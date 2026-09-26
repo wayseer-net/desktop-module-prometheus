@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"mindseye/internal/data"
 	"mindseye/internal/model"
 	"mindseye/internal/module"
@@ -136,7 +137,29 @@ func (m *Module) readWorld(ctx context.Context) (world, error) {
 	if err := c.get(ctx, "/api/v1/targets", map[string][]string{"state": {"active"}}, &ts); err != nil {
 		return world{}, err
 	}
-	return buildWorld(name, o.base.Host, o.kinds, ts.Active), nil
+	return buildWorld(name, o.base.Host, o.kinds, nodeExporters(ctx, c), ts.Active), nil
+}
+
+// nodeQuery finds the node exporters, and the name each machine gives itself.
+const nodeQuery = `group by (job, instance, nodename) (node_uname_info)`
+
+// nodeExporters are the targets exporting node_uname_info, by nodename; none if it fails.
+func nodeExporters(ctx context.Context, c *client) map[scrapeKey]string {
+	var res struct {
+		Result []struct {
+			Metric map[string]string `json:"metric"`
+		} `json:"result"`
+	}
+	if c.get(ctx, "/api/v1/query", map[string][]string{"query": {nodeQuery}}, &res) != nil {
+		return nil
+	}
+	out := map[scrapeKey]string{}
+	for _, r := range res.Result {
+		if name := r.Metric["nodename"]; name != "" {
+			out[scrapeKey{r.Metric["job"], r.Metric["instance"]}] = name
+		}
+	}
+	return out
 }
 
 // readCatalogue reads the metric metadata when it is due; failing keeps the last catalogue.
@@ -210,20 +233,20 @@ func (m *Module) QuerySeries(ctx context.Context, q data.SeriesQuery) ([]data.Se
 	var out []data.Series
 	for _, name := range q.Metrics {
 		mt, ok := byName[name]
-		keys := keysFor(&w, wanted, mt)
-		if !ok || len(keys) == 0 {
+		if !ok {
 			continue
 		}
-		expr := expression(mt, q.Agg, selector(keys), rangeFor(step, w.interval))
-		var res matrix
-		if err := c.post(ctx, "/api/v1/query_range", rangeForm(expr, q.Window, step), &res); err != nil {
-			return nil, fmt.Errorf("%s: %w", name, err)
+		gs := groups(&w, wanted, mt)
+		for _, kind := range slices.Sorted(maps.Keys(gs)) {
+			expr := expression(mt, kind, q.Agg, selector(gs[kind]), rangeFor(step, w.interval))
+			got, err := rangeSeries(ctx, c, expr, q.Window, step, func(res *matrix) ([]data.Series, error) {
+				return seriesOf(res, wanted, mt, q.Window)
+			})
+			if err != nil {
+				return nil, fmt.Errorf("%s: %w", name, err)
+			}
+			out = append(out, got...)
 		}
-		got, err := seriesOf(&res, wanted, mt, q.Window)
-		if err != nil {
-			return nil, fmt.Errorf("%s: %w", name, err)
-		}
-		out = append(out, got...)
 	}
 	return out, nil
 }
@@ -240,15 +263,29 @@ func wantedTargets(w *world, q data.SeriesQuery) map[scrapeKey]model.EntityRef {
 	return out
 }
 
-// keysFor are the wanted targets whose kind can have mt.
-func keysFor(w *world, wanted map[scrapeKey]model.EntityRef, mt metric) []scrapeKey {
-	var keys []scrapeKey
+// groups are the wanted targets that can have mt, by the kind whose expression queries them;
+// a family is queried the same way for every kind.
+func groups(w *world, wanted map[scrapeKey]model.EntityRef, mt metric) map[model.Kind][]scrapeKey {
+	out := map[model.Kind][]scrapeKey{}
 	for key, ref := range wanted {
-		if len(mt.Kinds) == 0 || slices.Contains(mt.Kinds, w.ents[ref].Kind) {
-			keys = append(keys, key)
+		kind := w.ents[ref].Kind
+		switch {
+		case mt.exprs == nil:
+			out[""] = append(out[""], key)
+		case mt.exprs[kind] != "":
+			out[kind] = append(out[kind], key)
 		}
 	}
-	return keys
+	return out
+}
+
+// rangeSeries asks query_range for expr over win at step, reading the answer with read.
+func rangeSeries(ctx context.Context, c *client, expr string, win data.TimeWindow, step time.Duration, read func(*matrix) ([]data.Series, error)) ([]data.Series, error) {
+	var res matrix
+	if err := c.post(ctx, "/api/v1/query_range", rangeForm(expr, win, step), &res); err != nil {
+		return nil, err
+	}
+	return read(&res)
 }
 
 // seriesOf maps a range query's results back to the targets asked for.

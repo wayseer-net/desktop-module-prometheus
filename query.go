@@ -6,6 +6,7 @@ import (
 	"maps"
 	"math"
 	"mindseye/internal/data"
+	"mindseye/internal/model"
 	"net/url"
 	"regexp"
 	"slices"
@@ -37,11 +38,11 @@ func matcher(label string, values map[string]bool) string {
 	return label + "=~" + strconv.Quote(strings.Join(vs, "|"))
 }
 
-// expression is the PromQL for m over the targets sel matches, one series per target.
-func expression(m metric, agg data.Aggregation, sel string, rateRange time.Duration) string {
+// expression is the PromQL for m over the targets of kind sel matches, one series per target.
+func expression(m metric, kind model.Kind, agg data.Aggregation, sel string, rateRange time.Duration) string {
 	rng := strconv.FormatInt(int64(rateRange/time.Second), 10) + "s"
-	if m.expr != "" {
-		return strings.NewReplacer("$sel", sel, "$range", rng).Replace(m.expr)
+	if m.exprs != nil {
+		return strings.NewReplacer("$sel", sel, "$range", rng).Replace(m.exprs[kind])
 	}
 	inner := m.Name + "{" + sel + "}"
 	if m.counter {

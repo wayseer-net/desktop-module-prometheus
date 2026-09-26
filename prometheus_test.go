@@ -123,7 +123,7 @@ func TestADownTargetCarriesItsScrapeError(t *testing.T) {
 	if job := entity(t, cs, labRef(KindJob, "api")); job.Status.Level != model.StatusCrit {
 		t.Errorf("a job with every target down reads %v", job.Status)
 	}
-	if host := entity(t, cs, labRef(model.KindHost, "localhost")); host.Status.Level != model.StatusOK || host.Attrs["job"].Str() != "node" {
+	if host := entity(t, cs, labRef(model.KindHost, "promhost")); host.Status.Level != model.StatusOK || host.Attrs["job"].Str() != "hosts" {
 		t.Errorf("node's target is not the host itself: %v %v", host.Status, host.Attrs)
 	}
 }
@@ -168,7 +168,7 @@ func TestSeriesComeFromTheRecordedRangeQueries(t *testing.T) {
 	m := configured(t, rp, "url: "+labURL)
 	running(t, m)
 	w := recordedWindow(t, rp)
-	host, self := labRef(model.KindHost, "localhost"), labRef(model.KindService, "prometheus/localhost:19090")
+	host := labRef(model.KindHost, "promhost")
 	for _, tc := range []struct {
 		metric   string
 		agg      data.Aggregation
@@ -181,7 +181,8 @@ func TestSeriesComeFromTheRecordedRangeQueries(t *testing.T) {
 		{"process_resident_memory_bytes", data.AggNone, nil, 2, model.UnitBytes},
 		{"prometheus_http_requests_total", data.AggNone, nil, 1, model.UnitPerSec},
 		{"go_goroutines", data.AggMax, nil, 2, model.UnitNone},
-		{"cpu.utilisation", data.AggNone, []model.EntityRef{self}, 0, ""},
+		{"cpu.utilisation", data.AggNone, nil, 2, model.UnitPercent},
+		{"memory.rss", data.AggNone, []model.EntityRef{host}, 0, ""},
 		{"no_such_metric", data.AggNone, nil, 0, ""},
 	} {
 		q := data.SeriesQuery{Entities: tc.entities, Metrics: []string{tc.metric}, Window: w, Step: data.StepFor(w, 100), Agg: tc.agg}

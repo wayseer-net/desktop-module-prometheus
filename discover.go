@@ -49,17 +49,23 @@ type world struct {
 type builder struct {
 	src   model.ModuleID
 	kinds map[string]model.Kind
+	nodes map[scrapeKey]string // node exporters, by their nodename
+	names map[string]string    // a node exporter's address to its nodename
 	w     world
 	on    map[model.EntityRef][]target // the hosts only named by instances, and the targets on them
 }
 
-// buildWorld lists the server, its jobs, their targets and the hosts they run on.
-func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, ts []target) world {
-	b := builder{src: src, kinds: kinds, w: world{
+// buildWorld lists the server, its jobs, their targets and the hosts they run on; nodes are the
+// node exporters among the targets, by nodename.
+func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, nodes map[scrapeKey]string, ts []target) world {
+	b := builder{src: src, kinds: kinds, nodes: nodes, names: map[string]string{}, w: world{
 		ents: map[model.EntityRef]model.Entity{}, edges: map[model.EdgeKey]model.Edge{},
 		scraped: map[model.EntityRef]scrapeKey{},
 	}, on: map[model.EntityRef][]target{}}
 	b.w.server = b.add(model.KindService, "server", base, model.Status{Level: model.StatusOK}, map[string]model.Value{"url": model.String(base)})
+	for key, name := range nodes {
+		b.names[hostOf(key.instance)] = name
+	}
 	jobs := map[string][]string{} // job to its targets' health
 	for _, t := range ts {
 		job, inst := t.Labels["job"], t.Labels["instance"]
@@ -86,11 +92,16 @@ func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, ts
 	return b.w
 }
 
-// target adds t: a host itself when its job maps to hosts, else a service on its host.
+// target adds t: a host itself when it is a node exporter or its job maps to hosts, else a
+// service on its host.
 func (b *builder) target(t target, job, inst string) {
-	host := hostOf(inst)
+	host := cmp.Or(b.names[hostOf(inst)], hostOf(inst))
 	kind := b.kinds[job]
-	if kind == "" {
+	switch {
+	case kind != "":
+	case b.nodes[scrapeKey{job, inst}] != "":
+		kind = model.KindHost
+	default:
 		kind = model.KindService
 	}
 	status, attrs := targetStatus(t), targetAttrs(t)

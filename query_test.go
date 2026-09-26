@@ -5,6 +5,7 @@ import (
 	"mindseye/internal/data"
 	"mindseye/internal/model"
 	"mindseye/internal/module"
+	"strings"
 	"testing"
 	"time"
 )
@@ -16,22 +17,24 @@ func TestQueriesTranslateToPromQL(t *testing.T) {
 	for _, tc := range []struct {
 		name string
 		m    metric
+		kind model.Kind
 		agg  data.Aggregation
 		sel  string
 		want string
 	}{
-		{"a gauge averages", gauge, data.AggNone, one, `avg by (job, instance) (go_goroutines{job="node",instance="web-1:9100"})`},
-		{"a counter sums its rate", counter, data.AggNone, one, `sum by (job, instance) (rate(http_requests_total{job="node",instance="web-1:9100"}[60s]))`},
-		{"max", gauge, data.AggMax, one, `max by (job, instance) (go_goroutines{job="node",instance="web-1:9100"})`},
-		{"p95", counter, data.AggP95, one, `quantile by (job, instance) (0.95, rate(http_requests_total{job="node",instance="web-1:9100"}[60s]))`},
-		{"canonical", canonical[0], data.AggMax, one, `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",job="node",instance="web-1:9100"}[60s])))`},
+		{"a gauge averages", gauge, "", data.AggNone, one, `avg by (job, instance) (go_goroutines{job="node",instance="web-1:9100"})`},
+		{"a counter sums its rate", counter, "", data.AggNone, one, `sum by (job, instance) (rate(http_requests_total{job="node",instance="web-1:9100"}[60s]))`},
+		{"max", gauge, "", data.AggMax, one, `max by (job, instance) (go_goroutines{job="node",instance="web-1:9100"})`},
+		{"p95", counter, "", data.AggP95, one, `quantile by (job, instance) (0.95, rate(http_requests_total{job="node",instance="web-1:9100"}[60s]))`},
+		{"canonical for a host", canonical[0], model.KindHost, data.AggMax, one, `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",job="node",instance="web-1:9100"}[60s])))`},
+		{"canonical for a service", canonical[0], model.KindService, data.AggNone, one, `100 * sum by (job, instance) (rate(process_cpu_seconds_total{job="node",instance="web-1:9100"}[60s]))`},
 		{
-			"several targets match by escaped regex", gauge, data.AggNone,
+			"several targets match by escaped regex", gauge, "", data.AggNone,
 			selector([]scrapeKey{{"api", "10.0.0.1:80"}, {"api", `we"b:80`}}),
 			`avg by (job, instance) (go_goroutines{job="api",instance=~"10\\.0\\.0\\.1:80|we\"b:80"})`,
 		},
 	} {
-		if got := expression(tc.m, tc.agg, tc.sel, time.Minute); got != tc.want {
+		if got := expression(tc.m, tc.kind, tc.agg, tc.sel, time.Minute); got != tc.want {
 			t.Errorf("%s:\n got %s\nwant %s", tc.name, got, tc.want)
 		}
 	}
@@ -97,6 +100,11 @@ func TestCatalogueComesFromMetadata(t *testing.T) {
 	for name, unit := range want {
 		if u, ok := got[name]; !ok || u != unit {
 			t.Errorf("%s: in catalogue %v, unit %q; want %q", name, ok, u, unit)
+		}
+	}
+	for _, m := range catalogueOf(meta) {
+		if shown := m.Name == "up" || m.Name == "scrape_duration_seconds" || strings.Contains(m.Name, "."); m.Extra == shown {
+			t.Errorf("%s: extra %v", m.Name, m.Extra)
 		}
 	}
 	for _, absent := range []string{"http_request_duration_seconds", "memory.utilisation"} {

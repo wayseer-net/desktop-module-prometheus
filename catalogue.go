@@ -15,38 +15,49 @@ type metaEntry struct {
 	Unit string `json:"unit"`
 }
 
-// metric is how one catalogue entry is queried: a counter as a rate, or a fixed expression.
+// metric is how one catalogue entry is queried: a family by name (a counter as a rate), or a
+// canonical metric by an expression for each kind of target.
 type metric struct {
 	module.Metric
 	counter bool
-	expr    string // for canonical metrics: PromQL with $sel and $range, grouped by job and instance
+	exprs   map[model.Kind]string // PromQL with $sel and $range, grouped by job and instance
 }
 
-// canonical are the shared metric names, from node_exporter's families, for hosts.
+// canonical are the metric names shared with other modules: hosts from node_exporter's
+// families, services from the process families most client libraries export.
 var canonical = []metric{
 	{
-		Metric: module.Metric{Name: "cpu.utilisation", Unit: model.UnitPercent, Description: "share of CPU time spent busy"},
-		expr:   `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",$sel}[$range])))`,
+		Metric: module.Metric{Name: "cpu.utilisation", Unit: model.UnitPercent, Description: "share of CPU time spent busy; for a service, of one core"},
+		exprs: map[model.Kind]string{
+			model.KindHost:    `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",$sel}[$range])))`,
+			model.KindService: `100 * sum by (job, instance) (rate(process_cpu_seconds_total{$sel}[$range]))`,
+		},
 	},
 	{
 		Metric: module.Metric{Name: "memory.utilisation", Unit: model.UnitPercent, Description: "share of memory not available to new work"},
-		expr:   `100 * (1 - sum by (job, instance) (node_memory_MemAvailable_bytes{$sel}) / sum by (job, instance) (node_memory_MemTotal_bytes{$sel}))`,
+		exprs: map[model.Kind]string{
+			model.KindHost: `100 * (1 - sum by (job, instance) (node_memory_MemAvailable_bytes{$sel}) / sum by (job, instance) (node_memory_MemTotal_bytes{$sel}))`,
+		},
+	},
+	{
+		Metric: module.Metric{Name: "memory.rss", Unit: model.UnitBytes, Description: "resident memory"},
+		exprs:  map[model.Kind]string{model.KindService: `sum by (job, instance) (process_resident_memory_bytes{$sel})`},
 	},
 	{
 		Metric: module.Metric{Name: "disk.read", Unit: model.UnitBytesPS, Description: "bytes read from every disk"},
-		expr:   `sum by (job, instance) (rate(node_disk_read_bytes_total{$sel}[$range]))`,
+		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_disk_read_bytes_total{$sel}[$range]))`},
 	},
 	{
 		Metric: module.Metric{Name: "disk.write", Unit: model.UnitBytesPS, Description: "bytes written to every disk"},
-		expr:   `sum by (job, instance) (rate(node_disk_written_bytes_total{$sel}[$range]))`,
+		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_disk_written_bytes_total{$sel}[$range]))`},
 	},
 	{
 		Metric: module.Metric{Name: "net.receive", Unit: model.UnitBytesPS, Description: "bytes received on every interface but loopback"},
-		expr:   `sum by (job, instance) (rate(node_network_receive_bytes_total{device!="lo",$sel}[$range]))`,
+		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_network_receive_bytes_total{device!="lo",$sel}[$range]))`},
 	},
 	{
 		Metric: module.Metric{Name: "net.transmit", Unit: model.UnitBytesPS, Description: "bytes sent on every interface but loopback"},
-		expr:   `sum by (job, instance) (rate(node_network_transmit_bytes_total{device!="lo",$sel}[$range]))`,
+		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_network_transmit_bytes_total{device!="lo",$sel}[$range]))`},
 	},
 }
 
@@ -57,12 +68,12 @@ var synthetic = map[string][]metaEntry{
 }
 
 // catalogueOf lists the canonical metrics whose families the server has, then every gauge and
-// counter family by its own name, with up and scrape_duration_seconds. Histograms, summaries and info families are left out.
+// counter family by its own name as an extra, with up and scrape_duration_seconds shown for
+// every target. Histograms, summaries and info families are left out.
 func catalogueOf(meta map[string][]metaEntry) []metric {
 	var out []metric
 	for _, c := range canonical {
-		if hasFamilies(meta, c.expr) {
-			c.Kinds, c.Native = []model.Kind{model.KindHost}, c.expr
+		if c, ok := available(c, meta); ok {
 			out = append(out, c)
 		}
 	}
@@ -83,10 +94,25 @@ func catalogueOf(meta map[string][]metaEntry) []metric {
 	return out
 }
 
-// hasFamilies reports whether every family expr reads is in meta.
+// available keeps c's expressions whose families the server has, with those kinds.
+func available(c metric, meta map[string][]metaEntry) (metric, bool) {
+	exprs := map[model.Kind]string{}
+	var natives []string
+	for _, k := range slices.Sorted(maps.Keys(c.exprs)) {
+		if hasFamilies(meta, c.exprs[k]) {
+			exprs[k] = c.exprs[k]
+			c.Kinds = append(c.Kinds, k)
+			natives = append(natives, string(k)+": "+c.exprs[k])
+		}
+	}
+	c.exprs, c.Native = exprs, strings.Join(natives, "; ")
+	return c, len(exprs) > 0
+}
+
+// hasFamilies reports whether every family expr reads, the names with underscores, is in meta.
 func hasFamilies(meta map[string][]metaEntry, expr string) bool {
 	for f := range strings.FieldsFuncSeq(expr, func(r rune) bool { return !isNameRune(r) }) {
-		if strings.HasPrefix(f, "node_") && len(meta[f]) == 0 {
+		if strings.Contains(f, "_") && len(meta[f]) == 0 {
 			return false
 		}
 	}
@@ -98,7 +124,8 @@ func isNameRune(r rune) bool {
 }
 
 func familyMetric(name string, e metaEntry) (metric, bool) {
-	m := metric{Metric: module.Metric{Name: name, Description: e.Help, Native: name}}
+	_, shown := synthetic[name]
+	m := metric{Metric: module.Metric{Name: name, Description: e.Help, Native: name, Extra: !shown}}
 	switch e.Type {
 	case "counter":
 		m.counter, m.Unit = true, rateUnit(name)
