@@ -38,11 +38,13 @@ type scrapeKey struct{ job, instance string }
 
 // world is the server's targets as entities.
 type world struct {
-	ents     map[model.EntityRef]model.Entity
-	edges    map[model.EdgeKey]model.Edge
-	server   model.EntityRef
-	scraped  map[model.EntityRef]scrapeKey // the targets, to query their series
-	interval time.Duration                 // the longest scrape interval, for rate ranges
+	ents      map[model.EntityRef]model.Entity
+	edges     map[model.EdgeKey]model.Edge
+	src       model.ModuleID
+	server    model.EntityRef
+	hostNames map[string]string             // a node exporter's address to its nodename
+	scraped   map[model.EntityRef]scrapeKey // the targets, to query their series
+	interval  time.Duration                 // the longest scrape interval, for rate ranges
 }
 
 // builder turns targets into a world.
@@ -60,12 +62,13 @@ type builder struct {
 func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, nodes map[scrapeKey]string, ts []target) world {
 	b := builder{src: src, kinds: kinds, nodes: nodes, names: map[string]string{}, w: world{
 		ents: map[model.EntityRef]model.Entity{}, edges: map[model.EdgeKey]model.Edge{},
-		scraped: map[model.EntityRef]scrapeKey{},
+		scraped: map[model.EntityRef]scrapeKey{}, src: src,
 	}, on: map[model.EntityRef][]target{}}
 	b.w.server = b.add(model.KindService, "server", base, model.Status{Level: model.StatusOK}, map[string]model.Value{"url": model.String(base)})
 	for key, name := range nodes {
 		b.names[hostOf(key.instance)] = name
 	}
+	b.w.hostNames = b.names
 	jobs := map[string][]string{} // job to its targets' health
 	for _, t := range ts {
 		job, inst := t.Labels["job"], t.Labels["instance"]

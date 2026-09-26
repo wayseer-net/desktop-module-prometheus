@@ -1,6 +1,7 @@
 package prometheus
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"mindseye/internal/model"
@@ -12,17 +13,24 @@ import (
 )
 
 type options struct {
-	URL        string            `yaml:"url"`         // the server, e.g. http://localhost:9090
-	Timeout    time.Duration     `yaml:"timeout"`     // longest wait for one request
-	Interval   time.Duration     `yaml:"interval"`    // how often targets are read
-	Auth       string            `yaml:"auth"`        // none, basic or bearer
-	Username   string            `yaml:"username"`    // for basic
-	SecretFile string            `yaml:"secret_file"` // file holding the password or token
-	SecretEnv  string            `yaml:"secret_env"`  // or the environment variable holding it
-	Kinds      map[string]string `yaml:"kinds"`       // job name to entity kind; others are services
+	endpoint     `yaml:",inline"`
+	Timeout      time.Duration     `yaml:"timeout"`      // longest wait for one request
+	Interval     time.Duration     `yaml:"interval"`     // how often targets are read
+	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; others are services
+	Alertmanager *endpoint         `yaml:"alertmanager"` // optional, for alerts
 
-	base  *url.URL
 	kinds map[string]model.Kind
+}
+
+// endpoint is a server and how to authenticate to it.
+type endpoint struct {
+	URL        string `yaml:"url"`         // e.g. http://localhost:9090
+	Auth       string `yaml:"auth"`        // none, basic or bearer
+	Username   string `yaml:"username"`    // for basic
+	SecretFile string `yaml:"secret_file"` // file holding the password or token
+	SecretEnv  string `yaml:"secret_env"`  // or the environment variable holding it
+
+	base *url.URL
 }
 
 const (
@@ -33,8 +41,8 @@ const (
 
 func defaults() options {
 	return options{
-		URL: "http://localhost:9090", Timeout: 10 * time.Second, Interval: 30 * time.Second,
-		Auth: authNone, Kinds: map[string]string{"node": string(model.KindHost), "node-exporter": string(model.KindHost)},
+		endpoint: endpoint{URL: "http://localhost:9090", Auth: authNone},
+		Timeout:  10 * time.Second, Interval: 30 * time.Second, Kinds: map[string]string{"node": string(model.KindHost), "node-exporter": string(model.KindHost)},
 	}
 }
 
@@ -45,10 +53,23 @@ func (o *options) validate() error {
 	case o.Interval < time.Second || o.Interval > time.Hour:
 		return fmt.Errorf("interval %v must be between 1s and 1h", o.Interval)
 	}
-	return errors.Join(o.parseURL(), o.checkAuth(), o.parseKinds())
+	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager())
 }
 
-func (o *options) parseURL() error {
+func (o *options) checkAlertmanager() error {
+	if o.Alertmanager == nil {
+		return nil
+	}
+	o.Alertmanager.Auth = cmp.Or(o.Alertmanager.Auth, authNone)
+	if err := o.Alertmanager.validate(); err != nil {
+		return fmt.Errorf("alertmanager: %w", err)
+	}
+	return nil
+}
+
+func (o *endpoint) validate() error { return errors.Join(o.parseURL(), o.checkAuth()) }
+
+func (o *endpoint) parseURL() error {
 	u, err := url.Parse(o.URL)
 	switch {
 	case err != nil:
@@ -65,7 +86,7 @@ func (o *options) parseURL() error {
 	return nil
 }
 
-func (o *options) checkAuth() error {
+func (o *endpoint) checkAuth() error {
 	secrets := 0
 	for _, s := range []string{o.SecretFile, o.SecretEnv} {
 		if s != "" {
@@ -107,7 +128,7 @@ func (secret) String() string   { return "[secret]" }
 func (secret) GoString() string { return "[secret]" }
 
 // readSecret loads the secret named by the options; errors name where it was sought, never it.
-func (o *options) readSecret() (secret, error) {
+func (o *endpoint) readSecret() (secret, error) {
 	var s string
 	switch {
 	case o.SecretEnv != "":

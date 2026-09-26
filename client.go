@@ -19,19 +19,21 @@ const (
 	errorCap = 300      // longest server message kept in an error
 )
 
-// client calls the Prometheus HTTP API, adding credentials and keeping them out of errors.
+// client calls the Prometheus or Alertmanager HTTP API, adding credentials and keeping them out
+// of errors.
 type client struct {
 	base    *url.URL
 	http    *http.Client
 	timeout time.Duration
 	header  string // Authorization value; empty for none
+	bare    bool   // answers are the data itself, as Alertmanager's are, not in an envelope
 }
 
-func newClient(o *options, rt http.RoundTripper, s secret) *client {
-	c := &client{base: o.base, http: &http.Client{Transport: rt}, timeout: o.Timeout}
-	switch o.Auth {
+func newClient(e *endpoint, timeout time.Duration, rt http.RoundTripper, s secret) *client {
+	c := &client{base: e.base, http: &http.Client{Transport: rt}, timeout: timeout}
+	switch e.Auth {
 	case authBasic:
-		c.header = "Basic " + base64.StdEncoding.EncodeToString([]byte(o.Username+":"+string(s)))
+		c.header = "Basic " + base64.StdEncoding.EncodeToString([]byte(e.Username+":"+string(s)))
 	case authBearer:
 		c.header = "Bearer " + string(s)
 	}
@@ -95,13 +97,16 @@ func (c *client) do(ctx context.Context, method, path string, form url.Values, o
 		return err
 	}
 	defer func() { _ = resp.Body.Close() }()
+	if c.bare {
+		return decodeBare(resp, out)
+	}
 	return decode(resp, out)
 }
 
 // decode reads an answer into out, or the error it reports.
 func decode(resp *http.Response, out any) error {
-	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
-		return fmt.Errorf("authentication failed (HTTP %d)", resp.StatusCode)
+	if err := authFailed(resp); err != nil {
+		return err
 	}
 	var env envelope
 	err := json.NewDecoder(io.LimitReader(resp.Body, bodyCap)).Decode(&env)
@@ -114,6 +119,28 @@ func decode(resp *http.Response, out any) error {
 		return fmt.Errorf("%s: %s", cmp.Or(env.ErrorType, "error"), clip(env.Error, errorCap))
 	}
 	return json.Unmarshal(env.Data, out)
+}
+
+// decodeBare reads an answer that is the data itself into out.
+func decodeBare(resp *http.Response, out any) error {
+	if err := authFailed(resp); err != nil {
+		return err
+	}
+	if resp.StatusCode/100 != 2 {
+		b, _ := io.ReadAll(io.LimitReader(resp.Body, errorCap))
+		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, clip(strings.TrimSpace(string(b)), errorCap))
+	}
+	if err := json.NewDecoder(io.LimitReader(resp.Body, bodyCap)).Decode(out); err != nil {
+		return fmt.Errorf("unreadable answer: %w", err)
+	}
+	return nil
+}
+
+func authFailed(resp *http.Response) error {
+	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
+		return fmt.Errorf("authentication failed (HTTP %d)", resp.StatusCode)
+	}
+	return nil
 }
 
 // redact removes the credentials from err's message, in case something echoed them.

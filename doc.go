@@ -6,6 +6,13 @@
 // network rates) from node_exporter's families. Every gauge and counter family the server
 // describes is in the catalogue by its own name; counters are queried as per-second rates.
 //
+// With an Alertmanager, each alert goes on the target its job and instance labels name, else the
+// host its instance names, else its job, else the server. A critical alert raises the entity to
+// Crit and any other but info or none to Warn, never lowering it, with the alert names as the
+// reason and in the `alerts` attribute. Silenced or inhibited alerts are listed in
+// `alerts_muted` and leave the status alone. Firing, muting and resolving are alert events. If
+// Alertmanager cannot be read, the last alerts stand and Health notes why.
+//
 //	modules:
 //	  - kind: prometheus
 //	    name: prom
@@ -18,6 +25,9 @@
 //	      secret_file: ""             # file holding the password or token, e.g. ~/.config/mindseye/prom-token
 //	      secret_env: ""              # or the environment variable holding it
 //	      kinds: {node: host, node-exporter: host}  # job name to entity kind; other jobs' targets are services
+//	      alertmanager:               # optional
+//	        url: http://localhost:9093
+//	        auth: none                # with its own username, secret_file or secret_env
 //
 // The secret is read once at configuration and sent only as the Authorization header; it never
 // appears in logs, errors or entities, and fixtures recorded with promtest leave headers out.

@@ -10,6 +10,7 @@ import (
 	"mindseye/internal/module"
 	"net/http"
 	"slices"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -43,6 +44,9 @@ type Module struct {
 	metrics   []metric
 	catalogAt time.Time
 	catNote   string
+	am        *client            // nil without an Alertmanager
+	alerts    map[string]alertOn // the last alerts read, by fingerprint
+	amNote    string
 }
 
 // New makes an unconfigured module that talks HTTP through the default transport.
@@ -69,13 +73,32 @@ func (m *Module) Configure(_ context.Context, cfg module.Config) error {
 	if err != nil {
 		return fmt.Errorf("line %d: %w", cfg.Line, err)
 	}
+	am, err := alertmanagerClient(&o, m.transport)
+	if err != nil {
+		return fmt.Errorf("line %d: %w", cfg.Line, err)
+	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.name, m.opts, m.client = cfg.Name, o, newClient(&o, m.transport, s)
+	m.name, m.opts, m.client, m.am = cfg.Name, o, newClient(&o.endpoint, o.Timeout, m.transport, s), am
+	m.alerts, m.amNote = nil, ""
 	m.world, m.read, m.metrics, m.catalogAt, m.catNote = world{}, false, nil, time.Time{}, ""
 	m.tracker.Reset()
 	m.health.Store(&data.Health{})
 	return nil
+}
+
+// alertmanagerClient is a client for the configured Alertmanager, or nil for none.
+func alertmanagerClient(o *options, rt http.RoundTripper) (*client, error) {
+	if o.Alertmanager == nil {
+		return nil, nil
+	}
+	s, err := o.Alertmanager.readSecret()
+	if err != nil {
+		return nil, fmt.Errorf("alertmanager: %w", err)
+	}
+	c := newClient(o.Alertmanager, o.Timeout, rt, s)
+	c.bare = true
+	return c, nil
 }
 
 // Run reads the targets every interval, sending a snapshot once they are first read and then
@@ -113,20 +136,30 @@ func (m *Module) Run(ctx context.Context, sink module.Sink) error {
 	}
 }
 
-// refresh reads the targets, and the catalogue when due, returning what changed.
+// refresh reads the targets, the alerts, and the catalogue when due, returning what changed.
 func (m *Module) refresh(ctx context.Context) (*model.ChangeSet, error) {
+	now := time.Now()
 	w, err := m.readWorld(ctx)
+	var evs []model.Event
 	if err == nil {
 		m.readCatalogue(ctx)
+		evs = m.readAlerts(ctx, &w, now)
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.health.Store(&data.Health{Err: err, Note: m.catNote})
+	m.health.Store(&data.Health{Err: err, Note: notes(m.catNote, m.amNote)})
 	if err != nil {
 		return nil, err
 	}
+	showAlerts(&w, m.alerts)
 	m.world, m.read = w, true
-	return m.tracker.Changes(w.ents, w.edges, time.Now()), nil
+	cs := m.tracker.Changes(w.ents, w.edges, now)
+	cs.Events = evs
+	return cs, nil
+}
+
+func notes(ns ...string) string {
+	return strings.Join(slices.DeleteFunc(ns, func(n string) bool { return n == "" }), "; ")
 }
 
 func (m *Module) readWorld(ctx context.Context) (world, error) {
