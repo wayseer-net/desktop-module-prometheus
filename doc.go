@@ -17,7 +17,7 @@
 //	      username: ""                # for basic
 //	      secret_file: ""             # file holding the password or token, e.g. ~/.config/mindseye/prom-token
 //	      secret_env: ""              # or the environment variable holding it
-//	      kinds: {node: host}         # job name to entity kind; other jobs' targets are services
+//	      kinds: {node: host, node-exporter: host}  # job name to entity kind; other jobs' targets are services
 //
 // The secret is read once at configuration and sent only as the Authorization header; it never
 // appears in logs, errors or entities, and fixtures recorded with promtest leave headers out.

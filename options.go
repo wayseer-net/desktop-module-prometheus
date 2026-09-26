@@ -34,7 +34,7 @@ const (
 func defaults() options {
 	return options{
 		URL: "http://localhost:9090", Timeout: 10 * time.Second, Interval: 30 * time.Second,
-		Auth: authNone, Kinds: map[string]string{"node": string(model.KindHost)},
+		Auth: authNone, Kinds: map[string]string{"node": string(model.KindHost), "node-exporter": string(model.KindHost)},
 	}
 }
 

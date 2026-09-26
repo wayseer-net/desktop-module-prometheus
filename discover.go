@@ -1,6 +1,7 @@
 package prometheus
 
 import (
+	"cmp"
 	"fmt"
 	"maps"
 	"mindseye/internal/model"
@@ -49,6 +50,7 @@ type builder struct {
 	src   model.ModuleID
 	kinds map[string]model.Kind
 	w     world
+	on    map[model.EntityRef][]target // the hosts only named by instances, and the targets on them
 }
 
 // buildWorld lists the server, its jobs, their targets and the hosts they run on.
@@ -56,7 +58,7 @@ func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, ts
 	b := builder{src: src, kinds: kinds, w: world{
 		ents: map[model.EntityRef]model.Entity{}, edges: map[model.EdgeKey]model.Edge{},
 		scraped: map[model.EntityRef]scrapeKey{},
-	}}
+	}, on: map[model.EntityRef][]target{}}
 	b.w.server = b.add(model.KindService, "server", base, model.Status{Level: model.StatusOK}, map[string]model.Value{"url": model.String(base)})
 	jobs := map[string][]string{} // job to its targets' health
 	for _, t := range ts {
@@ -73,6 +75,13 @@ func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, ts
 	}
 	for ref, key := range b.w.scraped {
 		b.edge(ref, b.ref(KindJob, key.job), model.RelMemberOf)
+	}
+	for ref, on := range b.on {
+		if _, scraped := b.w.scraped[ref]; !scraped {
+			e := b.w.ents[ref]
+			e.Status = hostStatus(on)
+			b.w.ents[ref] = e
+		}
 	}
 	return b.w
 }
@@ -94,6 +103,7 @@ func (b *builder) target(t target, job, inst string) {
 			b.add(model.KindHost, host, host, model.Status{}, nil)
 		}
 		b.edge(ref, b.ref(model.KindHost, host), model.RelRunsOn)
+		b.on[b.ref(model.KindHost, host)] = append(b.on[b.ref(model.KindHost, host)], t)
 	}
 	b.w.scraped[ref] = scrapeKey{job, inst}
 	if d, err := time.ParseDuration(t.ScrapeInterval); err == nil {
@@ -160,6 +170,24 @@ func targetAttrs(t target) map[string]model.Value {
 		attrs["last_error"] = model.String(clip(t.LastError, errorCap))
 	}
 	return attrs
+}
+
+// hostStatus is a host's reachability from the targets on it: OK when any answers, Down when
+// none does.
+func hostStatus(on []target) model.Status {
+	firstErr := ""
+	for _, t := range on {
+		switch {
+		case t.Health == "up":
+			return model.Status{Level: model.StatusOK}
+		case t.Health == "down" && firstErr == "":
+			firstErr = cmp.Or(firstLine(t.LastError), "down")
+		}
+	}
+	if firstErr == "" {
+		return model.Status{Level: model.StatusUnknown, Reason: "not scraped yet"}
+	}
+	return model.Status{Level: model.StatusDown, Reason: clip("no target on it answers: "+firstErr, reasonCap)}
 }
 
 // jobStatus is Crit when every target is down, Warn when some are.
