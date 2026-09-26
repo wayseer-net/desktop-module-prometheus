@@ -24,7 +24,7 @@ import (
 const labURL = "http://promhost:9090"
 
 // lab replays the recorded server; loose answers queries it never recorded with a recorded one.
-func lab(t *testing.T, loose bool) *promtest.Replayer {
+func lab(t testing.TB, loose bool) *promtest.Replayer {
 	t.Helper()
 	xs, err := promtest.Load("../../testdata/prometheus/lab.json")
 	if err != nil {
@@ -46,7 +46,7 @@ func (o onlyHost) RoundTrip(r *http.Request) (*http.Response, error) {
 	return o.next.RoundTrip(r)
 }
 
-func configured(t *testing.T, rt http.RoundTripper, opts string) *Module {
+func configured(t testing.TB, rt http.RoundTripper, opts string) *Module {
 	t.Helper()
 	m := NewWithTransport(rt)
 	if err := m.Configure(context.Background(), cfg(t, opts)); err != nil {
@@ -55,7 +55,7 @@ func configured(t *testing.T, rt http.RoundTripper, opts string) *Module {
 	return m
 }
 
-func cfg(t *testing.T, opts string) module.Config {
+func cfg(t testing.TB, opts string) module.Config {
 	t.Helper()
 	var doc yaml.Node
 	if err := yaml.Unmarshal([]byte(opts), &doc); err != nil {
@@ -143,7 +143,7 @@ func entity(t *testing.T, cs *model.ChangeSet, ref model.EntityRef) model.Entity
 }
 
 // recordedWindow is the window the fixture's range queries asked about.
-func recordedWindow(t *testing.T, rp *promtest.Replayer) data.TimeWindow {
+func recordedWindow(t testing.TB, rp *promtest.Replayer) data.TimeWindow {
 	t.Helper()
 	for _, x := range rp.Exchanges {
 		if x.Path == "/api/v1/query_range" {
@@ -154,7 +154,7 @@ func recordedWindow(t *testing.T, rp *promtest.Replayer) data.TimeWindow {
 	return data.TimeWindow{}
 }
 
-func unix(t *testing.T, s string) time.Time {
+func unix(t testing.TB, s string) time.Time {
 	t.Helper()
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {
