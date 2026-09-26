@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"fmt"
 	"maps"
-	"mindseye/internal/model"
+	"mindseye/pkg/sdk"
 	"net"
 	"slices"
 	"strings"
@@ -13,7 +13,7 @@ import (
 
 // Kinds and relations the module adds to the core vocabulary.
 const (
-	KindJob model.Kind = "prometheus/job"
+	KindJob sdk.Kind = "prometheus/job"
 )
 
 // reasonCap bounds a scrape error kept as a status reason.
@@ -38,33 +38,33 @@ type scrapeKey struct{ job, instance string }
 
 // world is the server's targets as entities.
 type world struct {
-	ents      map[model.EntityRef]model.Entity
-	edges     map[model.EdgeKey]model.Edge
-	src       model.ModuleID
-	server    model.EntityRef
-	hostNames map[string]string             // a node exporter's address to its nodename
-	scraped   map[model.EntityRef]scrapeKey // the targets, to query their series
-	interval  time.Duration                 // the longest scrape interval, for rate ranges
+	ents      map[sdk.EntityRef]sdk.Entity
+	edges     map[sdk.EdgeKey]sdk.Edge
+	src       sdk.ModuleID
+	server    sdk.EntityRef
+	hostNames map[string]string           // a node exporter's address to its nodename
+	scraped   map[sdk.EntityRef]scrapeKey // the targets, to query their series
+	interval  time.Duration               // the longest scrape interval, for rate ranges
 }
 
 // builder turns targets into a world.
 type builder struct {
-	src   model.ModuleID
-	kinds map[string]model.Kind
+	src   sdk.ModuleID
+	kinds map[string]sdk.Kind
 	nodes map[scrapeKey]string // node exporters, by their nodename
 	names map[string]string    // a node exporter's address to its nodename
 	w     world
-	on    map[model.EntityRef][]target // the hosts only named by instances, and the targets on them
+	on    map[sdk.EntityRef][]target // the hosts only named by instances, and the targets on them
 }
 
 // buildWorld lists the server, its jobs, their targets and the hosts they run on; nodes are the
 // node exporters among the targets, by nodename.
-func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, nodes map[scrapeKey]string, ts []target) world {
+func buildWorld(src sdk.ModuleID, base string, kinds map[string]sdk.Kind, nodes map[scrapeKey]string, ts []target) world {
 	b := builder{src: src, kinds: kinds, nodes: nodes, names: map[string]string{}, w: world{
-		ents: map[model.EntityRef]model.Entity{}, edges: map[model.EdgeKey]model.Edge{},
-		scraped: map[model.EntityRef]scrapeKey{}, src: src,
-	}, on: map[model.EntityRef][]target{}}
-	b.w.server = b.add(model.KindService, "server", base, model.Status{Level: model.StatusOK}, map[string]model.Value{"url": model.String(base)})
+		ents: map[sdk.EntityRef]sdk.Entity{}, edges: map[sdk.EdgeKey]sdk.Edge{},
+		scraped: map[sdk.EntityRef]scrapeKey{}, src: src,
+	}, on: map[sdk.EntityRef][]target{}}
+	b.w.server = b.add(sdk.KindService, "server", base, sdk.Status{Level: sdk.StatusOK}, map[string]sdk.Value{"url": sdk.String(base)})
 	for key, name := range nodes {
 		b.names[hostOf(key.instance)] = name
 	}
@@ -79,11 +79,11 @@ func buildWorld(src model.ModuleID, base string, kinds map[string]model.Kind, no
 		jobs[job] = append(jobs[job], t.Health)
 	}
 	for _, job := range slices.Sorted(maps.Keys(jobs)) {
-		ref := b.add(KindJob, job, job, jobStatus(jobs[job]), map[string]model.Value{"targets": model.Number(float64(len(jobs[job])))})
-		b.edge(ref, b.w.server, model.RelMemberOf)
+		ref := b.add(KindJob, job, job, jobStatus(jobs[job]), map[string]sdk.Value{"targets": sdk.Number(float64(len(jobs[job])))})
+		b.edge(ref, b.w.server, sdk.RelMemberOf)
 	}
 	for ref, key := range b.w.scraped {
-		b.edge(ref, b.ref(KindJob, key.job), model.RelMemberOf)
+		b.edge(ref, b.ref(KindJob, key.job), sdk.RelMemberOf)
 	}
 	for ref, on := range b.on {
 		if _, scraped := b.w.scraped[ref]; !scraped {
@@ -103,21 +103,21 @@ func (b *builder) target(t target, job, inst string) {
 	switch {
 	case kind != "":
 	case b.nodes[scrapeKey{job, inst}] != "":
-		kind = model.KindHost
+		kind = sdk.KindHost
 	default:
-		kind = model.KindService
+		kind = sdk.KindService
 	}
 	status, attrs := targetStatus(t), targetAttrs(t)
-	var ref model.EntityRef
-	if kind == model.KindHost {
+	var ref sdk.EntityRef
+	if kind == sdk.KindHost {
 		ref = b.merge(host, status, attrs)
 	} else {
 		ref = b.add(kind, job+"/"+inst, job+"/"+inst, status, attrs)
-		if _, ok := b.w.ents[b.ref(model.KindHost, host)]; !ok {
-			b.add(model.KindHost, host, host, model.Status{}, nil)
+		if _, ok := b.w.ents[b.ref(sdk.KindHost, host)]; !ok {
+			b.add(sdk.KindHost, host, host, sdk.Status{}, nil)
 		}
-		b.edge(ref, b.ref(model.KindHost, host), model.RelRunsOn)
-		b.on[b.ref(model.KindHost, host)] = append(b.on[b.ref(model.KindHost, host)], t)
+		b.edge(ref, b.ref(sdk.KindHost, host), sdk.RelRunsOn)
+		b.on[b.ref(sdk.KindHost, host)] = append(b.on[b.ref(sdk.KindHost, host)], t)
 	}
 	b.w.scraped[ref] = scrapeKey{job, inst}
 	if d, err := time.ParseDuration(t.ScrapeInterval); err == nil {
@@ -126,27 +126,27 @@ func (b *builder) target(t target, job, inst string) {
 }
 
 // merge adds a host scraped as a target, keeping the worse status when several jobs scrape it.
-func (b *builder) merge(host string, st model.Status, attrs map[string]model.Value) model.EntityRef {
-	ref := b.ref(model.KindHost, host)
+func (b *builder) merge(host string, st sdk.Status, attrs map[string]sdk.Value) sdk.EntityRef {
+	ref := b.ref(sdk.KindHost, host)
 	if old, ok := b.w.ents[ref]; ok && old.Status.Level.Worse(st.Level) {
 		return ref
 	}
-	return b.add(model.KindHost, host, host, st, attrs)
+	return b.add(sdk.KindHost, host, host, st, attrs)
 }
 
-func (b *builder) ref(kind model.Kind, native string) model.EntityRef {
-	r, _ := model.NewEntityRef(string(b.src), kind, native)
+func (b *builder) ref(kind sdk.Kind, native string) sdk.EntityRef {
+	r, _ := sdk.NewEntityRef(string(b.src), kind, native)
 	return r
 }
 
-func (b *builder) add(kind model.Kind, native, name string, st model.Status, attrs map[string]model.Value) model.EntityRef {
+func (b *builder) add(kind sdk.Kind, native, name string, st sdk.Status, attrs map[string]sdk.Value) sdk.EntityRef {
 	ref := b.ref(kind, native)
-	b.w.ents[ref] = model.Entity{Ref: ref, Kind: kind, Name: name, Status: st, Attrs: attrs, Source: b.src}
+	b.w.ents[ref] = sdk.Entity{Ref: ref, Kind: kind, Name: name, Status: st, Attrs: attrs, Source: b.src}
 	return ref
 }
 
-func (b *builder) edge(from, to model.EntityRef, rel model.Relation) {
-	e := model.Edge{From: from, To: to, Rel: rel, Source: b.src}
+func (b *builder) edge(from, to sdk.EntityRef, rel sdk.Relation) {
+	e := sdk.Edge{From: from, To: to, Rel: rel, Source: b.src}
 	b.w.edges[e.Key()] = e
 }
 
@@ -158,54 +158,54 @@ func hostOf(instance string) string {
 	return strings.Trim(instance, "[]")
 }
 
-func targetStatus(t target) model.Status {
+func targetStatus(t target) sdk.Status {
 	switch t.Health {
 	case "up":
-		return model.Status{Level: model.StatusOK}
+		return sdk.Status{Level: sdk.StatusOK}
 	case "down":
-		return model.Status{Level: model.StatusDown, Reason: clip(firstLine(t.LastError), reasonCap)}
+		return sdk.Status{Level: sdk.StatusDown, Reason: clip(firstLine(t.LastError), reasonCap)}
 	}
-	return model.Status{Level: model.StatusUnknown, Reason: "not scraped yet"}
+	return sdk.Status{Level: sdk.StatusUnknown, Reason: "not scraped yet"}
 }
 
 // targetAttrs are the target's own labels and how its scrapes go.
-func targetAttrs(t target) map[string]model.Value {
-	attrs := map[string]model.Value{
-		"job": model.String(t.Labels["job"]), "instance": model.String(t.Labels["instance"]),
-		"scrape_url": model.String(t.ScrapeURL), "scrape_interval": model.String(t.ScrapeInterval),
-		"scrape_duration": model.Number(t.LastScrapeDuration),
+func targetAttrs(t target) map[string]sdk.Value {
+	attrs := map[string]sdk.Value{
+		"job": sdk.String(t.Labels["job"]), "instance": sdk.String(t.Labels["instance"]),
+		"scrape_url": sdk.String(t.ScrapeURL), "scrape_interval": sdk.String(t.ScrapeInterval),
+		"scrape_duration": sdk.Number(t.LastScrapeDuration),
 	}
 	for k, v := range t.Labels {
 		if k != "job" && k != "instance" {
-			attrs["label."+k] = model.String(v)
+			attrs["label."+k] = sdk.String(v)
 		}
 	}
 	if t.LastError != "" {
-		attrs["last_error"] = model.String(clip(t.LastError, errorCap))
+		attrs["last_error"] = sdk.String(clip(t.LastError, errorCap))
 	}
 	return attrs
 }
 
 // hostStatus is a host's reachability from the targets on it: OK when any answers, Down when
 // none does.
-func hostStatus(on []target) model.Status {
+func hostStatus(on []target) sdk.Status {
 	firstErr := ""
 	for _, t := range on {
 		switch {
 		case t.Health == "up":
-			return model.Status{Level: model.StatusOK}
+			return sdk.Status{Level: sdk.StatusOK}
 		case t.Health == "down" && firstErr == "":
 			firstErr = cmp.Or(firstLine(t.LastError), "down")
 		}
 	}
 	if firstErr == "" {
-		return model.Status{Level: model.StatusUnknown, Reason: "not scraped yet"}
+		return sdk.Status{Level: sdk.StatusUnknown, Reason: "not scraped yet"}
 	}
-	return model.Status{Level: model.StatusDown, Reason: clip("no target on it answers: "+firstErr, reasonCap)}
+	return sdk.Status{Level: sdk.StatusDown, Reason: clip("no target on it answers: "+firstErr, reasonCap)}
 }
 
 // jobStatus is Crit when every target is down, Warn when some are.
-func jobStatus(health []string) model.Status {
+func jobStatus(health []string) sdk.Status {
 	down := 0
 	for _, h := range health {
 		if h == "down" {
@@ -214,11 +214,11 @@ func jobStatus(health []string) model.Status {
 	}
 	switch {
 	case down == 0:
-		return model.Status{Level: model.StatusOK}
+		return sdk.Status{Level: sdk.StatusOK}
 	case down == len(health):
-		return model.Status{Level: model.StatusCrit, Reason: "every target is down"}
+		return sdk.Status{Level: sdk.StatusCrit, Reason: "every target is down"}
 	}
-	return model.Status{Level: model.StatusWarn, Reason: fmt.Sprintf("%d of %d targets down", down, len(health))}
+	return sdk.Status{Level: sdk.StatusWarn, Reason: fmt.Sprintf("%d of %d targets down", down, len(health))}
 }
 
 func firstLine(s string) string {

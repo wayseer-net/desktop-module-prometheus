@@ -1,0 +1,19 @@
+lab/host/127.0.0.1 "127.0.0.1" down (no target on it answers: Get "http://127.0.0.1:19999/metrics": dial tcp 127.0.0.1:19999: connect: connection refused)
+lab/host/promhost "promhost" ok
+lab/prometheus%2Fjob/api "api" crit (every target is down)
+lab/prometheus%2Fjob/hosts "hosts" ok
+lab/prometheus%2Fjob/prometheus "prometheus" ok
+lab/service/api%2F127.0.0.1:19999 "api/127.0.0.1:19999" down (Get "http://127.0.0.1:19999/metrics": dial tcp 127.0.0.1:19999: connect: connection refused)
+lab/service/api%2Flocalhost:19998 "api/localhost:19998" down (Get "http://localhost:19998/metrics": dial tcp [::1]:19998: connect: connection refused)
+lab/service/prometheus%2Flocalhost:19090 "prometheus/localhost:19090" ok
+lab/service/server "promhost:9090" ok
+lab/host/promhost -member_of-> lab/prometheus%2Fjob/hosts
+lab/prometheus%2Fjob/api -member_of-> lab/service/server
+lab/prometheus%2Fjob/hosts -member_of-> lab/service/server
+lab/prometheus%2Fjob/prometheus -member_of-> lab/service/server
+lab/service/api%2F127.0.0.1:19999 -runs_on-> lab/host/127.0.0.1
+lab/service/api%2F127.0.0.1:19999 -member_of-> lab/prometheus%2Fjob/api
+lab/service/api%2Flocalhost:19998 -runs_on-> lab/host/promhost
+lab/service/api%2Flocalhost:19998 -member_of-> lab/prometheus%2Fjob/api
+lab/service/prometheus%2Flocalhost:19090 -runs_on-> lab/host/promhost
+lab/service/prometheus%2Flocalhost:19090 -member_of-> lab/prometheus%2Fjob/prometheus

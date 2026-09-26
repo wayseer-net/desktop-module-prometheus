@@ -4,10 +4,8 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
-	"mindseye/internal/model"
+	"mindseye/pkg/sdk"
 	"net/url"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -19,16 +17,15 @@ type options struct {
 	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; others are services
 	Alertmanager *endpoint         `yaml:"alertmanager"` // optional, for alerts
 
-	kinds map[string]model.Kind
+	kinds map[string]sdk.Kind
 }
 
 // endpoint is a server and how to authenticate to it.
 type endpoint struct {
-	URL        string `yaml:"url"`         // e.g. http://localhost:9090
-	Auth       string `yaml:"auth"`        // none, basic or bearer
-	Username   string `yaml:"username"`    // for basic
-	SecretFile string `yaml:"secret_file"` // file holding the password or token
-	SecretEnv  string `yaml:"secret_env"`  // or the environment variable holding it
+	URL               string           `yaml:"url"`      // e.g. http://localhost:9090
+	Auth              string           `yaml:"auth"`     // none, basic or bearer
+	Username          string           `yaml:"username"` // for basic
+	sdk.SecretOptions `yaml:",inline"` // the password or token
 
 	base *url.URL
 }
@@ -42,7 +39,7 @@ const (
 func defaults() options {
 	return options{
 		endpoint: endpoint{URL: "http://localhost:9090", Auth: authNone},
-		Timeout:  10 * time.Second, Interval: 30 * time.Second, Kinds: map[string]string{"node": string(model.KindHost), "node-exporter": string(model.KindHost)},
+		Timeout:  10 * time.Second, Interval: 30 * time.Second, Kinds: map[string]string{"node": string(sdk.KindHost), "node-exporter": string(sdk.KindHost)},
 	}
 }
 
@@ -111,61 +108,12 @@ func (o *endpoint) checkAuth() error {
 }
 
 func (o *options) parseKinds() error {
-	o.kinds = map[string]model.Kind{}
+	o.kinds = map[string]sdk.Kind{}
 	for job, k := range o.Kinds {
-		if err := model.Kind(k).Validate(); err != nil {
+		if err := sdk.Kind(k).Validate(); err != nil {
 			return fmt.Errorf("kinds: job %q: %w", job, err)
 		}
-		o.kinds[job] = model.Kind(k)
+		o.kinds[job] = sdk.Kind(k)
 	}
 	return nil
-}
-
-// secret is a password or token; it formats as a placeholder so it cannot be logged by mistake.
-type secret string
-
-func (secret) String() string   { return "[secret]" }
-func (secret) GoString() string { return "[secret]" }
-
-// readSecret loads the secret named by the options; errors name where it was sought, never it.
-func (o *endpoint) readSecret() (secret, error) {
-	var s string
-	switch {
-	case o.SecretEnv != "":
-		v, ok := os.LookupEnv(o.SecretEnv)
-		if !ok {
-			return "", fmt.Errorf("secret_env: %s is not set", o.SecretEnv)
-		}
-		s = v
-	case o.SecretFile != "":
-		b, err := os.ReadFile(expandHome(o.SecretFile))
-		if err != nil {
-			return "", fmt.Errorf("secret_file: %w", pathOnly(err))
-		}
-		s = string(b)
-	default:
-		return "", nil
-	}
-	if s = strings.TrimSpace(s); s == "" {
-		return "", errors.New("the secret is empty")
-	}
-	return secret(s), nil
-}
-
-// pathOnly keeps a file error's operation, path and cause, which hold nothing read from the file.
-func pathOnly(err error) error {
-	var pe *os.PathError
-	if errors.As(err, &pe) {
-		return pe
-	}
-	return errors.New("cannot read it")
-}
-
-func expandHome(p string) string {
-	if rest, ok := strings.CutPrefix(p, "~/"); ok {
-		if home, err := os.UserHomeDir(); err == nil {
-			return filepath.Join(home, rest)
-		}
-	}
-	return p
 }

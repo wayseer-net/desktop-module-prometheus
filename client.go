@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mindseye/pkg/sdk"
 	"net/http"
 	"net/url"
 	"strings"
@@ -29,13 +30,13 @@ type client struct {
 	bare    bool   // answers are the data itself, as Alertmanager's are, not in an envelope
 }
 
-func newClient(e *endpoint, timeout time.Duration, rt http.RoundTripper, s secret) *client {
+func newClient(e *endpoint, timeout time.Duration, rt http.RoundTripper, s sdk.Secret) *client {
 	c := &client{base: e.base, http: &http.Client{Transport: rt}, timeout: timeout}
 	switch e.Auth {
 	case authBasic:
-		c.header = "Basic " + base64.StdEncoding.EncodeToString([]byte(e.Username+":"+string(s)))
+		c.header = "Basic " + base64.StdEncoding.EncodeToString([]byte(e.Username+":"+s.Reveal()))
 	case authBearer:
-		c.header = "Bearer " + string(s)
+		c.header = "Bearer " + s.Reveal()
 	}
 	return c
 }

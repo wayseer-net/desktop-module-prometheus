@@ -2,7 +2,7 @@ package prometheus
 
 import (
 	"context"
-	"mindseye/internal/data"
+	"mindseye/pkg/sdk"
 	"net/http"
 	"os"
 	"slices"
@@ -19,13 +19,13 @@ func BenchmarkSeriesRoundTrip(b *testing.B) {
 	url, w := labURL, recordedWindow(b, rp)
 	if u := os.Getenv("MINDSEYE_PROM_URL"); u != "" {
 		now := time.Now()
-		rt, url, w = http.DefaultTransport, u, data.TimeWindow{From: now.Add(-time.Hour), To: now}
+		rt, url, w = http.DefaultTransport, u, sdk.TimeWindow{From: now.Add(-time.Hour), To: now}
 	}
 	m := configured(b, rt, "url: "+url)
 	if _, err := m.refresh(context.Background()); err != nil {
 		b.Fatal(err)
 	}
-	q := data.SeriesQuery{Metrics: []string{"cpu.utilisation"}, Window: w, Step: data.StepFor(w, 400)}
+	q := sdk.SeriesQuery{Metrics: []string{"cpu.utilisation"}, Window: w, Step: sdk.StepFor(w, 400)}
 	took := make([]time.Duration, 0, b.N)
 	b.ReportAllocs()
 	for b.Loop() {

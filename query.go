@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"maps"
 	"math"
-	"mindseye/internal/data"
-	"mindseye/internal/model"
+	"mindseye/pkg/sdk"
 	"net/url"
 	"regexp"
 	"slices"
@@ -39,7 +38,7 @@ func matcher(label string, values map[string]bool) string {
 }
 
 // expression is the PromQL for m over the targets of kind sel matches, one series per target.
-func expression(m metric, kind model.Kind, agg data.Aggregation, sel string, rateRange time.Duration) string {
+func expression(m metric, kind sdk.Kind, agg sdk.Aggregation, sel string, rateRange time.Duration) string {
 	rng := strconv.FormatInt(int64(rateRange/time.Second), 10) + "s"
 	if m.exprs != nil {
 		return strings.NewReplacer("$sel", sel, "$range", rng).Replace(m.exprs[kind])
@@ -49,9 +48,9 @@ func expression(m metric, kind model.Kind, agg data.Aggregation, sel string, rat
 		inner = "rate(" + inner + "[" + rng + "])"
 	}
 	switch agg {
-	case data.AggP95:
+	case sdk.AggP95:
 		return "quantile by (job, instance) (0.95, " + inner + ")"
-	case data.AggAvg, data.AggMax, data.AggMin, data.AggSum:
+	case sdk.AggAvg, sdk.AggMax, sdk.AggMin, sdk.AggSum:
 		return agg.String() + " by (job, instance) (" + inner + ")"
 	}
 	if m.counter {
@@ -70,16 +69,16 @@ func rangeFor(step, scrape time.Duration) time.Duration {
 }
 
 // stepFor is q's step, coarsened so no series exceeds Prometheus's point limit.
-func stepFor(q data.SeriesQuery) time.Duration {
+func stepFor(q sdk.SeriesQuery) time.Duration {
 	step := q.Step
 	if step <= 0 {
-		step = data.StepFor(q.Window, 1000)
+		step = sdk.StepFor(q.Window, 1000)
 	}
 	return max(step, q.Window.Span()/maxPoints+1, time.Millisecond)
 }
 
 // rangeForm is the query_range request for expr over w at step.
-func rangeForm(expr string, w data.TimeWindow, step time.Duration) url.Values {
+func rangeForm(expr string, w sdk.TimeWindow, step time.Duration) url.Values {
 	return url.Values{
 		"query": {expr},
 		"start": {seconds(w.From.UnixNano())},
@@ -100,8 +99,8 @@ type matrix struct {
 }
 
 // points reads a result's samples inside w, leaving out ones that are not numbers.
-func points(values [][2]json.RawMessage, w data.TimeWindow) ([]data.Point, error) {
-	out := make([]data.Point, 0, len(values))
+func points(values [][2]json.RawMessage, w sdk.TimeWindow) ([]sdk.Point, error) {
+	out := make([]sdk.Point, 0, len(values))
 	for _, v := range values {
 		t, err := strconv.ParseFloat(string(v[0]), 64)
 		if err != nil {
@@ -114,7 +113,7 @@ func points(values [][2]json.RawMessage, w data.TimeWindow) ([]data.Point, error
 		f, err := strconv.ParseFloat(s, 64)
 		ns := int64(math.Round(t*1e3)) * int64(time.Millisecond)
 		if err == nil && !math.IsNaN(f) && !math.IsInf(f, 0) && w.Contains(ns) {
-			out = append(out, data.Point{T: ns, V: f})
+			out = append(out, sdk.Point{T: ns, V: f})
 		}
 	}
 	return out, nil

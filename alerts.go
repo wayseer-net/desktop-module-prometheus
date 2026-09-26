@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"context"
 	"maps"
-	"mindseye/internal/model"
+	"mindseye/pkg/sdk"
 	"slices"
 	"strconv"
 	"strings"
@@ -42,24 +42,24 @@ func (a *amAlert) muted() string {
 // alertOn is an alert and the entity it was matched to.
 type alertOn struct {
 	amAlert
-	on model.EntityRef
+	on sdk.EntityRef
 }
 
 // grade is the status an alert's severity label gives its entity, and its events' severity;
 // info and none alerts leave the status alone.
-func grade(severity string) (model.StatusLevel, model.Severity) {
+func grade(severity string) (sdk.StatusLevel, sdk.Severity) {
 	switch severity {
 	case "critical":
-		return model.StatusCrit, model.SevCritical
+		return sdk.StatusCrit, sdk.SevCritical
 	case "info", "none":
-		return model.StatusUnknown, model.SevInfo
+		return sdk.StatusUnknown, sdk.SevInfo
 	}
-	return model.StatusWarn, model.SevWarn
+	return sdk.StatusWarn, sdk.SevWarn
 }
 
 // readAlerts reads the alerts, matches them to w's entities and returns the events since the
 // last read; when Alertmanager fails the last alerts stand and the error is noted.
-func (m *Module) readAlerts(ctx context.Context, w *world, now time.Time) []model.Event {
+func (m *Module) readAlerts(ctx context.Context, w *world, now time.Time) []sdk.Event {
 	m.mu.Lock()
 	c := m.am
 	m.mu.Unlock()
@@ -101,7 +101,7 @@ func rematched(w *world, alerts map[string]alertOn) map[string]alertOn {
 
 // alertTarget is the target a job and instance name, else the host an instance names, else the
 // job, else the server.
-func (w *world) alertTarget(labels map[string]string) model.EntityRef {
+func (w *world) alertTarget(labels map[string]string) sdk.EntityRef {
 	job, inst := labels["job"], labels["instance"]
 	for ref, key := range w.scraped {
 		if key == (scrapeKey{job, inst}) {
@@ -109,7 +109,7 @@ func (w *world) alertTarget(labels map[string]string) model.EntityRef {
 		}
 	}
 	if inst != "" {
-		if ref, ok := w.has(model.KindHost, cmp.Or(w.hostNames[hostOf(inst)], hostOf(inst))); ok {
+		if ref, ok := w.has(sdk.KindHost, cmp.Or(w.hostNames[hostOf(inst)], hostOf(inst))); ok {
 			return ref
 		}
 	}
@@ -119,8 +119,8 @@ func (w *world) alertTarget(labels map[string]string) model.EntityRef {
 	return w.server
 }
 
-func (w *world) has(kind model.Kind, native string) (model.EntityRef, bool) {
-	ref, err := model.NewEntityRef(string(w.src), kind, native)
+func (w *world) has(kind sdk.Kind, native string) (sdk.EntityRef, bool) {
+	ref, err := sdk.NewEntityRef(string(w.src), kind, native)
 	if err != nil {
 		return "", false
 	}
@@ -129,8 +129,8 @@ func (w *world) has(kind model.Kind, native string) (model.EntityRef, bool) {
 }
 
 // alertEvents are the alerts that fired, were muted or unmuted, or resolved between two reads.
-func alertEvents(src model.ModuleID, was, is map[string]alertOn, now time.Time) []model.Event {
-	var out []model.Event
+func alertEvents(src sdk.ModuleID, was, is map[string]alertOn, now time.Time) []sdk.Event {
+	var out []sdk.Event
 	for _, fp := range slices.Sorted(maps.Keys(is)) {
 		a, old, seen := is[fp], was[fp], false
 		if _, seen = was[fp]; seen && old.muted() == a.muted() {
@@ -138,7 +138,7 @@ func alertEvents(src model.ModuleID, was, is map[string]alertOn, now time.Time) 
 		}
 		switch {
 		case a.muted() != "":
-			out = append(out, alertEvent(src, &a, a.muted(), model.SevInfo, now))
+			out = append(out, alertEvent(src, &a, a.muted(), sdk.SevInfo, now))
 		case !seen:
 			_, sev := grade(a.Labels["severity"])
 			out = append(out, alertEvent(src, &a, "firing", sev, a.StartsAt))
@@ -150,27 +150,27 @@ func alertEvents(src model.ModuleID, was, is map[string]alertOn, now time.Time) 
 	for _, fp := range slices.Sorted(maps.Keys(was)) {
 		if _, ok := is[fp]; !ok {
 			a := was[fp]
-			out = append(out, alertEvent(src, &a, "resolved", model.SevInfo, now))
+			out = append(out, alertEvent(src, &a, "resolved", sdk.SevInfo, now))
 		}
 	}
 	return out
 }
 
-func alertEvent(src model.ModuleID, a *alertOn, what string, sev model.Severity, at time.Time) model.Event {
+func alertEvent(src sdk.ModuleID, a *alertOn, what string, sev sdk.Severity, at time.Time) sdk.Event {
 	msg := a.name() + " " + what
 	if s := a.Annotations["summary"]; s != "" && what == "firing" {
 		msg += ": " + clip(firstLine(s), reasonCap)
 	}
-	fields := map[string]model.Value{"alertname": model.String(a.name()), "fingerprint": model.String(a.Fingerprint)}
+	fields := map[string]sdk.Value{"alertname": sdk.String(a.name()), "fingerprint": sdk.String(a.Fingerprint)}
 	for k, v := range a.Labels {
 		if k != "alertname" {
-			fields["label."+k] = model.String(v)
+			fields["label."+k] = sdk.String(v)
 		}
 	}
 	if s := a.Annotations["summary"]; s != "" {
-		fields["summary"] = model.String(clip(s, errorCap))
+		fields["summary"] = sdk.String(clip(s, errorCap))
 	}
-	return model.Event{
+	return sdk.Event{
 		ID: "alert:" + a.Fingerprint + ":" + what + ":" + strconv.FormatInt(at.UnixNano(), 10), Entity: a.on,
 		At: at, Severity: sev, Kind: "alert", Message: msg, Fields: fields, Source: src,
 	}
@@ -180,7 +180,7 @@ func alertEvent(src model.ModuleID, a *alertOn, what string, sev model.Severity,
 // unmuted one's; muted alerts are listed apart and leave the status alone.
 func showAlerts(w *world, alerts map[string]alertOn) {
 	type onEntity struct{ firing, muted []*alertOn }
-	by := map[model.EntityRef]*onEntity{}
+	by := map[sdk.EntityRef]*onEntity{}
 	for _, fp := range slices.Sorted(maps.Keys(alerts)) {
 		a := alerts[fp]
 		o := by[a.on]
@@ -201,7 +201,7 @@ func showAlerts(w *world, alerts map[string]alertOn) {
 		}
 		e.Attrs = maps.Clone(e.Attrs)
 		if e.Attrs == nil {
-			e.Attrs = map[string]model.Value{}
+			e.Attrs = map[string]sdk.Value{}
 		}
 		setNames(e.Attrs, "alerts", o.firing)
 		setNames(e.Attrs, "alerts_muted", o.muted)
@@ -212,24 +212,24 @@ func showAlerts(w *world, alerts map[string]alertOn) {
 	}
 }
 
-func setNames(attrs map[string]model.Value, key string, as []*alertOn) {
+func setNames(attrs map[string]sdk.Value, key string, as []*alertOn) {
 	if len(as) > 0 {
-		attrs[key] = model.String(strings.Join(names(as), ", "))
+		attrs[key] = sdk.String(strings.Join(names(as), ", "))
 	}
 }
 
 // worst is the status the most severe alerts give, named by them; Unknown when none raises it.
-func worst(as []*alertOn) model.Status {
-	level := model.StatusUnknown
+func worst(as []*alertOn) sdk.Status {
+	level := sdk.StatusUnknown
 	for _, a := range as {
 		l, _ := grade(a.Labels["severity"])
 		level = max(level, l)
 	}
-	if level == model.StatusUnknown {
-		return model.Status{}
+	if level == sdk.StatusUnknown {
+		return sdk.Status{}
 	}
 	at := slices.DeleteFunc(slices.Clone(as), func(a *alertOn) bool { l, _ := grade(a.Labels["severity"]); return l != level })
-	return model.Status{Level: level, Reason: clip(strings.Join(names(at), ", "), reasonCap)}
+	return sdk.Status{Level: level, Reason: clip(strings.Join(names(at), ", "), reasonCap)}
 }
 
 func names(as []*alertOn) []string {

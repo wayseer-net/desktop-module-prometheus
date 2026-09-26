@@ -5,9 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
-	"mindseye/internal/data"
-	"mindseye/internal/model"
-	"mindseye/internal/module"
+	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strings"
@@ -27,20 +25,20 @@ const (
 	retryMax       = 10 * time.Second
 )
 
-func init() { module.Register(Kind, func() module.Module { return New() }) }
+func init() { sdk.Register(Kind, func() sdk.Module { return New() }) }
 
 // Module shows a Prometheus server's targets as entities and answers series queries from it.
 type Module struct {
 	transport http.RoundTripper
-	health    atomic.Pointer[data.Health]
+	health    atomic.Pointer[sdk.Health]
 
 	mu        sync.Mutex // guards what follows, shared by Run and queries
-	name      model.ModuleID
+	name      sdk.ModuleID
 	opts      options
 	client    *client
 	world     world
 	read      bool // world has been read
-	tracker   module.Tracker
+	tracker   sdk.Tracker
 	metrics   []metric
 	catalogAt time.Time
 	catNote   string
@@ -56,12 +54,12 @@ func New() *Module { return NewWithTransport(http.DefaultTransport) }
 func NewWithTransport(rt http.RoundTripper) *Module { return &Module{transport: rt} }
 
 // Info describes the module.
-func (m *Module) Info() module.Info {
-	return module.Info{Kind: Kind, Version: version, Description: "A Prometheus server's scrape targets, their jobs and hosts, with their series"}
+func (m *Module) Info() sdk.Info {
+	return sdk.Info{Kind: Kind, Version: version, Description: "A Prometheus server's scrape targets, their jobs and hosts, with their series"}
 }
 
 // Configure decodes options and reads the secret; no request is made until Run or Discover.
-func (m *Module) Configure(_ context.Context, cfg module.Config) error {
+func (m *Module) Configure(_ context.Context, cfg sdk.Config) error {
 	o := defaults()
 	if err := cfg.Decode(&o); err != nil {
 		return err
@@ -69,7 +67,7 @@ func (m *Module) Configure(_ context.Context, cfg module.Config) error {
 	if err := o.validate(); err != nil {
 		return fmt.Errorf("line %d: %w", cfg.Line, err)
 	}
-	s, err := o.readSecret()
+	s, err := o.Read()
 	if err != nil {
 		return fmt.Errorf("line %d: %w", cfg.Line, err)
 	}
@@ -83,7 +81,7 @@ func (m *Module) Configure(_ context.Context, cfg module.Config) error {
 	m.alerts, m.amNote = nil, ""
 	m.world, m.read, m.metrics, m.catalogAt, m.catNote = world{}, false, nil, time.Time{}, ""
 	m.tracker.Reset()
-	m.health.Store(&data.Health{})
+	m.health.Store(&sdk.Health{})
 	return nil
 }
 
@@ -92,7 +90,7 @@ func alertmanagerClient(o *options, rt http.RoundTripper) (*client, error) {
 	if o.Alertmanager == nil {
 		return nil, nil
 	}
-	s, err := o.Alertmanager.readSecret()
+	s, err := o.Alertmanager.Read()
 	if err != nil {
 		return nil, fmt.Errorf("alertmanager: %w", err)
 	}
@@ -103,7 +101,7 @@ func alertmanagerClient(o *options, rt http.RoundTripper) (*client, error) {
 
 // Run reads the targets every interval, sending a snapshot once they are first read and then
 // what changed; a failed read shows in Health and is retried sooner.
-func (m *Module) Run(ctx context.Context, sink module.Sink) error {
+func (m *Module) Run(ctx context.Context, sink sdk.Sink) error {
 	m.mu.Lock()
 	m.tracker.Reset()
 	every := m.opts.Interval
@@ -137,17 +135,17 @@ func (m *Module) Run(ctx context.Context, sink module.Sink) error {
 }
 
 // refresh reads the targets, the alerts, and the catalogue when due, returning what changed.
-func (m *Module) refresh(ctx context.Context) (*model.ChangeSet, error) {
+func (m *Module) refresh(ctx context.Context) (*sdk.ChangeSet, error) {
 	now := time.Now()
 	w, err := m.readWorld(ctx)
-	var evs []model.Event
+	var evs []sdk.Event
 	if err == nil {
 		m.readCatalogue(ctx)
 		evs = m.readAlerts(ctx, &w, now)
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.health.Store(&data.Health{Err: err, Note: notes(m.catNote, m.amNote)})
+	m.health.Store(&sdk.Health{Err: err, Note: notes(m.catNote, m.amNote)})
 	if err != nil {
 		return nil, err
 	}
@@ -215,15 +213,15 @@ func (m *Module) readCatalogue(ctx context.Context) {
 }
 
 // Health reports whether the server answered the last read.
-func (m *Module) Health() data.Health {
+func (m *Module) Health() sdk.Health {
 	if h := m.health.Load(); h != nil {
 		return *h
 	}
-	return data.Health{}
+	return sdk.Health{}
 }
 
 // Discover returns the targets as last read, reading them first if Run has not.
-func (m *Module) Discover(ctx context.Context) (*model.ChangeSet, error) {
+func (m *Module) Discover(ctx context.Context) (*sdk.ChangeSet, error) {
 	m.mu.Lock()
 	w, read := m.world, m.read
 	m.mu.Unlock()
@@ -233,15 +231,15 @@ func (m *Module) Discover(ctx context.Context) (*model.ChangeSet, error) {
 			return nil, err
 		}
 	}
-	var probe module.Tracker
+	var probe sdk.Tracker
 	return probe.Changes(w.ents, w.edges, time.Now()), nil
 }
 
 // Metrics lists the canonical metrics the server can answer, then its own gauges and counters.
-func (m *Module) Metrics() []module.Metric {
+func (m *Module) Metrics() []sdk.Metric {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	out := make([]module.Metric, len(m.metrics))
+	out := make([]sdk.Metric, len(m.metrics))
 	for i, mt := range m.metrics {
 		out[i] = mt.Metric
 	}
@@ -250,7 +248,7 @@ func (m *Module) Metrics() []module.Metric {
 
 // QuerySeries asks query_range for each metric over every target asked for, in one request per
 // metric; entities that are not targets have no series.
-func (m *Module) QuerySeries(ctx context.Context, q data.SeriesQuery) ([]data.Series, error) {
+func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Series, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -263,7 +261,7 @@ func (m *Module) QuerySeries(ctx context.Context, q data.SeriesQuery) ([]data.Se
 	m.mu.Unlock()
 	wanted := wantedTargets(&w, q)
 	step := stepFor(q)
-	var out []data.Series
+	var out []sdk.Series
 	for _, name := range q.Metrics {
 		mt, ok := byName[name]
 		if !ok {
@@ -272,7 +270,7 @@ func (m *Module) QuerySeries(ctx context.Context, q data.SeriesQuery) ([]data.Se
 		gs := groups(&w, wanted, mt)
 		for _, kind := range slices.Sorted(maps.Keys(gs)) {
 			expr := expression(mt, kind, q.Agg, selector(gs[kind]), rangeFor(step, w.interval))
-			got, err := rangeSeries(ctx, c, expr, q.Window, step, func(res *matrix) ([]data.Series, error) {
+			got, err := rangeSeries(ctx, c, expr, q.Window, step, func(res *matrix) ([]sdk.Series, error) {
 				return seriesOf(res, wanted, mt, q.Window)
 			})
 			if err != nil {
@@ -285,8 +283,8 @@ func (m *Module) QuerySeries(ctx context.Context, q data.SeriesQuery) ([]data.Se
 }
 
 // wantedTargets are the targets q names, or that its filter selects, by their scrape labels.
-func wantedTargets(w *world, q data.SeriesQuery) map[scrapeKey]model.EntityRef {
-	out := map[scrapeKey]model.EntityRef{}
+func wantedTargets(w *world, q sdk.SeriesQuery) map[scrapeKey]sdk.EntityRef {
+	out := map[scrapeKey]sdk.EntityRef{}
 	for ref, key := range w.scraped {
 		e := w.ents[ref]
 		if len(q.Entities) > 0 && slices.Contains(q.Entities, ref) || len(q.Entities) == 0 && q.Filter.Match(&e) {
@@ -298,8 +296,8 @@ func wantedTargets(w *world, q data.SeriesQuery) map[scrapeKey]model.EntityRef {
 
 // groups are the wanted targets that can have mt, by the kind whose expression queries them;
 // a family is queried the same way for every kind.
-func groups(w *world, wanted map[scrapeKey]model.EntityRef, mt metric) map[model.Kind][]scrapeKey {
-	out := map[model.Kind][]scrapeKey{}
+func groups(w *world, wanted map[scrapeKey]sdk.EntityRef, mt metric) map[sdk.Kind][]scrapeKey {
+	out := map[sdk.Kind][]scrapeKey{}
 	for key, ref := range wanted {
 		kind := w.ents[ref].Kind
 		switch {
@@ -313,7 +311,7 @@ func groups(w *world, wanted map[scrapeKey]model.EntityRef, mt metric) map[model
 }
 
 // rangeSeries asks query_range for expr over win at step, reading the answer with read.
-func rangeSeries(ctx context.Context, c *client, expr string, win data.TimeWindow, step time.Duration, read func(*matrix) ([]data.Series, error)) ([]data.Series, error) {
+func rangeSeries(ctx context.Context, c *client, expr string, win sdk.TimeWindow, step time.Duration, read func(*matrix) ([]sdk.Series, error)) ([]sdk.Series, error) {
 	var res matrix
 	if err := c.post(ctx, "/api/v1/query_range", rangeForm(expr, win, step), &res); err != nil {
 		return nil, err
@@ -322,11 +320,11 @@ func rangeSeries(ctx context.Context, c *client, expr string, win data.TimeWindo
 }
 
 // seriesOf maps a range query's results back to the targets asked for.
-func seriesOf(res *matrix, wanted map[scrapeKey]model.EntityRef, mt metric, win data.TimeWindow) ([]data.Series, error) {
+func seriesOf(res *matrix, wanted map[scrapeKey]sdk.EntityRef, mt metric, win sdk.TimeWindow) ([]sdk.Series, error) {
 	if res.ResultType != "matrix" {
 		return nil, errors.New("answer is a " + res.ResultType + ", not a matrix")
 	}
-	var out []data.Series
+	var out []sdk.Series
 	for _, r := range res.Result {
 		ref, ok := wanted[scrapeKey{r.Metric["job"], r.Metric["instance"]}]
 		if !ok {
@@ -336,7 +334,7 @@ func seriesOf(res *matrix, wanted map[scrapeKey]model.EntityRef, mt metric, win 
 		if err != nil {
 			return nil, err
 		}
-		out = append(out, data.Series{Ref: data.SeriesRef{Entity: ref, Metric: mt.Name}, Unit: mt.Unit, Points: ps})
+		out = append(out, sdk.Series{Ref: sdk.SeriesRef{Entity: ref, Metric: mt.Name}, Unit: mt.Unit, Points: ps})
 	}
 	return out, nil
 }

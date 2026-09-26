@@ -3,8 +3,8 @@ package prometheus
 import (
 	"context"
 	"errors"
-	"mindseye/internal/model"
 	"mindseye/modules/prometheus/promtest"
+	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strings"
@@ -55,7 +55,7 @@ func alerting(t *testing.T) (*Module, *withAlerts) {
 }
 
 // read is one refresh's changes, failing on an error.
-func read(t *testing.T, m *Module) *model.ChangeSet {
+func read(t *testing.T, m *Module) *sdk.ChangeSet {
 	t.Helper()
 	cs, err := m.refresh(context.Background())
 	if err != nil {
@@ -64,9 +64,9 @@ func read(t *testing.T, m *Module) *model.ChangeSet {
 	return cs
 }
 
-func eventFor(t *testing.T, cs *model.ChangeSet, name string) model.Event {
+func eventFor(t *testing.T, cs *sdk.ChangeSet, name string) sdk.Event {
 	t.Helper()
-	i := slices.IndexFunc(cs.Events, func(e model.Event) bool { return e.Kind == "alert" && e.Fields["alertname"].Str() == name })
+	i := slices.IndexFunc(cs.Events, func(e sdk.Event) bool { return e.Kind == "alert" && e.Fields["alertname"].Str() == name })
 	if i < 0 {
 		t.Fatalf("no event for %s in %+v", name, cs.Events)
 	}
@@ -75,7 +75,7 @@ func eventFor(t *testing.T, cs *model.ChangeSet, name string) model.Event {
 
 func TestAnAlertsLifecycleShowsAsStatusAndEvents(t *testing.T) {
 	m, am := alerting(t)
-	host, target := labRef(model.KindHost, "promhost"), labRef(model.KindService, "api/127.0.0.1:19999")
+	host, target := labRef(sdk.KindHost, "promhost"), labRef(sdk.KindService, "api/127.0.0.1:19999")
 
 	am.set(t, "firing")
 	checkFiring(t, m, read(t, m))
@@ -85,16 +85,16 @@ func TestAnAlertsLifecycleShowsAsStatusAndEvents(t *testing.T) {
 
 	am.set(t, "silenced")
 	cs := read(t, m)
-	if got := m.world.ents[host]; got.Status.Level != model.StatusOK || got.Attrs["alerts_muted"].Str() != "HighLoad" {
+	if got := m.world.ents[host]; got.Status.Level != sdk.StatusOK || got.Attrs["alerts_muted"].Str() != "HighLoad" {
 		t.Errorf("silenced: the host reads %+v with %v", got.Status, got.Attrs)
 	}
-	if e := eventFor(t, cs, "HighLoad"); e.Message != "HighLoad silenced" || e.Severity != model.SevInfo {
+	if e := eventFor(t, cs, "HighLoad"); e.Message != "HighLoad silenced" || e.Severity != sdk.SevInfo {
 		t.Errorf("silenced: %q at %v", e.Message, e.Severity)
 	}
 
 	am.set(t, "resolved")
 	cs = read(t, m)
-	if e := eventFor(t, cs, "TargetDown"); e.Message != "TargetDown resolved" || e.Entity != target || e.Severity != model.SevInfo {
+	if e := eventFor(t, cs, "TargetDown"); e.Message != "TargetDown resolved" || e.Entity != target || e.Severity != sdk.SevInfo {
 		t.Errorf("resolved: %q on %s at %v", e.Message, e.Entity, e.Severity)
 	}
 	if _, ok := m.world.ents[target].Attrs["alerts"]; ok {
@@ -103,24 +103,24 @@ func TestAnAlertsLifecycleShowsAsStatusAndEvents(t *testing.T) {
 }
 
 // checkFiring checks the lab's alerts as first read: on their entities, graded by severity.
-func checkFiring(t *testing.T, m *Module, cs *model.ChangeSet) {
+func checkFiring(t *testing.T, m *Module, cs *sdk.ChangeSet) {
 	t.Helper()
-	host, target := labRef(model.KindHost, "promhost"), labRef(model.KindService, "api/127.0.0.1:19999")
-	if got := m.world.ents[host].Status; got != (model.Status{Level: model.StatusWarn, Reason: "HighLoad"}) {
+	host, target := labRef(sdk.KindHost, "promhost"), labRef(sdk.KindService, "api/127.0.0.1:19999")
+	if got := m.world.ents[host].Status; got != (sdk.Status{Level: sdk.StatusWarn, Reason: "HighLoad"}) {
 		t.Errorf("firing: the host reads %+v", got)
 	}
 	if got := m.world.ents[host].Attrs["alerts"].Str(); got != "DiskFilling, HighLoad" {
 		t.Errorf("firing: the host's alerts are %q", got)
 	}
 	for name, want := range map[string]struct {
-		on  model.EntityRef
-		sev model.Severity
+		on  sdk.EntityRef
+		sev sdk.Severity
 	}{
-		"TargetDown":  {target, model.SevCritical},
-		"HighLoad":    {host, model.SevWarn},
-		"JobDegraded": {labRef(KindJob, "api"), model.SevWarn},
-		"DiskFilling": {host, model.SevInfo},
-		"Watchdog":    {labRef(model.KindService, "server"), model.SevInfo},
+		"TargetDown":  {target, sdk.SevCritical},
+		"HighLoad":    {host, sdk.SevWarn},
+		"JobDegraded": {labRef(KindJob, "api"), sdk.SevWarn},
+		"DiskFilling": {host, sdk.SevInfo},
+		"Watchdog":    {labRef(sdk.KindService, "server"), sdk.SevInfo},
 	} {
 		e := eventFor(t, cs, name)
 		if e.Entity != want.on || e.Severity != want.sev || !strings.HasPrefix(e.Message, name+" firing") {
@@ -133,11 +133,11 @@ func TestAnAlertRaisesButNeverLowersStatus(t *testing.T) {
 	m, am := alerting(t)
 	am.set(t, "firing")
 	read(t, m)
-	target := m.world.ents[labRef(model.KindService, "api/127.0.0.1:19999")]
-	if target.Status.Level != model.StatusDown || !strings.Contains(target.Status.Reason, "connection refused") {
+	target := m.world.ents[labRef(sdk.KindService, "api/127.0.0.1:19999")]
+	if target.Status.Level != sdk.StatusDown || !strings.Contains(target.Status.Reason, "connection refused") {
 		t.Errorf("a critical alert on a down target reads %+v", target.Status)
 	}
-	if job := m.world.ents[labRef(KindJob, "api")]; job.Status.Level != model.StatusCrit || job.Attrs["alerts"].Str() != "JobDegraded" {
+	if job := m.world.ents[labRef(KindJob, "api")]; job.Status.Level != sdk.StatusCrit || job.Attrs["alerts"].Str() != "JobDegraded" {
 		t.Errorf("a warning on a crit job reads %+v with %v", job.Status, job.Attrs)
 	}
 }
@@ -146,7 +146,7 @@ func TestUnmatchedAlertsAttachToTheServer(t *testing.T) {
 	m, am := alerting(t)
 	am.set(t, "firing")
 	read(t, m)
-	if got := m.world.ents[labRef(model.KindService, "server")].Attrs["alerts"].Str(); got != "Watchdog" {
+	if got := m.world.ents[labRef(sdk.KindService, "server")].Attrs["alerts"].Str(); got != "Watchdog" {
 		t.Errorf("the server's alerts are %q", got)
 	}
 }
@@ -166,22 +166,22 @@ func TestAnUnreachableAlertmanagerResolvesNothing(t *testing.T) {
 	if m.Health().Err != nil {
 		t.Errorf("an unreachable Alertmanager fails the module: %v", m.Health().Err)
 	}
-	if got := m.world.ents[labRef(model.KindHost, "promhost")].Status.Reason; got != "HighLoad" {
+	if got := m.world.ents[labRef(sdk.KindHost, "promhost")].Status.Reason; got != "HighLoad" {
 		t.Errorf("the last alerts were forgotten: %q", got)
 	}
 }
 
 func TestSeverityLabelsGrade(t *testing.T) {
 	for sev, want := range map[string]struct {
-		level model.StatusLevel
-		event model.Severity
+		level sdk.StatusLevel
+		event sdk.Severity
 	}{
-		"critical": {model.StatusCrit, model.SevCritical},
-		"warning":  {model.StatusWarn, model.SevWarn},
-		"":         {model.StatusWarn, model.SevWarn},
-		"page":     {model.StatusWarn, model.SevWarn},
-		"info":     {model.StatusUnknown, model.SevInfo},
-		"none":     {model.StatusUnknown, model.SevInfo},
+		"critical": {sdk.StatusCrit, sdk.SevCritical},
+		"warning":  {sdk.StatusWarn, sdk.SevWarn},
+		"":         {sdk.StatusWarn, sdk.SevWarn},
+		"page":     {sdk.StatusWarn, sdk.SevWarn},
+		"info":     {sdk.StatusUnknown, sdk.SevInfo},
+		"none":     {sdk.StatusUnknown, sdk.SevInfo},
 	} {
 		if l, e := grade(sev); l != want.level || e != want.event {
 			t.Errorf("%q grades %v %v, want %v %v", sev, l, e, want.level, want.event)

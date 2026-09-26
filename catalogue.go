@@ -2,8 +2,7 @@ package prometheus
 
 import (
 	"maps"
-	"mindseye/internal/model"
-	"mindseye/internal/module"
+	"mindseye/pkg/sdk"
 	"slices"
 	"strings"
 )
@@ -18,46 +17,46 @@ type metaEntry struct {
 // metric is how one catalogue entry is queried: a family by name (a counter as a rate), or a
 // canonical metric by an expression for each kind of target.
 type metric struct {
-	module.Metric
+	sdk.Metric
 	counter bool
-	exprs   map[model.Kind]string // PromQL with $sel and $range, grouped by job and instance
+	exprs   map[sdk.Kind]string // PromQL with $sel and $range, grouped by job and instance
 }
 
 // canonical are the metric names shared with other modules: hosts from node_exporter's
 // families, services from the process families most client libraries export.
 var canonical = []metric{
 	{
-		Metric: module.Metric{Name: "cpu.utilisation", Unit: model.UnitPercent, Description: "share of CPU time spent busy; for a service, of one core"},
-		exprs: map[model.Kind]string{
-			model.KindHost:    `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",$sel}[$range])))`,
-			model.KindService: `100 * sum by (job, instance) (rate(process_cpu_seconds_total{$sel}[$range]))`,
+		Metric: sdk.Metric{Name: "cpu.utilisation", Unit: sdk.UnitPercent, Description: "share of CPU time spent busy; for a service, of one core"},
+		exprs: map[sdk.Kind]string{
+			sdk.KindHost:    `100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode="idle",$sel}[$range])))`,
+			sdk.KindService: `100 * sum by (job, instance) (rate(process_cpu_seconds_total{$sel}[$range]))`,
 		},
 	},
 	{
-		Metric: module.Metric{Name: "memory.utilisation", Unit: model.UnitPercent, Description: "share of memory not available to new work"},
-		exprs: map[model.Kind]string{
-			model.KindHost: `100 * (1 - sum by (job, instance) (node_memory_MemAvailable_bytes{$sel}) / sum by (job, instance) (node_memory_MemTotal_bytes{$sel}))`,
+		Metric: sdk.Metric{Name: "memory.utilisation", Unit: sdk.UnitPercent, Description: "share of memory not available to new work"},
+		exprs: map[sdk.Kind]string{
+			sdk.KindHost: `100 * (1 - sum by (job, instance) (node_memory_MemAvailable_bytes{$sel}) / sum by (job, instance) (node_memory_MemTotal_bytes{$sel}))`,
 		},
 	},
 	{
-		Metric: module.Metric{Name: "memory.rss", Unit: model.UnitBytes, Description: "resident memory"},
-		exprs:  map[model.Kind]string{model.KindService: `sum by (job, instance) (process_resident_memory_bytes{$sel})`},
+		Metric: sdk.Metric{Name: "memory.rss", Unit: sdk.UnitBytes, Description: "resident memory"},
+		exprs:  map[sdk.Kind]string{sdk.KindService: `sum by (job, instance) (process_resident_memory_bytes{$sel})`},
 	},
 	{
-		Metric: module.Metric{Name: "disk.read", Unit: model.UnitBytesPS, Description: "bytes read from every disk"},
-		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_disk_read_bytes_total{$sel}[$range]))`},
+		Metric: sdk.Metric{Name: "disk.read", Unit: sdk.UnitBytesPS, Description: "bytes read from every disk"},
+		exprs:  map[sdk.Kind]string{sdk.KindHost: `sum by (job, instance) (rate(node_disk_read_bytes_total{$sel}[$range]))`},
 	},
 	{
-		Metric: module.Metric{Name: "disk.write", Unit: model.UnitBytesPS, Description: "bytes written to every disk"},
-		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_disk_written_bytes_total{$sel}[$range]))`},
+		Metric: sdk.Metric{Name: "disk.write", Unit: sdk.UnitBytesPS, Description: "bytes written to every disk"},
+		exprs:  map[sdk.Kind]string{sdk.KindHost: `sum by (job, instance) (rate(node_disk_written_bytes_total{$sel}[$range]))`},
 	},
 	{
-		Metric: module.Metric{Name: "net.receive", Unit: model.UnitBytesPS, Description: "bytes received on every interface but loopback"},
-		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_network_receive_bytes_total{device!="lo",$sel}[$range]))`},
+		Metric: sdk.Metric{Name: "net.receive", Unit: sdk.UnitBytesPS, Description: "bytes received on every interface but loopback"},
+		exprs:  map[sdk.Kind]string{sdk.KindHost: `sum by (job, instance) (rate(node_network_receive_bytes_total{device!="lo",$sel}[$range]))`},
 	},
 	{
-		Metric: module.Metric{Name: "net.transmit", Unit: model.UnitBytesPS, Description: "bytes sent on every interface but loopback"},
-		exprs:  map[model.Kind]string{model.KindHost: `sum by (job, instance) (rate(node_network_transmit_bytes_total{device!="lo",$sel}[$range]))`},
+		Metric: sdk.Metric{Name: "net.transmit", Unit: sdk.UnitBytesPS, Description: "bytes sent on every interface but loopback"},
+		exprs:  map[sdk.Kind]string{sdk.KindHost: `sum by (job, instance) (rate(node_network_transmit_bytes_total{device!="lo",$sel}[$range]))`},
 	},
 }
 
@@ -96,7 +95,7 @@ func catalogueOf(meta map[string][]metaEntry) []metric {
 
 // available keeps c's expressions whose families the server has, with those kinds.
 func available(c metric, meta map[string][]metaEntry) (metric, bool) {
-	exprs := map[model.Kind]string{}
+	exprs := map[sdk.Kind]string{}
 	var natives []string
 	for _, k := range slices.Sorted(maps.Keys(c.exprs)) {
 		if hasFamilies(meta, c.exprs[k]) {
@@ -125,7 +124,7 @@ func isNameRune(r rune) bool {
 
 func familyMetric(name string, e metaEntry) (metric, bool) {
 	_, shown := synthetic[name]
-	m := metric{Metric: module.Metric{Name: name, Description: e.Help, Native: name, Extra: !shown}}
+	m := metric{Metric: sdk.Metric{Name: name, Description: e.Help, Native: name, Extra: !shown}}
 	switch e.Type {
 	case "counter":
 		m.counter, m.Unit = true, rateUnit(name)
@@ -140,35 +139,35 @@ func familyMetric(name string, e metaEntry) (metric, bool) {
 }
 
 // rateUnit is the unit of a counter's rate, from its name's suffix.
-func rateUnit(name string) model.Unit {
+func rateUnit(name string) sdk.Unit {
 	switch {
 	case strings.HasSuffix(name, "_bytes_total"):
-		return model.UnitBytesPS
+		return sdk.UnitBytesPS
 	case strings.HasSuffix(name, "_bits_total"):
-		return model.UnitBitsPS
+		return sdk.UnitBitsPS
 	case strings.HasSuffix(name, "_seconds_total"):
-		return model.UnitRatio // seconds per second
+		return sdk.UnitRatio // seconds per second
 	}
-	return model.UnitPerSec
+	return sdk.UnitPerSec
 }
 
 // gaugeUnit is a gauge's unit, from its metadata or its name's suffix.
-func gaugeUnit(name, unit string) model.Unit {
+func gaugeUnit(name, unit string) sdk.Unit {
 	suffix := unit
 	if suffix == "" {
 		suffix = name[strings.LastIndexByte(name, '_')+1:]
 	}
 	switch suffix {
 	case "bytes":
-		return model.UnitBytes
+		return sdk.UnitBytes
 	case "seconds":
-		return model.UnitSeconds
+		return sdk.UnitSeconds
 	case "ratio":
-		return model.UnitRatio
+		return sdk.UnitRatio
 	case "percent":
-		return model.UnitPercent
+		return sdk.UnitPercent
 	case "bits":
-		return model.UnitBits
+		return sdk.UnitBits
 	}
-	return model.UnitNone
+	return sdk.UnitNone
 }

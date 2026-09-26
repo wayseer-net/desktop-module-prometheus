@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"fmt"
 	"io"
-	"mindseye/internal/module/moduletest"
+	"mindseye/pkg/sdk/sdktest"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -81,19 +80,12 @@ func TestTheSecretNeverAppearsInErrors(t *testing.T) {
 		{http.StatusBadGateway, `proxy saw ` + token, "HTTP 502"},
 	} {
 		m := configured(t, echo{tc.status, tc.body}, "url: "+labURL+"\nauth: basic\nusername: u\nsecret_env: PROM_PASSWORD")
-		moduletest.Run(t, func(ctx context.Context, s *moduletest.Sink) error { return m.Run(ctx, s) })
-		moduletest.Eventually(t, func() bool { return m.Health().Err != nil })
+		sdktest.Run(t, func(ctx context.Context, s *sdktest.Sink) error { return m.Run(ctx, s) })
+		sdktest.Eventually(t, func() bool { return m.Health().Err != nil })
 		got := m.Health().Err.Error()
 		if !strings.Contains(got, tc.want) || strings.Contains(got, token) {
 			t.Errorf("HTTP %d reads %q; want %q, without the secret", tc.status, got, tc.want)
 		}
-	}
-}
-
-func TestTheSecretFormatsAsAPlaceholder(t *testing.T) {
-	s := secret(token)
-	if got := fmt.Sprintf("%v %s %+v %#v", s, s, s, s); strings.Contains(got, token) {
-		t.Errorf("a secret formats as %q", got)
 	}
 }
 
