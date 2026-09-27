@@ -12,19 +12,19 @@ import (
 
 type options struct {
 	endpoint     `yaml:",inline"`
-	Timeout      time.Duration     `yaml:"timeout"`      // longest wait for one request
-	Interval     time.Duration     `yaml:"interval"`     // how often targets are read
-	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; others are services
-	Alertmanager *endpoint         `yaml:"alertmanager"` // optional, for alerts
+	Timeout      time.Duration     `yaml:"timeout"`      // longest wait for one request, 100ms to 5m; default 10s
+	Interval     time.Duration     `yaml:"interval"`     // how often targets are read, 1s to 1h; default 30s
+	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; other jobs' targets are services; default node and node-exporter are host
+	Alertmanager *endpoint         `yaml:"alertmanager"` // an Alertmanager whose firing alerts show on their entities, with its own credentials
 
 	kinds map[string]sdk.Kind
 }
 
 // endpoint is a server and how to authenticate to it.
 type endpoint struct {
-	URL               string           `yaml:"url"`      // e.g. http://localhost:9090
-	Auth              string           `yaml:"auth"`     // none, basic or bearer
-	Username          string           `yaml:"username"` // for basic
+	URL               string           `yaml:"url"`      // the server's address, http:// or https://
+	Auth              string           `yaml:"auth"`     // how to authenticate: none, basic or bearer; default none
+	Username          string           `yaml:"username"` // the user, for basic
 	sdk.SecretOptions `yaml:",inline"` // the password or token
 
 	base *url.URL
