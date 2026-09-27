@@ -12,10 +12,10 @@ import (
 
 func TestRecordingScrubsHostsAndReplaysByQuery(t *testing.T) {
 	server := &Replayer{Exchanges: []Exchange{
-		{Method: "POST", Path: "/api/v1/query_range", Form: url.Values{"query": {"up"}}, Status: 200, Body: []byte(`{"host":"fray"}`)},
+		{Method: "POST", Path: "/api/v1/query_range", Form: url.Values{"query": {"up"}}, Status: 200, Body: []byte(`{"host":"lanbox"}`)},
 	}}
-	rec := &Recorder{Next: server, Scrub: map[string]string{"fray": "promhost"}}
-	req, _ := http.NewRequest("POST", "http://fray:9090/api/v1/query_range", strings.NewReader("query=up&start=1"))
+	rec := &Recorder{Next: server, Scrub: map[string]string{"lanbox": "promhost"}}
+	req, _ := http.NewRequest("POST", "http://lanbox:9090/api/v1/query_range", strings.NewReader("query=up&start=1"))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Set("Authorization", "Bearer secret")
 	if _, err := rec.RoundTrip(req); err != nil {
@@ -26,7 +26,7 @@ func TestRecordingScrubsHostsAndReplaysByQuery(t *testing.T) {
 		t.Fatal(err)
 	}
 	saved, _ := os.ReadFile(path)
-	if s := string(saved); strings.Contains(s, "fray") || strings.Contains(s, "secret") || !strings.Contains(s, "promhost") {
+	if s := string(saved); strings.Contains(s, "lanbox") || strings.Contains(s, "secret") || !strings.Contains(s, "promhost") {
 		t.Errorf("recording kept a host or header:\n%s", s)
 	}
 	xs, err := Load(path)
