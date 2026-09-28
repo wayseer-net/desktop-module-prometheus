@@ -38,6 +38,11 @@ func TestAHostReadsFromTheTargetsOnIt(t *testing.T) {
 			t.Errorf("%s: %v %v; want %v %q", tc.host, ok, e.Status, tc.level, tc.reason)
 		}
 	}
+	for _, e := range w.ents {
+		if d, ok := e.Attrs["scrape_duration"]; ok && d.Unit() != sdk.UnitSeconds {
+			t.Errorf("%s: scrape_duration in %q, want seconds", e.Ref, d.Unit())
+		}
+	}
 }
 
 func TestNodeExportersAreHostsNamedByTheirNodename(t *testing.T) {

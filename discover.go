@@ -173,7 +173,7 @@ func targetAttrs(t target) map[string]sdk.Value {
 	attrs := map[string]sdk.Value{
 		"job": sdk.String(t.Labels["job"]), "instance": sdk.String(t.Labels["instance"]),
 		"scrape_url": sdk.String(t.ScrapeURL), "scrape_interval": sdk.String(t.ScrapeInterval),
-		"scrape_duration": sdk.Number(t.LastScrapeDuration),
+		"scrape_duration": sdk.Number(t.LastScrapeDuration).In(sdk.UnitSeconds),
 	}
 	for k, v := range t.Labels {
 		if k != "job" && k != "instance" {
