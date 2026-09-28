@@ -24,7 +24,11 @@ func TestOptionsAreChecked(t *testing.T) {
 		{"timeout: 10ms", "timeout 10ms"},
 		{"interval: 2h", "interval 2h0m0s"},
 		{"auth: digest\nsecret_env: PROM_TOKEN", `auth "digest"`},
-		{"auth: bearer", "needs one of secret_file or secret_env"},
+		{"auth: bearer", "needs one of secret_file, secret_env or secret_keyring"},
+		{"auth: bearer\nsecret_env: PROM_TOKEN\nsecret_keyring: prom/token", "set only one of secret_file, secret_env or secret_keyring"},
+		{"auth: bearer\nsecret_keyring: prom", "secret_keyring: prom is not <service>/<account>"},
+		{"secret_keyring: prom/token", "need auth: basic or bearer"},
+		{"alertmanager: {url: http://am:9093, auth: bearer, secret_keyring: am}", "alertmanager: secret_keyring: am is not <service>/<account>"},
 		{"auth: basic\nsecret_env: PROM_TOKEN", "needs a username"},
 		{"auth: bearer\nusername: u\nsecret_env: PROM_TOKEN", "takes no username"},
 		{"secret_env: PROM_TOKEN", "need auth: basic or bearer"},
@@ -50,8 +54,10 @@ func TestTheSecretIsSentAsTheAuthorizationHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Setenv("PROM_PASSWORD", token)
+	sdktest.Keyring(t, map[string]string{"prom/token": token})
 	for _, tc := range []struct{ opts, want string }{
 		{"auth: bearer\nsecret_file: " + file, "Bearer " + token},
+		{"auth: bearer\nsecret_keyring: prom/token", "Bearer " + token},
 		{"auth: basic\nusername: grafana\nsecret_env: PROM_PASSWORD", "Basic " + base64.StdEncoding.EncodeToString([]byte("grafana:"+token))},
 		{"auth: none", ""},
 	} {

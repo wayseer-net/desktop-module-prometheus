@@ -74,7 +74,7 @@ func (o *endpoint) parseURL() error {
 	case u.Scheme != "http" && u.Scheme != "https" || u.Host == "":
 		return fmt.Errorf("url %q must be http:// or https:// with a host", o.URL)
 	case u.User != nil:
-		return errors.New("url must not hold credentials; use auth with secret_file or secret_env")
+		return errors.New("url must not hold credentials; use auth with secret_file, secret_env or secret_keyring")
 	case u.RawQuery != "" || u.Fragment != "":
 		return fmt.Errorf("url %q must not have a query or fragment", o.URL)
 	}
@@ -84,21 +84,18 @@ func (o *endpoint) parseURL() error {
 }
 
 func (o *endpoint) checkAuth() error {
-	secrets := 0
-	for _, s := range []string{o.SecretFile, o.SecretEnv} {
-		if s != "" {
-			secrets++
-		}
+	if err := o.Validate(); err != nil {
+		return err
 	}
 	switch {
-	case o.Auth == authNone && (secrets > 0 || o.Username != ""):
-		return errors.New("username, secret_file and secret_env need auth: basic or bearer")
+	case o.Auth == authNone && (o.Set() || o.Username != ""):
+		return errors.New("username and secrets need auth: basic or bearer")
 	case o.Auth == authNone:
 		return nil
 	case o.Auth != authBasic && o.Auth != authBearer:
 		return fmt.Errorf("auth %q is not one of none, basic, bearer", o.Auth)
-	case secrets != 1:
-		return fmt.Errorf("auth %s needs one of secret_file or secret_env", o.Auth)
+	case !o.Set():
+		return fmt.Errorf("auth %s needs one of secret_file, secret_env or secret_keyring", o.Auth)
 	case o.Auth == authBasic && o.Username == "":
 		return errors.New("auth basic needs a username")
 	case o.Auth == authBearer && o.Username != "":
