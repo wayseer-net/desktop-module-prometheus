@@ -202,7 +202,7 @@ func (m *Module) readCatalogue(ctx context.Context) {
 		return
 	}
 	var meta map[string][]metaEntry
-	err := c.get(ctx, "/api/v1/metadata", nil, &meta)
+	err := c.get(ctx, "/api/v1/metadata", map[string][]string{"limit_per_metric": {"1"}}, &meta) // only the first is used
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	if err != nil {

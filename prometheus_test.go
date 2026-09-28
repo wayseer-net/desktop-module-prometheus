@@ -221,3 +221,18 @@ func (stall) RoundTrip(r *http.Request) (*http.Response, error) {
 	<-r.Context().Done()
 	return nil, r.Context().Err()
 }
+
+func TestMetadataAsksForOneEntryPerMetric(t *testing.T) {
+	rp := lab(t, false)
+	m := configured(t, rp, "url: "+labURL)
+	running(t, m)
+	for _, r := range rp.Requests() {
+		if r.URL.Path == "/api/v1/metadata" {
+			if got := r.URL.Query().Get("limit_per_metric"); got != "1" {
+				t.Errorf("metadata asked with limit_per_metric=%q, want 1", got)
+			}
+			return
+		}
+	}
+	t.Error("the metric catalogue was never read")
+}
