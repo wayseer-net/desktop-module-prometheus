@@ -8,6 +8,7 @@ import (
 	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -246,8 +247,12 @@ func (m *Module) Metrics() []sdk.Metric {
 	return out
 }
 
+// RanksTop is true: a query's Top is answered by asking the server for its top targets.
+func (m *Module) RanksTop() bool { return true }
+
 // QuerySeries asks query_range for each metric over every target asked for, in one request per
-// metric; entities that are not targets have no series.
+// metric and kind; entities that are not targets have no series. With q.Top below the targets'
+// count, the server's topk names the targets first.
 func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Series, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -269,7 +274,17 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 		}
 		gs := groups(&w, wanted, mt)
 		for _, kind := range slices.Sorted(maps.Keys(gs)) {
-			expr := expression(mt, kind, q.Agg, selector(gs[kind]), rangeFor(step, w.interval))
+			keys := gs[kind]
+			if q.Top > 0 && len(keys) > q.Top {
+				var err error
+				if keys, err = topTargets(ctx, c, expression(mt, kind, q.Agg, selector(keys), rangeFor(step, w.interval)), q); err != nil {
+					return nil, fmt.Errorf("%s: %w", name, err)
+				}
+				if len(keys) == 0 {
+					continue
+				}
+			}
+			expr := expression(mt, kind, q.Agg, selector(keys), rangeFor(step, w.interval))
 			got, err := rangeSeries(ctx, c, expr, q.Window, step, func(res *matrix) ([]sdk.Series, error) {
 				return seriesOf(res, wanted, mt, q.Window)
 			})
@@ -278,6 +293,24 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 			}
 			out = append(out, got...)
 		}
+	}
+	return out, nil
+}
+
+// topTargets are the targets of expr's q.Top highest values at the window's end.
+func topTargets(ctx context.Context, c *client, expr string, q sdk.SeriesQuery) ([]scrapeKey, error) {
+	var res struct {
+		Result []struct {
+			Metric map[string]string `json:"metric"`
+		} `json:"result"`
+	}
+	form := map[string][]string{"query": {"topk(" + strconv.Itoa(q.Top) + ", " + expr + ")"}, "time": {seconds(q.Window.To.UnixNano())}}
+	if err := c.post(ctx, "/api/v1/query", form, &res); err != nil {
+		return nil, err
+	}
+	out := make([]scrapeKey, 0, len(res.Result))
+	for _, r := range res.Result {
+		out = append(out, scrapeKey{r.Metric["job"], r.Metric["instance"]})
 	}
 	return out, nil
 }
