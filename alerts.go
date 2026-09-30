@@ -176,13 +176,15 @@ func alertEvent(src sdk.ModuleID, a *alertOn, what string, sev sdk.Severity, at 
 	}
 }
 
-// showAlerts lists each entity's alerts in its attributes and raises its status to the worst
-// unmuted one's; muted alerts are listed apart and leave the status alone.
+// showAlerts makes each alert an entity, a member of what it is about, lists each entity's
+// alerts in its attributes and raises its status to the worst unmuted one's; muted alerts are
+// listed apart and leave the status alone.
 func showAlerts(w *world, alerts map[string]alertOn) {
 	type onEntity struct{ firing, muted []*alertOn }
 	by := map[sdk.EntityRef]*onEntity{}
 	for _, fp := range slices.Sorted(maps.Keys(alerts)) {
 		a := alerts[fp]
+		w.addAlert(&a)
 		o := by[a.on]
 		if o == nil {
 			o = &onEntity{}
@@ -239,4 +241,35 @@ func names(as []*alertOn) []string {
 	}
 	slices.Sort(out)
 	return slices.Compact(out)
+}
+
+// addAlert adds a as an entity: graded by severity while it notifies, Unknown and saying why
+// while muted.
+func (w *world) addAlert(a *alertOn) {
+	ref, ok := w.alertRef(a.Fingerprint)
+	if !ok {
+		return
+	}
+	state := cmp.Or(a.muted(), "firing")
+	st := sdk.Status{Level: sdk.StatusUnknown, Reason: state}
+	if state == "firing" {
+		st.Level, _ = grade(a.Labels["severity"])
+		st.Reason = clip(firstLine(cmp.Or(a.Annotations["summary"], "firing")), reasonCap)
+	}
+	attrs := map[string]sdk.Value{"state": sdk.String(state)}
+	for k, v := range a.Labels {
+		attrs["label."+k] = sdk.String(v)
+	}
+	if s := a.Annotations["summary"]; s != "" {
+		attrs["summary"] = sdk.String(clip(s, errorCap))
+	}
+	w.ents[ref] = sdk.Entity{Ref: ref, Kind: sdk.KindAlert, Name: a.name(), Status: st, Attrs: attrs, Source: w.src}
+	e := sdk.Edge{From: ref, To: a.on, Rel: sdk.RelMemberOf, Source: w.src}
+	w.edges[e.Key()] = e
+}
+
+// alertRef is the entity for the alert with fingerprint fp.
+func (w *world) alertRef(fp string) (sdk.EntityRef, bool) {
+	ref, err := sdk.NewEntityRef(string(w.src), sdk.KindAlert, fp)
+	return ref, err == nil && fp != ""
 }

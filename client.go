@@ -1,6 +1,7 @@
 package prometheus
 
 import (
+	"bytes"
 	"cmp"
 	"context"
 	"encoding/base64"
@@ -51,44 +52,73 @@ type envelope struct {
 
 // get calls path with form as its query, decoding the answer's data into out.
 func (c *client) get(ctx context.Context, path string, form url.Values, out any) error {
-	return c.call(ctx, http.MethodGet, path, form, out)
+	return c.call(ctx, request{method: http.MethodGet, path: path, query: form}, out)
 }
 
 // post calls path with form as its body, as Prometheus accepts for long queries.
 func (c *client) post(ctx context.Context, path string, form url.Values, out any) error {
-	return c.call(ctx, http.MethodPost, path, form, out)
+	body := []byte(form.Encode())
+	return c.call(ctx, request{method: http.MethodPost, path: path, body: body, contentType: "application/x-www-form-urlencoded"}, out)
 }
 
-func (c *client) call(ctx context.Context, method, path string, form url.Values, out any) error {
+// send calls path with v as a JSON body, decoding the answer into out unless it is nil.
+func (c *client) send(ctx context.Context, method, path string, v, out any) error {
+	var rq request
+	rq.method, rq.path = method, path
+	if v != nil {
+		b, err := json.Marshal(v)
+		if err != nil {
+			return err
+		}
+		rq.body, rq.contentType = b, "application/json"
+	}
+	return c.call(ctx, rq, out)
+}
+
+// request is one call to the API.
+type request struct {
+	method, path string
+	query        url.Values
+	body         []byte
+	contentType  string
+}
+
+func (c *client) call(ctx context.Context, rq request, out any) error {
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	err := c.do(ctx, method, path, form, out)
+	err := c.do(ctx, rq, out)
+	var ae *authError
 	switch {
 	case err == nil:
 		return nil
 	case errors.Is(ctx.Err(), context.DeadlineExceeded):
-		return fmt.Errorf("%s: no answer within %v: %w", path, c.timeout, context.DeadlineExceeded)
+		return fmt.Errorf("%s: no answer within %v: %w", rq.path, c.timeout, context.DeadlineExceeded)
 	case ctx.Err() != nil:
 		return ctx.Err()
+	case errors.As(err, &ae):
+		return fmt.Errorf("%s: %w", rq.path, ae) // holds no server text
 	}
-	return c.redact(fmt.Errorf("%s: %w", path, err))
+	var ue *url.Error
+	if errors.As(err, &ue) {
+		err = ue.Err // drop the request's URL
+	}
+	return c.redact(fmt.Errorf("%s: %w", rq.path, err))
 }
 
-func (c *client) do(ctx context.Context, method, path string, form url.Values, out any) error {
+func (c *client) do(ctx context.Context, rq request, out any) error {
 	u := *c.base
-	u.Path += path
+	u.Path += rq.path
+	u.RawQuery = rq.query.Encode()
 	var body io.Reader
-	if method == http.MethodGet {
-		u.RawQuery = form.Encode()
-	} else {
-		body = strings.NewReader(form.Encode())
+	if rq.body != nil {
+		body = bytes.NewReader(rq.body)
 	}
-	req, err := http.NewRequestWithContext(ctx, method, u.String(), body)
+	req, err := http.NewRequestWithContext(ctx, rq.method, u.String(), body)
 	if err != nil {
 		return err
 	}
-	if body != nil {
-		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	if rq.contentType != "" {
+		req.Header.Set("Content-Type", rq.contentType)
 	}
 	if c.header != "" {
 		req.Header.Set("Authorization", c.header)
@@ -129,7 +159,10 @@ func decodeBare(resp *http.Response, out any) error {
 	}
 	if resp.StatusCode/100 != 2 {
 		b, _ := io.ReadAll(io.LimitReader(resp.Body, errorCap))
-		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, clip(strings.TrimSpace(string(b)), errorCap))
+		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, clip(firstLine(strings.TrimSpace(string(b))), errorCap))
+	}
+	if out == nil {
+		return nil
 	}
 	if err := json.NewDecoder(io.LimitReader(resp.Body, bodyCap)).Decode(out); err != nil {
 		return fmt.Errorf("unreadable answer: %w", err)
@@ -137,9 +170,14 @@ func decodeBare(resp *http.Response, out any) error {
 	return nil
 }
 
+// authError is a server refusing the credentials; it holds nothing the server said.
+type authError struct{ code int }
+
+func (e *authError) Error() string { return fmt.Sprintf("authentication failed (HTTP %d)", e.code) }
+
 func authFailed(resp *http.Response) error {
 	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
-		return fmt.Errorf("authentication failed (HTTP %d)", resp.StatusCode)
+		return &authError{resp.StatusCode}
 	}
 	return nil
 }

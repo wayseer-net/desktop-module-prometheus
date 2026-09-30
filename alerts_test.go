@@ -227,3 +227,30 @@ func TestAlertmanagerHasItsOwnCredentials(t *testing.T) {
 		}
 	}
 }
+
+func TestEachAlertIsAnEntityOnWhatItIsAbout(t *testing.T) {
+	m, am := alerting(t)
+	host, highLoad, targetDown := labRef(sdk.KindHost, "promhost"), labRef(sdk.KindAlert, "239ed139539f9c50"), labRef(sdk.KindAlert, "7c9dec2ac85c10cf")
+	am.set(t, "firing")
+	read(t, m)
+	e := m.world.ents[highLoad]
+	if e.Name != "HighLoad" || e.Kind != sdk.KindAlert || e.Status != (sdk.Status{Level: sdk.StatusWarn, Reason: "load is high on localhost:19100"}) ||
+		e.Attrs["state"].Str() != "firing" || e.Attrs["label.severity"].Str() != "warning" {
+		t.Errorf("firing: %+v", e)
+	}
+	if _, ok := m.world.edges[sdk.Edge{From: highLoad, To: host, Rel: sdk.RelMemberOf}.Key()]; !ok {
+		t.Error("the alert is not a member of its host")
+	}
+
+	am.set(t, "silenced")
+	read(t, m)
+	if e := m.world.ents[highLoad]; e.Status != (sdk.Status{Level: sdk.StatusUnknown, Reason: "silenced"}) || e.Attrs["state"].Str() != "silenced" {
+		t.Errorf("silenced: %+v", e)
+	}
+
+	am.set(t, "resolved")
+	read(t, m)
+	if _, ok := m.world.ents[targetDown]; ok {
+		t.Error("a resolved alert is still an entity")
+	}
+}

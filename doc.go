@@ -6,12 +6,14 @@
 // network rates) from node_exporter's families. Every gauge and counter family the server
 // describes is in the catalogue by its own name; counters are queried as per-second rates.
 //
-// With an Alertmanager, each alert goes on the target its job and instance labels name, else the
-// host its instance names, else its job, else the server. A critical alert raises the entity to
+// With an Alertmanager, each alert is an `alert` entity, a member of the target its job and
+// instance labels name, else the host its instance names, else its job, else the server. A critical alert raises the entity to
 // Crit and any other but info or none to Warn, never lowering it, with the alert names as the
 // reason and in the `alerts` attribute. Silenced or inhibited alerts are listed in
 // `alerts_muted` and leave the status alone. Firing, muting and resolving are alert events. If
-// Alertmanager cannot be read, the last alerts stand and Health notes why.
+// Alertmanager cannot be read, the last alerts stand and Health notes why. The owner may allow
+// `silence`, matching an alert's labels exactly for 15m to 7d, and `unsilence`, which expires
+// only the silences this instance made (createdBy its name, comment "Mind's Eye").
 //
 //	modules:
 //	  - kind: prometheus
