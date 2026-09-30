@@ -3,9 +3,11 @@ package prometheus
 import (
 	"cmp"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"maps"
+	"math"
 	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
@@ -281,17 +283,17 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 		gs := groups(&w, wanted, mt)
 		for _, kind := range slices.Sorted(maps.Keys(gs)) {
 			keys := gs[kind]
+			exprOf := func(ks []scrapeKey) string {
+				return expression(mt, kind, q.Agg, selector(ks), rangeFor(step, w.interval))
+			}
 			if q.Top > 0 && len(keys) > q.Top {
 				var err error
-				if keys, err = topTargets(ctx, c, expression(mt, kind, q.Agg, selector(keys), rangeFor(step, w.interval)), q); err != nil {
+				if keys, err = topTargets(ctx, c, keys, exprOf, q); err != nil {
 					return nil, fmt.Errorf("%s: %w", name, err)
 				}
 				if len(keys) == 0 {
 					continue
 				}
-			}
-			exprOf := func(ks []scrapeKey) string {
-				return expression(mt, kind, q.Agg, selector(ks), rangeFor(step, w.interval))
 			}
 			got, err := chunkedSeries(ctx, c, keys, exprOf, q.Window, step, func(res *matrix) ([]sdk.Series, error) {
 				return seriesOf(res, wanted, mt, q.Window)
@@ -305,22 +307,53 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 	return out, nil
 }
 
-// topTargets are the targets of expr's q.Top highest values at the window's end.
-func topTargets(ctx context.Context, c *client, expr string, q sdk.SeriesQuery) ([]scrapeKey, error) {
-	var res struct {
-		Result []struct {
-			Metric map[string]string `json:"metric"`
-		} `json:"result"`
-	}
-	form := map[string][]string{"query": {"topk(" + strconv.Itoa(q.Top) + ", " + expr + ")"}, "time": {seconds(q.Window.To.UnixNano())}}
-	if err := c.post(ctx, "/api/v1/query", form, &res); err != nil {
+// topTargets are the targets with the q.Top highest values of exprOf at the window's end: each
+// chunk's top, asked at once, then merged, which is the same as one topk over every target.
+func topTargets(ctx context.Context, c *client, keys []scrapeKey, exprOf func([]scrapeKey) string, q sdk.SeriesQuery) ([]scrapeKey, error) {
+	got, err := inChunks(keys, func(ks []scrapeKey) ([]rankedTarget, error) {
+		var res struct {
+			Result []struct {
+				Metric map[string]string  `json:"metric"`
+				Value  [2]json.RawMessage `json:"value"`
+			} `json:"result"`
+		}
+		form := map[string][]string{"query": {"topk(" + strconv.Itoa(q.Top) + ", " + exprOf(ks) + ")"}, "time": {seconds(q.Window.To.UnixNano())}}
+		if err := c.post(ctx, "/api/v1/query", form, &res); err != nil {
+			return nil, err
+		}
+		out := make([]rankedTarget, 0, len(res.Result))
+		for _, r := range res.Result {
+			out = append(out, rankedTarget{scrapeKey{r.Metric["job"], r.Metric["instance"]}, rankValue(r.Value)})
+		}
+		return out, nil
+	})
+	if err != nil {
 		return nil, err
 	}
-	out := make([]scrapeKey, 0, len(res.Result))
-	for _, r := range res.Result {
-		out = append(out, scrapeKey{r.Metric["job"], r.Metric["instance"]})
+	all := slices.Concat(got...)
+	slices.SortFunc(all, func(a, b rankedTarget) int {
+		return cmp.Or(cmp.Compare(b.v, a.v), compareKeys(a.key, b.key))
+	})
+	out := make([]scrapeKey, 0, min(q.Top, len(all)))
+	for _, r := range all[:min(q.Top, len(all))] {
+		out = append(out, r.key)
 	}
 	return out, nil
+}
+
+// rankedTarget is a target and its value when ranked.
+type rankedTarget struct {
+	key scrapeKey
+	v   float64
+}
+
+// rankValue is an instant sample's value, or -Inf, ranking last, when it is not a number.
+func rankValue(pair [2]json.RawMessage) float64 {
+	s := rawSamples([][2]json.RawMessage{pair})
+	if s.err != nil || !s.at[0].ok {
+		return math.Inf(-1)
+	}
+	return s.at[0].v
 }
 
 // wantedTargets are the targets q names, or that its filter selects, by their scrape labels.
@@ -357,25 +390,36 @@ const rangeChunk, rangeParallel = 100, 6
 
 // chunkedSeries asks for exprOf's series over keys a chunk at a time, answering in keys' order.
 func chunkedSeries(ctx context.Context, c *client, keys []scrapeKey, exprOf func([]scrapeKey) string, win sdk.TimeWindow, step time.Duration, read func(*matrix) ([]sdk.Series, error)) ([]sdk.Series, error) {
-	slices.SortFunc(keys, func(a, b scrapeKey) int {
-		return cmp.Or(cmp.Compare(a.job, b.job), cmp.Compare(a.instance, b.instance))
+	got, err := inChunks(keys, func(ks []scrapeKey) ([]sdk.Series, error) {
+		return rangeSeries(ctx, c, exprOf(ks), win, step, read)
 	})
+	return slices.Concat(got...), err
+}
+
+// inChunks sorts keys and asks each rangeChunk of them, rangeParallel at a time, answering in
+// order, or with the first chunk's error.
+func inChunks[T any](keys []scrapeKey, ask func([]scrapeKey) (T, error)) ([]T, error) {
+	slices.SortFunc(keys, compareKeys)
 	chunks := slices.Collect(slices.Chunk(keys, rangeChunk))
-	got, errs := make([][]sdk.Series, len(chunks)), make([]error, len(chunks))
+	got, errs := make([]T, len(chunks)), make([]error, len(chunks))
 	slots := make(chan struct{}, rangeParallel)
 	var wg sync.WaitGroup
 	for i, ks := range chunks {
 		slots <- struct{}{}
 		wg.Go(func() {
 			defer func() { <-slots }()
-			got[i], errs[i] = rangeSeries(ctx, c, exprOf(ks), win, step, read)
+			got[i], errs[i] = ask(ks)
 		})
 	}
 	wg.Wait()
 	if i := slices.IndexFunc(errs, func(err error) bool { return err != nil }); i >= 0 {
 		return nil, errs[i]
 	}
-	return slices.Concat(got...), nil
+	return got, nil
+}
+
+func compareKeys(a, b scrapeKey) int {
+	return cmp.Or(cmp.Compare(a.job, b.job), cmp.Compare(a.instance, b.instance))
 }
 
 // rangeSeries asks query_range for expr over win at step, reading the answer with read.

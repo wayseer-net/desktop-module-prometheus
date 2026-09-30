@@ -2,6 +2,7 @@ package prometheus
 
 import (
 	"bytes"
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -47,16 +48,19 @@ func (l *bigLab) RoundTrip(r *http.Request) (*http.Response, error) {
 	}, nil
 }
 
-// labTarget is one generated target.
-type labTarget struct{ job, instance, node string }
+// labTarget is one generated target; now is its value at a topk's time.
+type labTarget struct {
+	job, instance, node string
+	now                 float64
+}
 
 func (l *bigLab) targets() []labTarget {
 	var ts []labTarget
 	for i := range l.hosts {
-		ts = append(ts, labTarget{"node", fmt.Sprintf("host-%02d:9100", i), fmt.Sprintf("host-%02d", i)})
+		ts = append(ts, labTarget{"node", fmt.Sprintf("host-%02d:9100", i), fmt.Sprintf("host-%02d", i), float64(i)})
 	}
 	for i := range l.services {
-		ts = append(ts, labTarget{fmt.Sprintf("app-%02d", i%40), fmt.Sprintf("svc-%03d:8080", i), ""})
+		ts = append(ts, labTarget{fmt.Sprintf("app-%02d", i%40), fmt.Sprintf("svc-%03d:8080", i), "", float64(i * 37 % 1000)})
 	}
 	return ts
 }
@@ -80,6 +84,7 @@ func (l *bigLab) answer(path, query string, form map[string][]string) []byte {
 	case path == "/api/v1/query" && strings.HasPrefix(query, "topk("):
 		n, _ := strconv.Atoi(query[len("topk("):strings.IndexByte(query, ',')])
 		ts := l.matching(query)
+		slices.SortFunc(ts, func(a, b labTarget) int { return cmp.Compare(b.now, a.now) })
 		return envelopeOf(labVector(ts[:min(n, len(ts))], false))
 	case path == "/api/v1/query_range":
 		return l.matrix(query, form)
@@ -110,7 +115,7 @@ func labVector(ts []labTarget, nodes bool) map[string]any {
 		if nodes {
 			m["nodename"] = t.node
 		}
-		res = append(res, map[string]any{"metric": m, "value": []any{0, "1"}})
+		res = append(res, map[string]any{"metric": m, "value": []any{0, strconv.FormatFloat(t.now, 'f', -1, 64)}})
 	}
 	return map[string]any{"resultType": "vector", "result": res}
 }

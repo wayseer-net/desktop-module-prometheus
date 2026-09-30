@@ -1,9 +1,11 @@
 package prometheus
 
 import (
+	"cmp"
 	"context"
 	"mindseye/pkg/sdk"
 	"net/http"
+	"slices"
 	"strings"
 	"sync"
 	"testing"
@@ -18,16 +20,24 @@ type inFlight struct {
 	mu              sync.Mutex
 	now, most, sent int
 	widest          int
+	topSent         int // the ranking queries, and the most targets one named
+	topWidest       int
 }
 
 func (f *inFlight) RoundTrip(r *http.Request) (*http.Response, error) {
-	if r.URL.Path != "/api/v1/query_range" {
-		return f.next.RoundTrip(r)
-	}
 	if err := r.ParseForm(); err != nil {
 		return nil, err
 	}
 	m := instanceMatcher.FindStringSubmatch(r.Form.Get("query"))
+	if strings.HasPrefix(r.Form.Get("query"), "topk(") && m != nil {
+		f.mu.Lock()
+		f.topSent++
+		f.topWidest = max(f.topWidest, strings.Count(m[1], "|")+1)
+		f.mu.Unlock()
+	}
+	if r.URL.Path != "/api/v1/query_range" {
+		return f.next.RoundTrip(r)
+	}
 	f.mu.Lock()
 	f.now++
 	f.sent++
@@ -70,5 +80,48 @@ func TestALargeAskIsSplitAndSentAtOnce(t *testing.T) {
 	}
 	if f.most < 2 || f.most > rangeParallel {
 		t.Errorf("%d range queries in flight at most; want 2 to %d", f.most, rangeParallel)
+	}
+}
+
+func TestATopIsRankedInChunksAndMerged(t *testing.T) {
+	lab := lanSize()
+	f := &inFlight{next: lab}
+	m := configured(t, f, "url: "+bigLabURL)
+	if _, err := m.refresh(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	end := time.Unix(1_790_000_000, 0)
+	w := sdk.TimeWindow{From: end.Add(-time.Hour), To: end}
+	got, err := m.QuerySeries(context.Background(), sdk.SeriesQuery{Metrics: []string{"cpu.utilisation"}, Window: w, Step: sdk.StepFor(w, 400), Top: 50})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var services []labTarget
+	for _, lt := range lab.targets() {
+		if lt.node == "" {
+			services = append(services, lt)
+		}
+	}
+	slices.SortFunc(services, func(a, b labTarget) int { return cmp.Compare(b.now, a.now) })
+	want := map[string]bool{}
+	for _, lt := range services[:50] {
+		want[lt.job+"/"+lt.instance] = true
+	}
+	n := 0
+	for _, s := range got {
+		if e := m.world.ents[s.Ref.Entity]; e.Kind == sdk.KindService {
+			n++
+			if !want[m.world.scraped[s.Ref.Entity].job+"/"+m.world.scraped[s.Ref.Entity].instance] {
+				t.Errorf("%s is not among the 50 highest", s.Ref.Entity)
+			}
+		}
+	}
+	if n != 50 {
+		t.Errorf("%d services, want the top 50", n)
+	}
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.topWidest > rangeChunk || f.topSent < 2 {
+		t.Errorf("%d ranking queries, the widest naming %d targets; want several, none over %d", f.topSent, f.topWidest, rangeChunk)
 	}
 }
