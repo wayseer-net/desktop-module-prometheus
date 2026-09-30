@@ -1,8 +1,6 @@
 package prometheus
 
 import (
-	"encoding/json"
-	"fmt"
 	"maps"
 	"math"
 	"mindseye/pkg/sdk"
@@ -93,27 +91,21 @@ func seconds(ns int64) string { return strconv.FormatFloat(float64(ns)/1e9, 'f',
 type matrix struct {
 	ResultType string `json:"resultType"`
 	Result     []struct {
-		Metric map[string]string    `json:"metric"`
-		Values [][2]json.RawMessage `json:"values"`
+		Metric map[string]string `json:"metric"`
+		Values samples           `json:"values"`
 	} `json:"result"`
 }
 
 // points reads a result's samples inside w, leaving out ones that are not numbers.
-func points(values [][2]json.RawMessage, w sdk.TimeWindow) ([]sdk.Point, error) {
-	out := make([]sdk.Point, 0, len(values))
-	for _, v := range values {
-		t, err := strconv.ParseFloat(string(v[0]), 64)
-		if err != nil {
-			return nil, fmt.Errorf("sample time %s: %w", v[0], err)
-		}
-		var s string
-		if err := json.Unmarshal(v[1], &s); err != nil {
-			return nil, fmt.Errorf("sample value %s: %w", v[1], err)
-		}
-		f, err := strconv.ParseFloat(s, 64)
-		ns := int64(math.Round(t*1e3)) * int64(time.Millisecond)
-		if err == nil && !math.IsNaN(f) && !math.IsInf(f, 0) && w.Contains(ns) {
-			out = append(out, sdk.Point{T: ns, V: f})
+func points(values samples, w sdk.TimeWindow) ([]sdk.Point, error) {
+	if values.err != nil {
+		return nil, values.err
+	}
+	out := make([]sdk.Point, 0, len(values.at))
+	for _, v := range values.at {
+		ns := int64(math.Round(v.t*1e3)) * int64(time.Millisecond)
+		if v.ok && w.Contains(ns) {
+			out = append(out, sdk.Point{T: ns, V: v.v})
 		}
 	}
 	return out, nil

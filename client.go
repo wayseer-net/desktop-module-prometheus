@@ -42,12 +42,12 @@ func newClient(e *endpoint, timeout time.Duration, rt http.RoundTripper, s sdk.S
 	return c
 }
 
-// envelope is every API answer's wrapping.
+// envelope is every API answer's wrapping; Data points at where its data is decoded.
 type envelope struct {
-	Status    string          `json:"status"`
-	Data      json.RawMessage `json:"data"`
-	ErrorType string          `json:"errorType"`
-	Error     string          `json:"error"`
+	Status    string `json:"status"`
+	Data      any    `json:"data"`
+	ErrorType string `json:"errorType"`
+	Error     string `json:"error"`
 }
 
 // get calls path with form as its query, decoding the answer's data into out.
@@ -139,7 +139,7 @@ func decode(resp *http.Response, out any) error {
 	if err := authFailed(resp); err != nil {
 		return err
 	}
-	var env envelope
+	env := envelope{Data: cmp.Or(out, any(new(json.RawMessage)))} // decoded in one pass, not copied
 	err := json.NewDecoder(io.LimitReader(resp.Body, bodyCap)).Decode(&env)
 	switch {
 	case err != nil && resp.StatusCode/100 != 2:
@@ -149,7 +149,7 @@ func decode(resp *http.Response, out any) error {
 	case env.Status != "success":
 		return &apiError{kind: cmp.Or(env.ErrorType, "error"), msg: clip(env.Error, errorCap)}
 	}
-	return json.Unmarshal(env.Data, out)
+	return nil
 }
 
 // decodeBare reads an answer that is the data itself into out.

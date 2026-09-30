@@ -63,7 +63,7 @@ func TestStepsAndRangesSuitPrometheus(t *testing.T) {
 }
 
 func TestPointsKeepNumbersInsideTheWindow(t *testing.T) {
-	var values [][2]json.RawMessage
+	var values samples
 	if err := json.Unmarshal([]byte(`[[99.5,"1"],[100,"2"],[100.25,"NaN"],[101,"+Inf"],[102,"3"],[110,"4"]]`), &values); err != nil {
 		t.Fatal(err)
 	}
