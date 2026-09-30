@@ -1,0 +1,74 @@
+package prometheus
+
+import (
+	"context"
+	"mindseye/pkg/sdk"
+	"net/http"
+	"strings"
+	"sync"
+	"testing"
+	"time"
+)
+
+// inFlight passes requests to next, counting range queries, the targets each names, and the
+// most in flight at once; each range query waits a moment, as a server evaluating it would.
+type inFlight struct {
+	next http.RoundTripper
+
+	mu              sync.Mutex
+	now, most, sent int
+	widest          int
+}
+
+func (f *inFlight) RoundTrip(r *http.Request) (*http.Response, error) {
+	if r.URL.Path != "/api/v1/query_range" {
+		return f.next.RoundTrip(r)
+	}
+	if err := r.ParseForm(); err != nil {
+		return nil, err
+	}
+	m := instanceMatcher.FindStringSubmatch(r.Form.Get("query"))
+	f.mu.Lock()
+	f.now++
+	f.sent++
+	f.most = max(f.most, f.now)
+	if m != nil {
+		f.widest = max(f.widest, strings.Count(m[1], "|")+1)
+	}
+	f.mu.Unlock()
+	time.Sleep(20 * time.Millisecond)
+	f.mu.Lock()
+	f.now--
+	f.mu.Unlock()
+	return f.next.RoundTrip(r)
+}
+
+func TestALargeAskIsSplitAndSentAtOnce(t *testing.T) {
+	f := &inFlight{next: lanSize()}
+	m := configured(t, f, "url: "+bigLabURL)
+	if _, err := m.refresh(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	end := time.Unix(1_790_000_000, 0)
+	w := sdk.TimeWindow{From: end.Add(-time.Hour), To: end}
+	got, err := m.QuerySeries(context.Background(), sdk.SeriesQuery{Metrics: []string{"cpu.utilisation"}, Window: w, Step: sdk.StepFor(w, 400)})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 20+549 {
+		t.Errorf("%d series, want one for each of the 569 targets", len(got))
+	}
+	seen := map[sdk.EntityRef]bool{}
+	for _, s := range got {
+		if seen[s.Ref.Entity] || len(s.Points) == 0 {
+			t.Errorf("%s: repeated, or no points", s.Ref.Entity)
+		}
+		seen[s.Ref.Entity] = true
+	}
+	if f.widest > rangeChunk || f.sent != 1+6 {
+		t.Errorf("%d range queries, the widest naming %d targets; want 7, none over %d", f.sent, f.widest, rangeChunk)
+	}
+	if f.most < 2 || f.most > rangeParallel {
+		t.Errorf("%d range queries in flight at most; want 2 to %d", f.most, rangeParallel)
+	}
+}

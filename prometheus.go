@@ -1,6 +1,7 @@
 package prometheus
 
 import (
+	"cmp"
 	"context"
 	"errors"
 	"fmt"
@@ -289,8 +290,10 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 					continue
 				}
 			}
-			expr := expression(mt, kind, q.Agg, selector(keys), rangeFor(step, w.interval))
-			got, err := rangeSeries(ctx, c, expr, q.Window, step, func(res *matrix) ([]sdk.Series, error) {
+			exprOf := func(ks []scrapeKey) string {
+				return expression(mt, kind, q.Agg, selector(ks), rangeFor(step, w.interval))
+			}
+			got, err := chunkedSeries(ctx, c, keys, exprOf, q.Window, step, func(res *matrix) ([]sdk.Series, error) {
 				return seriesOf(res, wanted, mt, q.Window)
 			})
 			if err != nil {
@@ -346,6 +349,33 @@ func groups(w *world, wanted map[scrapeKey]sdk.EntityRef, mt metric) map[sdk.Kin
 		}
 	}
 	return out
+}
+
+// A range query names at most rangeChunk targets; a larger ask is split, with rangeParallel
+// chunks in flight, as the server evaluates each query on its own and time grows with series.
+const rangeChunk, rangeParallel = 100, 6
+
+// chunkedSeries asks for exprOf's series over keys a chunk at a time, answering in keys' order.
+func chunkedSeries(ctx context.Context, c *client, keys []scrapeKey, exprOf func([]scrapeKey) string, win sdk.TimeWindow, step time.Duration, read func(*matrix) ([]sdk.Series, error)) ([]sdk.Series, error) {
+	slices.SortFunc(keys, func(a, b scrapeKey) int {
+		return cmp.Or(cmp.Compare(a.job, b.job), cmp.Compare(a.instance, b.instance))
+	})
+	chunks := slices.Collect(slices.Chunk(keys, rangeChunk))
+	got, errs := make([][]sdk.Series, len(chunks)), make([]error, len(chunks))
+	slots := make(chan struct{}, rangeParallel)
+	var wg sync.WaitGroup
+	for i, ks := range chunks {
+		slots <- struct{}{}
+		wg.Go(func() {
+			defer func() { <-slots }()
+			got[i], errs[i] = rangeSeries(ctx, c, exprOf(ks), win, step, read)
+		})
+	}
+	wg.Wait()
+	if i := slices.IndexFunc(errs, func(err error) bool { return err != nil }); i >= 0 {
+		return nil, errs[i]
+	}
+	return slices.Concat(got...), nil
 }
 
 // rangeSeries asks query_range for expr over win at step, reading the answer with read.
