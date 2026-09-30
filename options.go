@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"mindseye/pkg/sdk"
 	"net/url"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -16,6 +17,7 @@ type options struct {
 	Interval     time.Duration     `yaml:"interval"`     // how often targets are read, 1s to 1h; default 30s
 	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; other jobs' targets are services; default node and node-exporter are host
 	Alertmanager *endpoint         `yaml:"alertmanager"` // an Alertmanager whose firing alerts show on their entities, with its own credentials
+	Flows        []flowQuery       `yaml:"flows"`        // queries whose answers are traffic between entities in the world
 
 	kinds map[string]sdk.Kind
 }
@@ -29,6 +31,24 @@ type endpoint struct {
 
 	base *url.URL
 }
+
+// flowQuery turns each series a query answers into traffic from the entity one label names to
+// the entity another names.
+type flowQuery struct {
+	Query string          `yaml:"query"` // PromQL giving a rate per second for each source and destination; required
+	From  flowEnd         `yaml:"from"`  // where traffic comes from; required
+	To    flowEnd         `yaml:"to"`    // where traffic goes; required
+	Unit  sdk.TrafficUnit `yaml:"unit"`  // what the rate counts: requests, bytes or messages; required
+}
+
+// flowEnd is the label naming one end of a flow, and the kind of entity it names.
+type flowEnd struct {
+	Label string   `yaml:"label"` // the label whose value names the entity; required
+	Kind  sdk.Kind `yaml:"kind"`  // the entity's kind; default service
+}
+
+// labelName is what Prometheus allows a label to be called.
+var labelName = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 
 const (
 	authNone   = "none"
@@ -50,7 +70,40 @@ func (o *options) validate() error {
 	case o.Interval < time.Second || o.Interval > time.Hour:
 		return fmt.Errorf("interval %v must be between 1s and 1h", o.Interval)
 	}
-	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager())
+	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager(), o.checkFlows())
+}
+
+func (o *options) checkFlows() error {
+	var errs []error
+	for i := range o.Flows {
+		f := &o.Flows[i]
+		f.From.Kind, f.To.Kind = cmp.Or(f.From.Kind, sdk.KindService), cmp.Or(f.To.Kind, sdk.KindService)
+		if err := f.validate(); err != nil {
+			errs = append(errs, fmt.Errorf("flows[%d]: %w", i, err))
+		}
+	}
+	return errors.Join(errs...)
+}
+
+func (f *flowQuery) validate() error {
+	var errs []error
+	if strings.TrimSpace(f.Query) == "" {
+		errs = append(errs, errors.New("needs a query"))
+	}
+	if f.Unit == sdk.TrafficNone {
+		errs = append(errs, errors.New("needs a unit: requests, bytes or messages"))
+	}
+	return errors.Join(append(errs, f.From.validate("from"), f.To.validate("to"))...)
+}
+
+func (e flowEnd) validate(end string) error {
+	if !labelName.MatchString(e.Label) {
+		return fmt.Errorf("%s.label %q is not a label name", end, e.Label)
+	}
+	if err := e.Kind.Validate(); err != nil {
+		return fmt.Errorf("%s.kind: %w", end, err)
+	}
+	return nil
 }
 
 func (o *options) checkAlertmanager() error {

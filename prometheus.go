@@ -46,6 +46,8 @@ type Module struct {
 	am        *client            // nil without an Alertmanager
 	alerts    map[string]alertOn // the last alerts read, by fingerprint
 	amNote    string
+	resolve   func() sdk.Resolver // the world, for flow ends; nil until the host gives it
+	flowEdges [][]sdk.Edge        // each flow query's last edges
 }
 
 // New makes an unconfigured module that talks HTTP through the default transport.
@@ -79,7 +81,7 @@ func (m *Module) Configure(_ context.Context, cfg sdk.Config) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.name, m.opts, m.client, m.am = cfg.Name, o, newClient(&o.endpoint, o.Timeout, m.transport, s), am
-	m.alerts, m.amNote = nil, ""
+	m.alerts, m.amNote, m.flowEdges = nil, "", nil
 	m.world, m.read, m.metrics, m.catalogAt, m.catNote = world{}, false, nil, time.Time{}, ""
 	m.tracker.Reset()
 	m.health.Store(&sdk.Health{})
@@ -135,18 +137,21 @@ func (m *Module) Run(ctx context.Context, sink sdk.Sink) error {
 	}
 }
 
-// refresh reads the targets, the alerts, and the catalogue when due, returning what changed.
+// refresh reads the targets, the alerts, the flows, and the catalogue when due, returning what
+// changed.
 func (m *Module) refresh(ctx context.Context) (*sdk.ChangeSet, error) {
 	now := time.Now()
 	w, err := m.readWorld(ctx)
 	var evs []sdk.Event
+	var flowNote string
 	if err == nil {
 		m.readCatalogue(ctx)
 		evs = m.readAlerts(ctx, &w, now)
+		flowNote = m.readFlows(ctx, &w)
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.health.Store(&sdk.Health{Err: err, Note: notes(m.catNote, m.amNote)})
+	m.health.Store(&sdk.Health{Err: err, Note: notes(m.catNote, m.amNote, flowNote)})
 	if err != nil {
 		return nil, err
 	}

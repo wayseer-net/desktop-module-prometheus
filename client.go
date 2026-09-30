@@ -147,7 +147,7 @@ func decode(resp *http.Response, out any) error {
 	case err != nil:
 		return fmt.Errorf("unreadable answer: %w", err)
 	case env.Status != "success":
-		return fmt.Errorf("%s: %s", cmp.Or(env.ErrorType, "error"), clip(env.Error, errorCap))
+		return &apiError{kind: cmp.Or(env.ErrorType, "error"), msg: clip(env.Error, errorCap)}
 	}
 	return json.Unmarshal(env.Data, out)
 }
@@ -169,6 +169,11 @@ func decodeBare(resp *http.Response, out any) error {
 	}
 	return nil
 }
+
+// apiError is the server refusing a request, with its kind of error and what it said.
+type apiError struct{ kind, msg string }
+
+func (e *apiError) Error() string { return e.kind + ": " + e.msg }
 
 // authError is a server refusing the credentials; it holds nothing the server said.
 type authError struct{ code int }
@@ -194,8 +199,17 @@ func (c *client) redact(err error) error {
 			msg = strings.ReplaceAll(msg, pass, "[secret]")
 		}
 	}
-	return errors.New(msg)
+	return &redacted{msg, err}
 }
+
+// redacted is an error whose message has had the credentials removed; what it wraps has not.
+type redacted struct {
+	msg string
+	err error
+}
+
+func (e *redacted) Error() string { return e.msg }
+func (e *redacted) Unwrap() error { return e.err }
 
 // clip shortens s to at most n bytes without splitting a character.
 func clip(s string, n int) string {
