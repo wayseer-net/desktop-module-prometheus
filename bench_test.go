@@ -24,7 +24,7 @@ func BenchmarkSeriesRoundTrip(b *testing.B) {
 	var rt http.RoundTripper = lanSize()
 	url, end := bigLabURL, time.Unix(1_790_000_000, 0)
 	if u := os.Getenv("MINDSEYE_PROM_URL"); u != "" {
-		rt, url, end = http.DefaultTransport, u, time.Now()
+		rt, url, end = New().transport, u, time.Now()
 	}
 	m := configured(b, rt, "url: "+url)
 	if _, err := m.refresh(context.Background()); err != nil {

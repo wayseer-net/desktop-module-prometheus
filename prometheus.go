@@ -53,8 +53,13 @@ type Module struct {
 	flowEdges [][]sdk.Edge        // each flow query's last edges
 }
 
-// New makes an unconfigured module that talks HTTP through the default transport.
-func New() *Module { return NewWithTransport(http.DefaultTransport) }
+// New makes an unconfigured module that talks HTTP through the default transport, keeping an
+// idle connection for each chunk in flight so parallel asks reuse them.
+func New() *Module {
+	tr := http.DefaultTransport.(*http.Transport).Clone()
+	tr.MaxIdleConnsPerHost = rangeParallel
+	return NewWithTransport(tr)
+}
 
 // NewWithTransport makes an unconfigured module that sends its requests through rt.
 func NewWithTransport(rt http.RoundTripper) *Module { return &Module{transport: rt} }

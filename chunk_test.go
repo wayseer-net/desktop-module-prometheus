@@ -3,11 +3,15 @@ package prometheus
 import (
 	"cmp"
 	"context"
+	"io"
 	"mindseye/pkg/sdk"
+	"net"
 	"net/http"
+	"net/http/httptest"
 	"slices"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 )
@@ -123,5 +127,44 @@ func TestATopIsRankedInChunksAndMerged(t *testing.T) {
 	defer f.mu.Unlock()
 	if f.topWidest > rangeChunk || f.topSent < 2 {
 		t.Errorf("%d ranking queries, the widest naming %d targets; want several, none over %d", f.topSent, f.topWidest, rangeChunk)
+	}
+}
+
+func TestParallelAsksReuseTheirConnections(t *testing.T) {
+	lab := lanSize()
+	srv := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		resp, err := lab.RoundTrip(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		_, _ = io.Copy(w, resp.Body)
+	}))
+	var opened atomic.Int32
+	srv.Config.ConnState = func(_ net.Conn, s http.ConnState) {
+		if s == http.StateNew {
+			opened.Add(1)
+		}
+	}
+	srv.StartTLS()
+	defer srv.Close()
+	tr := New().transport.(*http.Transport).Clone()
+	tr.TLSClientConfig = srv.Client().Transport.(*http.Transport).TLSClientConfig
+	m := configured(t, tr, "url: "+srv.URL)
+	if _, err := m.refresh(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	end := time.Unix(1_790_000_000, 0)
+	w := sdk.TimeWindow{From: end.Add(-time.Hour), To: end}
+	q := sdk.SeriesQuery{Metrics: []string{"cpu.utilisation"}, Window: w, Step: sdk.StepFor(w, 400), Top: appTop}
+	if _, err := m.QuerySeries(context.Background(), q); err != nil {
+		t.Fatal(err)
+	}
+	before := opened.Load()
+	if _, err := m.QuerySeries(context.Background(), q); err != nil {
+		t.Fatal(err)
+	}
+	if n := opened.Load() - before; n != 0 {
+		t.Errorf("asking again opened %d connections; want the first ask's reused", n)
 	}
 }
