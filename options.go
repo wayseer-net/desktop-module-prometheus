@@ -18,6 +18,7 @@ type options struct {
 	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; other jobs' targets are services; default node and node-exporter are host
 	Alertmanager *endpoint         `yaml:"alertmanager"` // an Alertmanager whose firing alerts show on their entities, with its own credentials
 	Flows        []flowQuery       `yaml:"flows"`        // queries whose answers are traffic between entities in the world
+	Series       []seriesQuery     `yaml:"series"`       // queries whose answers are a metric of entities in the world
 
 	kinds map[string]sdk.Kind
 }
@@ -47,6 +48,21 @@ type flowEnd struct {
 	Kind  sdk.Kind `yaml:"kind"`  // the entity's kind; default service
 }
 
+// seriesQuery turns each series a query answers into a metric of the entity its labels name.
+type seriesQuery struct {
+	Query       string       `yaml:"query"`       // PromQL giving a series for each entity; required
+	Metric      string       `yaml:"metric"`      // the metric's name, such as queue.depth; required
+	Unit        sdk.Unit     `yaml:"unit"`        // its unit, such as count, bytes or percent; default none, a plain number
+	Description string       `yaml:"description"` // what it measures, shown with it
+	Entity      seriesEntity `yaml:"entity"`      // the entity each series is of; required
+}
+
+// seriesEntity is the labels whose values, joined by "/", name an entity, and its kind.
+type seriesEntity struct {
+	Labels []string `yaml:"labels"` // such as [namespace, pod]; the last alone is tried too; required
+	Kind   sdk.Kind `yaml:"kind"`   // the entity's kind; default service
+}
+
 // labelName is what Prometheus allows a label to be called.
 var labelName = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_]*$`)
 
@@ -70,7 +86,7 @@ func (o *options) validate() error {
 	case o.Interval < time.Second || o.Interval > time.Hour:
 		return fmt.Errorf("interval %v must be between 1s and 1h", o.Interval)
 	}
-	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager(), o.checkFlows())
+	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager(), o.checkFlows(), o.checkSeries())
 }
 
 func (o *options) checkFlows() error {
@@ -104,6 +120,52 @@ func (e flowEnd) validate(end string) error {
 		return fmt.Errorf("%s.kind: %w", end, err)
 	}
 	return nil
+}
+
+// metricName is what a series' metric may be called.
+var metricName = regexp.MustCompile(`^[a-zA-Z_][a-zA-Z0-9_.:]*$`)
+
+func (o *options) checkSeries() error {
+	var errs []error
+	seen := map[string]bool{}
+	for i := range o.Series {
+		s := &o.Series[i]
+		s.Entity.Kind = cmp.Or(s.Entity.Kind, sdk.KindService)
+		err := s.validate()
+		if seen[s.Metric] {
+			err = errors.Join(err, fmt.Errorf("metric %q is named twice", s.Metric))
+		}
+		seen[s.Metric] = true
+		if err != nil {
+			errs = append(errs, fmt.Errorf("series[%d]: %w", i, err))
+		}
+	}
+	return errors.Join(errs...)
+}
+
+func (s *seriesQuery) validate() error {
+	var errs []error
+	if strings.TrimSpace(s.Query) == "" {
+		errs = append(errs, errors.New("needs a query"))
+	}
+	if !metricName.MatchString(s.Metric) {
+		errs = append(errs, fmt.Errorf("metric %q is not a metric name", s.Metric))
+	}
+	if err := s.Unit.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("unit: %w", err))
+	}
+	if len(s.Entity.Labels) == 0 {
+		errs = append(errs, errors.New("entity.labels needs a label"))
+	}
+	for _, l := range s.Entity.Labels {
+		if !labelName.MatchString(l) {
+			errs = append(errs, fmt.Errorf("entity.labels: %q is not a label name", l))
+		}
+	}
+	if err := s.Entity.Kind.Validate(); err != nil {
+		errs = append(errs, fmt.Errorf("entity.kind: %w", err))
+	}
+	return errors.Join(errs...)
 }
 
 func (o *options) checkAlertmanager() error {

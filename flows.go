@@ -52,7 +52,7 @@ func (m *Module) readFlows(ctx context.Context, w *world) string {
 			err = errors.New("the answer is a " + res.ResultType + ", not a vector")
 		}
 		if err != nil {
-			msgs = append(msgs, fmt.Sprintf("flow %d: %s", i+1, flowError(err)))
+			msgs = append(msgs, fmt.Sprintf("flow %d: %s", i+1, queryError(err)))
 			if i < len(last) {
 				next[i] = last[i]
 			}
@@ -118,8 +118,8 @@ func sampleValue(raw json.RawMessage) (float64, bool) {
 	return f, err == nil && !math.IsNaN(f) && !math.IsInf(f, 0) && f >= 0
 }
 
-// flowError says why a flow query failed without what the server said, which may quote the query.
-func flowError(err error) string {
+// queryError says why an owner's query failed without what the server said, which may quote it.
+func queryError(err error) string {
 	var ae *apiError
 	if errors.As(err, &ae) {
 		return "the server refused the query (" + ae.kind + ")"

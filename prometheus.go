@@ -36,21 +36,22 @@ type Module struct {
 	transport http.RoundTripper
 	health    atomic.Pointer[sdk.Health]
 
-	mu        sync.Mutex // guards what follows, shared by Run and queries
-	name      sdk.ModuleID
-	opts      options
-	client    *client
-	world     world
-	read      bool // world has been read
-	tracker   sdk.Tracker
-	metrics   []metric
-	catalogAt time.Time
-	catNote   string
-	am        *client            // nil without an Alertmanager
-	alerts    map[string]alertOn // the last alerts read, by fingerprint
-	amNote    string
-	resolve   func() sdk.Resolver // the world, for flow ends; nil until the host gives it
-	flowEdges [][]sdk.Edge        // each flow query's last edges
+	mu           sync.Mutex // guards what follows, shared by Run and queries
+	name         sdk.ModuleID
+	opts         options
+	client       *client
+	world        world
+	read         bool // world has been read
+	tracker      sdk.Tracker
+	metrics      []metric
+	catalogAt    time.Time
+	catNote      string
+	am           *client            // nil without an Alertmanager
+	alerts       map[string]alertOn // the last alerts read, by fingerprint
+	amNote       string
+	resolve      func() sdk.Resolver    // the world, for flow ends; nil until the host gives it
+	flowEdges    [][]sdk.Edge           // each flow query's last edges
+	seriesCounts map[string]seriesCount // each series' unmatched, by metric, as last read
 }
 
 // New makes an unconfigured module that talks HTTP through the default transport, keeping an
@@ -89,7 +90,7 @@ func (m *Module) Configure(_ context.Context, cfg sdk.Config) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.name, m.opts, m.client, m.am = cfg.Name, o, newClient(&o.endpoint, o.Timeout, m.transport, s), am
-	m.alerts, m.amNote, m.flowEdges = nil, "", nil
+	m.alerts, m.amNote, m.flowEdges, m.seriesCounts = nil, "", nil, map[string]seriesCount{}
 	m.world, m.read, m.metrics, m.catalogAt, m.catNote = world{}, false, nil, time.Time{}, ""
 	m.tracker.Reset()
 	m.health.Store(&sdk.Health{})
@@ -159,7 +160,7 @@ func (m *Module) refresh(ctx context.Context) (*sdk.ChangeSet, error) {
 	}
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.health.Store(&sdk.Health{Err: err, Note: notes(m.catNote, m.amNote, flowNote)})
+	m.health.Store(&sdk.Health{Err: err, Note: notes(m.catNote, m.amNote, flowNote, m.seriesNote())})
 	if err != nil {
 		return nil, err
 	}
@@ -249,15 +250,16 @@ func (m *Module) Discover(ctx context.Context) (*sdk.ChangeSet, error) {
 	return probe.Changes(w.ents, w.edges, time.Now()), nil
 }
 
-// Metrics lists the canonical metrics the server can answer, then its own gauges and counters.
+// Metrics lists the canonical metrics the server can answer, its own gauges and counters, then
+// the owner's series of other modules' entities.
 func (m *Module) Metrics() []sdk.Metric {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	out := make([]sdk.Metric, len(m.metrics))
+	out := make([]sdk.Metric, len(m.metrics), len(m.metrics)+len(m.opts.Series))
 	for i, mt := range m.metrics {
 		out[i] = mt.Metric
 	}
-	return out
+	return append(out, joinedMetrics(m.opts.Series)...)
 }
 
 // RanksTop is true: a query's Top is answered by asking the server for its top targets.
@@ -265,7 +267,7 @@ func (m *Module) RanksTop() bool { return true }
 
 // QuerySeries asks query_range for each metric over every target asked for, in one request per
 // metric and kind; entities that are not targets have no series. With q.Top below the targets'
-// count, the server's topk names the targets first.
+// count, the server's topk names the targets first. An owner's series is asked as written.
 func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Series, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -281,6 +283,14 @@ func (m *Module) QuerySeries(ctx context.Context, q sdk.SeriesQuery) ([]sdk.Seri
 	step := stepFor(q)
 	var out []sdk.Series
 	for _, name := range q.Metrics {
+		if s, ok := m.seriesFor(name); ok {
+			got, err := m.querySeriesOf(ctx, s, q)
+			if err != nil {
+				return nil, err
+			}
+			out = append(out, got...)
+			continue
+		}
 		mt, ok := byName[name]
 		if !ok {
 			continue
