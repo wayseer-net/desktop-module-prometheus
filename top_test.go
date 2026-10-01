@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"strings"
 	"sync"
 	"testing"
+	"wayseer/pkg/sdk"
 )
 
 // topServer answers the topk instant query with its one target, and range queries with a

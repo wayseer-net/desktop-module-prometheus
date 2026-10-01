@@ -2,15 +2,15 @@ package prometheus
 
 import (
 	"context"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"os"
 	"slices"
 	"testing"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
-// What the app asks of a module: at most seriesBatch entities a query (cmd/mindseye/series.go),
+// What the app asks of a module: at most seriesBatch entities a query (cmd/wayseer/series.go),
 // or, of one that ranks, Grid's top (grid.MaxTiles).
 const appBatch, appTop = 100, 500
 

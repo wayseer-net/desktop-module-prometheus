@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
-	"mindseye/pkg/sdk"
 	"slices"
 	"strconv"
 	"testing"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // oldPoints is the decoder samples replaced, kept as the reference for its results.

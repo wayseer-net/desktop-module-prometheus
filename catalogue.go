@@ -2,9 +2,9 @@ package prometheus
 
 import (
 	"maps"
-	"mindseye/pkg/sdk"
 	"slices"
 	"strings"
+	"wayseer/pkg/sdk"
 )
 
 // metaEntry is one family's metadata from /api/v1/metadata.

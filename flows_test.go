@@ -3,12 +3,12 @@ package prometheus
 import (
 	"context"
 	"errors"
-	"mindseye/modules/prometheus/promtest"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strings"
 	"testing"
+	"wayseer/modules/prometheus/promtest"
+	"wayseer/pkg/sdk"
 )
 
 const (

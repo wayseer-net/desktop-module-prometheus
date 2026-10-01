@@ -4,11 +4,11 @@ import (
 	"cmp"
 	"context"
 	"maps"
-	"mindseye/pkg/sdk"
 	"slices"
 	"strconv"
 	"strings"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // amAlert is one alert from Alertmanager's /api/v2/alerts, which lists only unresolved ones.

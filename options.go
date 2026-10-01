@@ -4,11 +4,11 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
-	"mindseye/pkg/sdk"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 type options struct {

@@ -9,11 +9,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 const (

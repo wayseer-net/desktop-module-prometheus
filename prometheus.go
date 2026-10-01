@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"maps"
 	"math"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strconv"
@@ -16,6 +15,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // Kind is the module kind in config.

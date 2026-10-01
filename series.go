@@ -6,9 +6,9 @@ import (
 	"errors"
 	"fmt"
 	"maps"
-	"mindseye/pkg/sdk"
 	"slices"
 	"strings"
+	"wayseer/pkg/sdk"
 )
 
 // seriesCount is how many series, as a metric was last read, named no entity or several.

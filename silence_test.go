@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -14,6 +13,7 @@ import (
 	"sync"
 	"testing"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // fakeAM is an Alertmanager that serves alerts and silences, and records the changes it is sent.

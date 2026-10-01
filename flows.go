@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"math"
-	"mindseye/pkg/sdk"
 	"strconv"
+	"wayseer/pkg/sdk"
 )
 
 // UseWorld gives the module the world, to match flow ends against what other modules found.

@@ -2,10 +2,10 @@ package prometheus
 
 import (
 	"encoding/json"
-	"mindseye/pkg/sdk"
 	"strings"
 	"testing"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 func TestQueriesTranslateToPromQL(t *testing.T) {

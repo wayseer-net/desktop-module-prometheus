@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"context"
 	"io"
-	"mindseye/pkg/sdk"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +13,7 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // inFlight passes requests to next, counting range queries, the targets each names, and the

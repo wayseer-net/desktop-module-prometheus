@@ -3,13 +3,13 @@ package prometheus
 import (
 	"maps"
 	"math"
-	"mindseye/pkg/sdk"
 	"net/url"
 	"regexp"
 	"slices"
 	"strconv"
 	"strings"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // maxPoints is Prometheus's limit on points per series in one range query.

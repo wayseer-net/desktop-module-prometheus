@@ -4,15 +4,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"mindseye/modules/prometheus/promtest"
-	"mindseye/pkg/sdk"
-	"mindseye/pkg/sdk/sdktest"
 	"net/http"
 	"slices"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+	"wayseer/modules/prometheus/promtest"
+	"wayseer/pkg/sdk"
+	"wayseer/pkg/sdk/sdktest"
 
 	"go.yaml.in/yaml/v3"
 )

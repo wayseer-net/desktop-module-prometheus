@@ -5,12 +5,12 @@ import (
 	"context"
 	"encoding/base64"
 	"io"
-	"mindseye/pkg/sdk/sdktest"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"wayseer/pkg/sdk/sdktest"
 )
 
 const token = "s3cret-t0ken"

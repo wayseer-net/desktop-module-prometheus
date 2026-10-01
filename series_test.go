@@ -2,12 +2,12 @@ package prometheus
 
 import (
 	"context"
-	"mindseye/modules/prometheus/promtest"
-	"mindseye/pkg/sdk"
 	"slices"
 	"strings"
 	"testing"
 	"time"
+	"wayseer/modules/prometheus/promtest"
+	"wayseer/pkg/sdk"
 )
 
 const (

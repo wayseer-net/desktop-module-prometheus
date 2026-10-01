@@ -1,8 +1,8 @@
 package prometheus
 
 import (
-	"mindseye/pkg/sdk"
 	"testing"
+	"wayseer/pkg/sdk"
 )
 
 func scrapeOf(job, instance, health, lastError string) target {

@@ -3,14 +3,14 @@ package prometheus
 import (
 	"context"
 	"errors"
-	"mindseye/modules/prometheus/promtest"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
+	"wayseer/modules/prometheus/promtest"
+	"wayseer/pkg/sdk"
 )
 
 const amURL = "http://amhost:9093"

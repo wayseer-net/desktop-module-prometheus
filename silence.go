@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"maps"
-	"mindseye/pkg/sdk"
 	"net/http"
 	"slices"
 	"strings"
 	"time"
+	"wayseer/pkg/sdk"
 )
 
 // silenceComment marks the silences Mind's Eye makes, with the instance's name as createdBy.
