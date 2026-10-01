@@ -19,11 +19,11 @@ func lanSize() *bigLab { return &bigLab{hosts: 20, services: 549} }
 
 // BenchmarkSeriesRoundTrip asks for CPU at 400 points over an hour, as the app asks: a batch of
 // entities, and a ranked top; "every" asks for every target at once, a worst case with no
-// budget. It uses the generated server, or the server at MINDSEYE_PROM_URL over the last hour.
+// budget. It uses the generated server, or the server at WAYSEER_PROM_URL over the last hour.
 func BenchmarkSeriesRoundTrip(b *testing.B) {
 	var rt http.RoundTripper = lanSize()
 	url, end := bigLabURL, time.Unix(1_790_000_000, 0)
-	if u := os.Getenv("MINDSEYE_PROM_URL"); u != "" {
+	if u := os.Getenv("WAYSEER_PROM_URL"); u != "" {
 		rt, url, end = New().transport, u, time.Now()
 	}
 	m := configured(b, rt, "url: "+url)
