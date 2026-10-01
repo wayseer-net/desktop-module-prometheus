@@ -13,7 +13,7 @@
 // `alerts_muted` and leave the status alone. Firing, muting and resolving are alert events. If
 // Alertmanager cannot be read, the last alerts stand and Health notes why. The owner may allow
 // `silence`, matching an alert's labels exactly for 15m to 7d, and `unsilence`, which expires
-// only the silences this instance made (createdBy its name, comment "Mind's Eye").
+// only the silences this instance made (createdBy its name, comment "Wayseer").
 //
 //	modules:
 //	  - kind: prometheus
@@ -24,7 +24,7 @@
 //	      interval: 30s               # how often targets are read
 //	      auth: none                  # none, basic or bearer
 //	      username: ""                # for basic
-//	      secret_file: ""             # file holding the password or token, e.g. ~/.config/mindseye/prom-token
+//	      secret_file: ""             # file holding the password or token, e.g. ~/.config/wayseer/prom-token
 //	      secret_env: ""              # or the environment variable holding it
 //	      secret_keyring: ""          # or the keyring entry holding it, <service>/<account>
 //	      kinds: {node: host, node-exporter: host}  # job name to entity kind; other jobs' targets are services

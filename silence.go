@@ -12,8 +12,8 @@ import (
 	"wayseer/pkg/sdk"
 )
 
-// silenceComment marks the silences Mind's Eye makes, with the instance's name as createdBy.
-const silenceComment = "Mind's Eye"
+// silenceComment marks the silences Wayseer makes, with the instance's name as createdBy.
+const silenceComment = "Wayseer"
 
 // amSilence is a silence as Alertmanager's /api/v2 takes and gives it.
 type amSilence struct {
@@ -48,7 +48,7 @@ func (m *Module) Actions() []sdk.Action {
 		},
 		{
 			ID: "unsilence", Title: "Unsilence", Kinds: onAlerts,
-			Changes: "Expires the silence Mind's Eye made for this alert; silences made elsewhere stay",
+			Changes: "Expires the silence Wayseer made for this alert; silences made elsewhere stay",
 		},
 	}
 }
@@ -125,14 +125,14 @@ func unsilence(ctx context.Context, c *client, a *amAlert, by string) (sdk.Actio
 		n++
 	}
 	if n == 0 {
-		return sdk.ActionResult{}, fmt.Errorf("%s has no silence Mind's Eye made; silences made elsewhere are left alone", a.name())
+		return sdk.ActionResult{}, fmt.Errorf("%s has no silence Wayseer made; silences made elsewhere are left alone", a.name())
 	}
 	return sdk.ActionResult{Message: "unsilenced " + a.name()}, nil
 }
 
 // madeBy reports whether s is an active silence this instance made.
 func madeBy(s *amSilence, by string) bool {
-	return s.CreatedBy == by && s.Comment == silenceComment && s.Status != nil && s.Status.State == "active"
+	return s.CreatedBy == by && (s.Comment == silenceComment || s.Comment == mindsEyeComment) && s.Status != nil && s.Status.State == "active"
 }
 
 // matchersOf matches each label exactly, by name.
