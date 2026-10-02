@@ -11,23 +11,48 @@ var errLeftOut = errors.New("past max_made")
 
 // maker makes entities for flow ends with make that no module found, joining one refresh's world.
 type maker struct {
-	w    *world
-	max  int
-	made map[sdk.EntityRef]bool
-	left map[sdk.EntityRef]bool // ends left out past max
+	w      *world
+	max    int
+	made   map[sdk.EntityRef]bool
+	left   map[sdk.EntityRef]bool // ends left out past max
+	skipFn func(sdk.EntityRef) bool
+	known  map[endValue]resolved // what each end's value resolved to this refresh
+}
+
+type endValue struct {
+	end   flowEnd
+	value string
+}
+
+type resolved struct {
+	ref sdk.EntityRef
+	err error
 }
 
 func newMaker(w *world, bound int) *maker {
-	return &maker{w: w, max: bound, made: map[sdk.EntityRef]bool{}, left: map[sdk.EntityRef]bool{}}
+	mk := &maker{w: w, max: bound, made: map[sdk.EntityRef]bool{}, left: map[sdk.EntityRef]bool{}, known: map[endValue]resolved{}}
+	mk.skipFn = mk.skip
+	return mk
 }
 
 // resolve is the entity value names: one found in the world, else, with make, one made for it.
-// The module's own made entities are left out of the match so a found one takes their place.
+// A value names the same entity all refresh, as the world it is matched in stays the same.
 func (mk *maker) resolve(r sdk.Resolver, e flowEnd, value string) (sdk.EntityRef, error) {
+	k := endValue{e, value}
+	if got, ok := mk.known[k]; ok {
+		return got.ref, got.err
+	}
+	ref, err := mk.find(r, e, value)
+	mk.known[k] = resolved{ref, err}
+	return ref, err
+}
+
+// find leaves the module's own made entities out of the match, so a found one takes their place.
+func (mk *maker) find(r sdk.Resolver, e flowEnd, value string) (sdk.EntityRef, error) {
 	if !e.Make {
 		return r.Match(e.Kind, value)
 	}
-	ref, err := r.MatchExcept(e.Kind, value, mk.skip)
+	ref, err := r.MatchExcept(e.Kind, value, mk.skipFn)
 	if !errors.Is(err, sdk.ErrNoMatch) {
 		return ref, err
 	}

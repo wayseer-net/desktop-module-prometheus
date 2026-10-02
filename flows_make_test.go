@@ -3,6 +3,7 @@ package prometheus
 import (
 	"context"
 	"maps"
+	"net/http"
 	"net/url"
 	"slices"
 	"strings"
@@ -48,7 +49,7 @@ func graphLab(t *testing.T) *promtest.Replayer {
 }
 
 // graphing refreshes a module reading the service graph against w.
-func graphing(t *testing.T, rt *promtest.Replayer, opts string, w sdk.Resolver) (*Module, *sdk.ChangeSet) {
+func graphing(t testing.TB, rt http.RoundTripper, opts string, w sdk.Resolver) (*Module, *sdk.ChangeSet) {
 	t.Helper()
 	m := configured(t, rt, opts)
 	m.UseWorld(func() sdk.Resolver { return w })

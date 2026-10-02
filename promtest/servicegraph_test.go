@@ -7,15 +7,10 @@ import (
 	"net/http"
 	"net/url"
 	"slices"
+	"strconv"
 	"strings"
 	"testing"
-)
-
-const (
-	graphRequests = "sum by (client, server) (rate(traces_service_graph_request_total[1m]))"
-	graphFailed   = "sum by (client, server) (rate(traces_service_graph_request_failed_total[1m]))"
-	serverErrors  = "sum by (server) (rate(traces_service_graph_request_failed_total[5m]))"
-	serverP95     = "histogram_quantile(0.95, sum by (server, le) (rate(traces_service_graph_request_server_seconds_bucket[5m])))"
+	"time"
 )
 
 // shopEdges is the made-up shop's call graph, client → server.
@@ -37,7 +32,7 @@ func TestServiceGraph(t *testing.T) {
 	}
 	rp := &Replayer{Exchanges: xs}
 
-	edges := graphEdges(t, rp, "/api/v1/query", graphRequests)
+	edges := graphEdges(t, rp, "/api/v1/query", GraphRequests)
 	if got := slices.Sorted(maps.Keys(edges)); !slices.Equal(got, slices.Sorted(slices.Values(shopEdges))) {
 		t.Errorf("edges %v; want %v", got, shopEdges)
 	}
@@ -49,12 +44,12 @@ func TestServiceGraph(t *testing.T) {
 	if servers["reports"] || servers["user"] || !clients["reports"] || !clients["user"] {
 		t.Errorf("servers %v; want reports and user calling but called by no one", servers)
 	}
-	for e := range graphEdges(t, rp, "/api/v1/query", graphFailed) {
+	for e := range graphEdges(t, rp, "/api/v1/query", GraphFailed) {
 		if !edges[e] {
 			t.Errorf("failures on %s, which has no requests", e)
 		}
 	}
-	for _, q := range []string{serverErrors, serverP95} {
+	for _, q := range []string{GraphErrors, GraphP95} {
 		got := graphEdges(t, rp, "/api/v1/query_range", q)
 		for s := range servers {
 			if !got[s] {
@@ -64,17 +59,25 @@ func TestServiceGraph(t *testing.T) {
 	}
 }
 
-// graphEdges asks rp for query at path and returns each series' "client→server", or its server
-// alone when the query keeps no client, after checking every sample is a number.
-func graphEdges(t *testing.T, rp *Replayer, path, query string) map[string]bool {
+// graphEdges asks rt for query at path, over the last hour for a range, and returns each
+// series' "client→server", or its server alone when the query keeps no client, after checking
+// every sample is a number.
+func graphEdges(t *testing.T, rt http.RoundTripper, path, query string) map[string]bool {
 	t.Helper()
-	req, _ := http.NewRequest("POST", "http://promhost:9090"+path, strings.NewReader(url.Values{"query": {query}}.Encode()))
+	form := url.Values{"query": {query}}
+	if strings.HasSuffix(path, "_range") {
+		end := time.Now().Unix()
+		form.Set("start", strconv.FormatInt(end-3600, 10))
+		form.Set("end", strconv.FormatInt(end, 10))
+		form.Set("step", "60")
+	}
+	req, _ := http.NewRequest("POST", "http://promhost:9090"+path, strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	resp, err := rp.RoundTrip(req)
+	resp, err := rt.RoundTrip(req)
 	if err != nil {
 		t.Fatal(err)
 	}
-	body, _ := io.ReadAll(resp.Body)
+	body := mustRead(t, resp)
 	if resp.StatusCode != 200 {
 		t.Fatalf("%s: HTTP %d", query, resp.StatusCode)
 	}
@@ -102,4 +105,13 @@ func graphEdges(t *testing.T, rp *Replayer, path, query string) map[string]bool 
 		got[key] = true
 	}
 	return got
+}
+
+func mustRead(t *testing.T, resp *http.Response) []byte {
+	t.Helper()
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return b
 }
