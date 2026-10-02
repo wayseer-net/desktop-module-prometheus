@@ -49,10 +49,14 @@ type fakeWorld struct {
 }
 
 func (w fakeWorld) Match(kind sdk.Kind, value string) (sdk.EntityRef, error) {
+	return w.MatchExcept(kind, value, func(sdk.EntityRef) bool { return false })
+}
+
+func (w fakeWorld) MatchExcept(kind sdk.Kind, value string, skip func(sdk.EntityRef) bool) (sdk.EntityRef, error) {
 	if slices.Contains(w.ambiguous, value) {
 		return "", sdk.ErrAmbiguous
 	}
-	if r, ok := w.refs[kind][value]; ok {
+	if r, ok := w.refs[kind][value]; ok && !skip(r) {
 		return r, nil
 	}
 	return "", sdk.ErrNoMatch

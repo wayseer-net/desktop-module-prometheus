@@ -51,6 +51,7 @@ type Module struct {
 	amNote       string
 	resolve      func() sdk.Resolver    // the world, for flow ends; nil until the host gives it
 	flowEdges    [][]sdk.Edge           // each flow query's last edges
+	flowMade     [][]sdk.Entity         // the made entities each flow query's last edges join
 	seriesCounts map[string]seriesCount // each series' unmatched, by metric, as last read
 }
 
@@ -90,7 +91,7 @@ func (m *Module) Configure(_ context.Context, cfg sdk.Config) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	m.name, m.opts, m.client, m.am = cfg.Name, o, newClient(&o.endpoint, o.Timeout, m.transport, s), am
-	m.alerts, m.amNote, m.flowEdges, m.seriesCounts = nil, "", nil, map[string]seriesCount{}
+	m.alerts, m.amNote, m.flowEdges, m.flowMade, m.seriesCounts = nil, "", nil, nil, map[string]seriesCount{}
 	m.world, m.read, m.metrics, m.catalogAt, m.catNote = world{}, false, nil, time.Time{}, ""
 	m.tracker.Reset()
 	m.health.Store(&sdk.Health{})

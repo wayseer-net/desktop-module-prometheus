@@ -18,6 +18,7 @@ type options struct {
 	Kinds        map[string]string `yaml:"kinds"`        // job name to entity kind; other jobs' targets are services; default node and node-exporter are host
 	Alertmanager *endpoint         `yaml:"alertmanager"` // an Alertmanager whose firing alerts show on their entities, with its own credentials
 	Flows        []flowQuery       `yaml:"flows"`        // queries whose answers are traffic between entities in the world
+	MaxMade      int               `yaml:"max_made"`     // most entities flow ends with make may make, 1 to 10000; default 1000
 	Series       []seriesQuery     `yaml:"series"`       // queries whose answers are a metric of entities in the world
 
 	kinds map[string]sdk.Kind
@@ -46,6 +47,7 @@ type flowQuery struct {
 type flowEnd struct {
 	Label string   `yaml:"label"` // the label whose value names the entity; required
 	Kind  sdk.Kind `yaml:"kind"`  // the entity's kind; default service
+	Make  bool     `yaml:"make"`  // make an entity of kind for a value no module found; needs kind
 }
 
 // seriesQuery turns each series a query answers into a metric of the entity its labels name.
@@ -75,7 +77,7 @@ const (
 func defaults() options {
 	return options{
 		endpoint: endpoint{URL: "http://localhost:9090", Auth: authNone},
-		Timeout:  10 * time.Second, Interval: 30 * time.Second, Kinds: map[string]string{"node": string(sdk.KindHost), "node-exporter": string(sdk.KindHost)},
+		Timeout:  10 * time.Second, Interval: 30 * time.Second, MaxMade: 1000, Kinds: map[string]string{"node": string(sdk.KindHost), "node-exporter": string(sdk.KindHost)},
 	}
 }
 
@@ -85,6 +87,8 @@ func (o *options) validate() error {
 		return fmt.Errorf("timeout %v must be between 100ms and 5m", o.Timeout)
 	case o.Interval < time.Second || o.Interval > time.Hour:
 		return fmt.Errorf("interval %v must be between 1s and 1h", o.Interval)
+	case o.MaxMade < 1 || o.MaxMade > 10000:
+		return fmt.Errorf("max_made %d must be between 1 and 10000", o.MaxMade)
 	}
 	return errors.Join(o.endpoint.validate(), o.parseKinds(), o.checkAlertmanager(), o.checkFlows(), o.checkSeries())
 }
@@ -93,7 +97,6 @@ func (o *options) checkFlows() error {
 	var errs []error
 	for i := range o.Flows {
 		f := &o.Flows[i]
-		f.From.Kind, f.To.Kind = cmp.Or(f.From.Kind, sdk.KindService), cmp.Or(f.To.Kind, sdk.KindService)
 		if err := f.validate(); err != nil {
 			errs = append(errs, fmt.Errorf("flows[%d]: %w", i, err))
 		}
@@ -112,7 +115,12 @@ func (f *flowQuery) validate() error {
 	return errors.Join(append(errs, f.From.validate("from"), f.To.validate("to"))...)
 }
 
-func (e flowEnd) validate(end string) error {
+// validate checks the end, defaulting its kind to service unless it makes entities.
+func (e *flowEnd) validate(end string) error {
+	if e.Make && e.Kind == "" {
+		return fmt.Errorf("%s.make needs a kind, the kind of entity it makes", end)
+	}
+	e.Kind = cmp.Or(e.Kind, sdk.KindService)
 	if !labelName.MatchString(e.Label) {
 		return fmt.Errorf("%s.label %q is not a label name", end, e.Label)
 	}

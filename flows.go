@@ -33,7 +33,8 @@ type flowCount struct{ unknown, ambiguous int }
 // returning a note of what could not be read or matched. A query that fails keeps its last edges.
 func (m *Module) readFlows(ctx context.Context, w *world) string {
 	m.mu.Lock()
-	c, flows, resolve, last := m.client, m.opts.Flows, m.resolve, m.flowEdges
+	c, flows, resolve, last, lastMade := m.client, m.opts.Flows, m.resolve, m.flowEdges, m.flowMade
+	mk := newMaker(w, m.opts.MaxMade)
 	m.mu.Unlock()
 	if len(flows) == 0 {
 		return ""
@@ -55,10 +56,11 @@ func (m *Module) readFlows(ctx context.Context, w *world) string {
 			msgs = append(msgs, fmt.Sprintf("flow %d: %s", i+1, queryError(err)))
 			if i < len(last) {
 				next[i] = last[i]
+				mk.keep(lastMade[i])
 			}
 			continue
 		}
-		next[i] = flowEdges(m.name, f, &res, r, &count)
+		next[i] = flowEdges(m.name, f, &res, func(e flowEnd, v string) (sdk.EntityRef, error) { return mk.resolve(r, e, v) }, &count)
 	}
 	for _, es := range next {
 		for _, e := range es {
@@ -68,14 +70,14 @@ func (m *Module) readFlows(ctx context.Context, w *world) string {
 		}
 	}
 	m.mu.Lock()
-	m.flowEdges = next
+	m.flowEdges, m.flowMade = next, mk.touched(next)
 	m.mu.Unlock()
-	return notes(append(msgs, count.note())...)
+	return notes(append(msgs, count.note(), mk.note())...)
 }
 
 // flowEdges sums the answer's rates by the entities its ends name, leaving out a flow within
 // one entity and a series whose end names no one entity.
-func flowEdges(src sdk.ModuleID, f flowQuery, res *vector, r sdk.Resolver, count *flowCount) []sdk.Edge {
+func flowEdges(src sdk.ModuleID, f flowQuery, res *vector, end func(flowEnd, string) (sdk.EntityRef, error), count *flowCount) []sdk.Edge {
 	sums := map[sdk.EdgeKey]float64{}
 	var order []sdk.EdgeKey
 	for _, s := range res.Result {
@@ -83,9 +85,11 @@ func flowEdges(src sdk.ModuleID, f flowQuery, res *vector, r sdk.Resolver, count
 		if !ok {
 			continue
 		}
-		from, err1 := r.Match(f.From.Kind, s.Metric[f.From.Label])
-		to, err2 := r.Match(f.To.Kind, s.Metric[f.To.Label])
+		from, err1 := end(f.From, s.Metric[f.From.Label])
+		to, err2 := end(f.To, s.Metric[f.To.Label])
 		switch {
+		case errors.Is(err1, errLeftOut) || errors.Is(err2, errLeftOut):
+			continue
 		case errors.Is(err1, sdk.ErrAmbiguous) || errors.Is(err2, sdk.ErrAmbiguous):
 			count.ambiguous++
 			continue
