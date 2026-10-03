@@ -34,7 +34,7 @@ flows:
 func flowLab(t *testing.T) *promtest.Replayer {
 	t.Helper()
 	rp := lab(t, false)
-	xs, err := promtest.Load("../../testdata/prometheus/flows.json")
+	xs, err := promtest.Load("testdata/flows.json")
 	if err != nil {
 		t.Fatal(err)
 	}

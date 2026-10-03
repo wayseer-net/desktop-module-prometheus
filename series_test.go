@@ -56,7 +56,7 @@ func podWorld(t *testing.T) fakeWorld {
 func seriesLab(t *testing.T, w fakeWorld) (*Module, *promtest.Replayer) {
 	t.Helper()
 	rp := lab(t, false)
-	xs, err := promtest.Load("../../testdata/prometheus/series.json")
+	xs, err := promtest.Load("testdata/series.json")
 	if err != nil {
 		t.Fatal(err)
 	}

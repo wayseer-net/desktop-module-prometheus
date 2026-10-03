@@ -22,7 +22,7 @@ const labURL = "http://promhost:9090"
 // lab replays the recorded server; loose answers queries it never recorded with a recorded one.
 func lab(t testing.TB, loose bool) *promtest.Replayer {
 	t.Helper()
-	xs, err := promtest.Load("../../testdata/prometheus/lab.json")
+	xs, err := promtest.Load("testdata/lab.json")
 	if err != nil {
 		t.Fatal(err)
 	}

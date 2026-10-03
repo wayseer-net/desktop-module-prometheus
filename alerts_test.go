@@ -41,7 +41,7 @@ func (w *withAlerts) set(t *testing.T, stage string) {
 		w.stage.Store(nil)
 		return
 	}
-	xs, err := promtest.Load("../../testdata/prometheus/alerts-" + stage + ".json")
+	xs, err := promtest.Load("testdata/alerts-" + stage + ".json")
 	if err != nil {
 		t.Fatal(err)
 	}

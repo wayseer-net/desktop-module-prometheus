@@ -40,7 +40,7 @@ flows:
 func graphLab(t *testing.T) *promtest.Replayer {
 	t.Helper()
 	rp := lab(t, false)
-	xs, err := promtest.Load("../../testdata/prometheus/service-graph.json")
+	xs, err := promtest.Load("testdata/service-graph.json")
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -1,0 +1,157 @@
+[
+ {
+  "method": "POST",
+  "path": "/api/v1/query",
+  "form": {
+   "query": [
+    "sum by (source_workload, destination_workload, response_code) (rate(istio_requests_total{reporter=\"destination\"}[1m]))"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "vector",
+    "result": [
+     {
+      "metric": {
+       "source_workload": "frontend",
+       "destination_workload": "checkout",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "120.5"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "checkout",
+       "destination_workload": "payments",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "40"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "checkout",
+       "destination_workload": "payments",
+       "response_code": "503"
+      },
+      "value": [
+       1790000000.0,
+       "2"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "checkout",
+       "destination_workload": "cart",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "30"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "unknown",
+       "destination_workload": "checkout",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "2"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "loadgen",
+       "destination_workload": "frontend",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "10"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "frontend",
+       "destination_workload": "frontend",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "1"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "checkout",
+       "destination_workload": "inventory",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "5"
+      ]
+     },
+     {
+      "metric": {
+       "source_workload": "cart",
+       "destination_workload": "payments",
+       "response_code": "200"
+      },
+      "value": [
+       1790000000.0,
+       "NaN"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query",
+  "form": {
+   "query": [
+    "sum by (src, dst) (rate(net_sent_bytes_total[1m]))"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "vector",
+    "result": [
+     {
+      "metric": {
+       "src": "web-01",
+       "dst": "db-07:5432"
+      },
+      "value": [
+       1790000000.0,
+       "1536"
+      ]
+     },
+     {
+      "metric": {
+       "src": "frontend",
+       "dst": "checkout"
+      },
+      "value": [
+       1790000000.0,
+       "9000"
+      ]
+     }
+    ]
+   }
+  }
+ }
+]

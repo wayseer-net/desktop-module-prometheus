@@ -26,7 +26,7 @@ var shopEdges = []string{
 // TestServiceGraph wants the recorded Tempo service graph to answer its queries with every edge
 // of the shop, failures only on edges that exist, and errors and p95 latency for every server.
 func TestServiceGraph(t *testing.T) {
-	xs, err := Load("../../../testdata/prometheus/service-graph.json")
+	xs, err := Load("../testdata/service-graph.json")
 	if err != nil {
 		t.Fatal(err)
 	}

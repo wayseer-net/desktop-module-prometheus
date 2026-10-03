@@ -1,0 +1,9254 @@
+[
+ {
+  "method": "GET",
+  "path": "/api/v1/targets",
+  "form": {
+   "state": [
+    "active"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "activeTargets": [
+     {
+      "discoveredLabels": {
+       "__address__": "127.0.0.1:19999",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "api"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "127.0.0.1:19999",
+       "job": "api"
+      },
+      "scrapePool": "api",
+      "scrapeUrl": "http://127.0.0.1:19999/metrics",
+      "globalUrl": "http://promhost:19999/metrics",
+      "lastError": "Get \"http://127.0.0.1:19999/metrics\": dial tcp 127.0.0.1:19999: connect: connection refused",
+      "lastScrape": "2026-09-25T23:13:55.748998527-06:00",
+      "lastScrapeDuration": 0.000468962,
+      "health": "down",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19998",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "api"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "localhost:19998",
+       "job": "api"
+      },
+      "scrapePool": "api",
+      "scrapeUrl": "http://localhost:19998/metrics",
+      "globalUrl": "http://promhost:19998/metrics",
+      "lastError": "Get \"http://localhost:19998/metrics\": dial tcp [::1]:19998: connect: connection refused",
+      "lastScrape": "2026-09-25T23:13:56.313837522-06:00",
+      "lastScrapeDuration": 0.00041506,
+      "health": "down",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19100",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "hosts"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "scrapePool": "hosts",
+      "scrapeUrl": "http://localhost:19100/metrics",
+      "globalUrl": "http://promhost:19100/metrics",
+      "lastError": "",
+      "lastScrape": "2026-09-25T23:13:54.076675506-06:00",
+      "lastScrapeDuration": 0.058448068,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19090",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "job": "prometheus"
+      },
+      "labels": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "scrapePool": "prometheus",
+      "scrapeUrl": "http://localhost:19090/metrics",
+      "globalUrl": "http://promhost:19090/metrics",
+      "lastError": "",
+      "lastScrape": "2026-09-25T23:13:54.20582642-06:00",
+      "lastScrapeDuration": 0.002888058,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": null
+   }
+  }
+ },
+ {
+  "method": "GET",
+  "path": "/api/v1/query",
+  "form": {
+   "query": [
+    "group by (job, instance, nodename) (node_uname_info)"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "vector",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts",
+       "nodename": "promhost"
+      },
+      "value": [
+       1790399636.350,
+       "1"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "GET",
+  "path": "/api/v1/targets",
+  "form": {
+   "state": [
+    "active"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "activeTargets": [
+     {
+      "discoveredLabels": {
+       "__address__": "127.0.0.1:19999",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "api"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "127.0.0.1:19999",
+       "job": "api"
+      },
+      "scrapePool": "api",
+      "scrapeUrl": "http://127.0.0.1:19999/metrics",
+      "globalUrl": "http://promhost:19999/metrics",
+      "lastError": "Get \"http://127.0.0.1:19999/metrics\": dial tcp 127.0.0.1:19999: connect: connection refused",
+      "lastScrape": "2026-09-25T23:13:55.748998527-06:00",
+      "lastScrapeDuration": 0.000468962,
+      "health": "down",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19998",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "api"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "localhost:19998",
+       "job": "api"
+      },
+      "scrapePool": "api",
+      "scrapeUrl": "http://localhost:19998/metrics",
+      "globalUrl": "http://promhost:19998/metrics",
+      "lastError": "Get \"http://localhost:19998/metrics\": dial tcp [::1]:19998: connect: connection refused",
+      "lastScrape": "2026-09-25T23:13:56.313837522-06:00",
+      "lastScrapeDuration": 0.00041506,
+      "health": "down",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19100",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "env": "lab",
+       "job": "hosts"
+      },
+      "labels": {
+       "env": "lab",
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "scrapePool": "hosts",
+      "scrapeUrl": "http://localhost:19100/metrics",
+      "globalUrl": "http://promhost:19100/metrics",
+      "lastError": "",
+      "lastScrape": "2026-09-25T23:13:54.076675506-06:00",
+      "lastScrapeDuration": 0.058448068,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     },
+     {
+      "discoveredLabels": {
+       "__address__": "localhost:19090",
+       "__always_scrape_classic_histograms__": "false",
+       "__convert_classic_histograms_to_nhcb__": "false",
+       "__metrics_path__": "/metrics",
+       "__scheme__": "http",
+       "__scrape_interval__": "5s",
+       "__scrape_native_histograms__": "false",
+       "__scrape_timeout__": "5s",
+       "job": "prometheus"
+      },
+      "labels": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "scrapePool": "prometheus",
+      "scrapeUrl": "http://localhost:19090/metrics",
+      "globalUrl": "http://promhost:19090/metrics",
+      "lastError": "",
+      "lastScrape": "2026-09-25T23:13:54.20582642-06:00",
+      "lastScrapeDuration": 0.002888058,
+      "health": "up",
+      "scrapeInterval": "5s",
+      "scrapeTimeout": "5s"
+     }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": null
+   }
+  }
+ },
+ {
+  "method": "GET",
+  "path": "/api/v1/query",
+  "form": {
+   "query": [
+    "group by (job, instance, nodename) (node_uname_info)"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "vector",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts",
+       "nodename": "promhost"
+      },
+      "value": [
+       1790399636.351,
+       "1"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "GET",
+  "path": "/api/v1/metadata",
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "go_gc_cleanups_executed_cleanups_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Approximate total count of cleanup functions (created by runtime.AddCleanup) executed by the runtime. Subtract /gc/cleanups/queued:cleanups to approximate cleanup queue length. Useful for detecting slow cleanups holding up the queue. Sourced from /gc/cleanups/executed:cleanups."
+     }
+    ],
+    "go_gc_cleanups_queued_cleanups_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Approximate total count of cleanup functions (created by runtime.AddCleanup) queued by the runtime for execution. Subtract from /gc/cleanups/executed:cleanups to approximate cleanup queue length. Useful for detecting slow cleanups holding up the queue. Sourced from /gc/cleanups/queued:cleanups."
+     }
+    ],
+    "go_gc_cycles_automatic_gc_cycles_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Count of completed GC cycles generated by the Go runtime. Sourced from /gc/cycles/automatic:gc-cycles."
+     }
+    ],
+    "go_gc_cycles_forced_gc_cycles_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Count of completed GC cycles forced by the application. Sourced from /gc/cycles/forced:gc-cycles."
+     }
+    ],
+    "go_gc_cycles_total_gc_cycles_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Count of all completed GC cycles. Sourced from /gc/cycles/total:gc-cycles."
+     }
+    ],
+    "go_gc_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "A summary of the wall-time pause (stop-the-world) duration in garbage collection cycles."
+     }
+    ],
+    "go_gc_finalizers_executed_finalizers_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total count of finalizer functions (created by runtime.SetFinalizer) executed by the runtime. Subtract /gc/finalizers/queued:finalizers to approximate finalizer queue length. Useful for detecting finalizers overwhelming the queue, either by being too slow, or by there being too many of them. Sourced from /gc/finalizers/executed:finalizers."
+     }
+    ],
+    "go_gc_finalizers_queued_finalizers_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total count of finalizer functions (created by runtime.SetFinalizer) and queued by the runtime for execution. Subtract from /gc/finalizers/executed:finalizers to approximate finalizer queue length. Useful for detecting slow finalizers holding up the queue. Sourced from /gc/finalizers/queued:finalizers."
+     }
+    ],
+    "go_gc_gogc_percent": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Heap size target percentage configured by the user, otherwise 100. This value is set by the GOGC environment variable, and the runtime/debug.SetGCPercent function. Sourced from /gc/gogc:percent."
+     }
+    ],
+    "go_gc_gomemlimit_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Go runtime memory limit configured by the user, otherwise math.MaxInt64. This value is set by the GOMEMLIMIT environment variable, and the runtime/debug.SetMemoryLimit function. Sourced from /gc/gomemlimit:bytes."
+     }
+    ],
+    "go_gc_heap_allocs_by_size_bytes": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of heap allocations by approximate size. Bucket counts increase monotonically. Note that this does not include tiny objects as defined by /gc/heap/tiny/allocs:objects, only tiny blocks. Sourced from /gc/heap/allocs-by-size:bytes."
+     }
+    ],
+    "go_gc_heap_allocs_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Cumulative sum of memory allocated to the heap by the application. Sourced from /gc/heap/allocs:bytes."
+     }
+    ],
+    "go_gc_heap_allocs_objects_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Cumulative count of heap allocations triggered by the application. Note that this does not include tiny objects as defined by /gc/heap/tiny/allocs:objects, only tiny blocks. Sourced from /gc/heap/allocs:objects."
+     }
+    ],
+    "go_gc_heap_frees_by_size_bytes": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of freed heap allocations by approximate size. Bucket counts increase monotonically. Note that this does not include tiny objects as defined by /gc/heap/tiny/allocs:objects, only tiny blocks. Sourced from /gc/heap/frees-by-size:bytes."
+     }
+    ],
+    "go_gc_heap_frees_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Cumulative sum of heap memory freed by the garbage collector. Sourced from /gc/heap/frees:bytes."
+     }
+    ],
+    "go_gc_heap_frees_objects_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Cumulative count of heap allocations whose storage was freed by the garbage collector. Note that this does not include tiny objects as defined by /gc/heap/tiny/allocs:objects, only tiny blocks. Sourced from /gc/heap/frees:objects."
+     }
+    ],
+    "go_gc_heap_goal_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Heap size target for the end of the GC cycle. Sourced from /gc/heap/goal:bytes."
+     }
+    ],
+    "go_gc_heap_live_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Heap memory occupied by live objects that were marked by the previous GC. Sourced from /gc/heap/live:bytes."
+     }
+    ],
+    "go_gc_heap_objects_objects": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of objects, live or unswept, occupying heap memory. Sourced from /gc/heap/objects:objects."
+     }
+    ],
+    "go_gc_heap_tiny_allocs_objects_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Count of small allocations that are packed together into blocks. These allocations are counted separately from other allocations because each individual allocation is not tracked by the runtime, only their block. Each block is already accounted for in allocs-by-size and frees-by-size. Sourced from /gc/heap/tiny/allocs:objects."
+     }
+    ],
+    "go_gc_limiter_last_enabled_gc_cycle": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "GC cycle the last time the GC CPU limiter was enabled. This metric is useful for diagnosing the root cause of an out-of-memory error, because the limiter trades memory for CPU time when the GC's CPU time gets too high. This is most likely to occur with use of SetMemoryLimit. The first GC cycle is cycle 1, so a value of 0 indicates that it was never enabled. Sourced from /gc/limiter/last-enabled:gc-cycle."
+     }
+    ],
+    "go_gc_pauses_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Deprecated. Prefer the identical /sched/pauses/total/gc:seconds. Sourced from /gc/pauses:seconds."
+     }
+    ],
+    "go_gc_scan_globals_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The total amount of global variable space that is scannable. Sourced from /gc/scan/globals:bytes."
+     }
+    ],
+    "go_gc_scan_heap_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The total amount of heap space that is scannable. Sourced from /gc/scan/heap:bytes."
+     }
+    ],
+    "go_gc_scan_stack_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The number of bytes of stack that were scanned last GC cycle. Sourced from /gc/scan/stack:bytes."
+     }
+    ],
+    "go_gc_scan_total_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The total amount space that is scannable. Sum of all metrics in /gc/scan. Sourced from /gc/scan/total:bytes."
+     }
+    ],
+    "go_gc_stack_starting_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The stack size of new goroutines. Sourced from /gc/stack/starting-size:bytes."
+     }
+    ],
+    "go_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of goroutines that currently exist."
+     }
+    ],
+    "go_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Information about the Go environment."
+     }
+    ],
+    "go_memstats_alloc_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes allocated in heap and currently in use. Equals to /memory/classes/heap/objects:bytes."
+     }
+    ],
+    "go_memstats_alloc_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of bytes allocated in heap until now, even if released already. Equals to /gc/heap/allocs:bytes."
+     }
+    ],
+    "go_memstats_buck_hash_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes used by the profiling bucket hash table. Equals to /memory/classes/profiling/buckets:bytes."
+     }
+    ],
+    "go_memstats_frees_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of heap objects frees. Equals to /gc/heap/frees:objects + /gc/heap/tiny/allocs:objects."
+     }
+    ],
+    "go_memstats_gc_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes used for garbage collection system metadata. Equals to /memory/classes/metadata/other:bytes."
+     }
+    ],
+    "go_memstats_heap_alloc_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes allocated and currently in use, same as go_memstats_alloc_bytes. Equals to /memory/classes/heap/objects:bytes."
+     }
+    ],
+    "go_memstats_heap_idle_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes waiting to be used. Equals to /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes."
+     }
+    ],
+    "go_memstats_heap_inuse_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes that are in use. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes"
+     }
+    ],
+    "go_memstats_heap_objects": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of currently allocated objects. Equals to /gc/heap/objects:objects."
+     }
+    ],
+    "go_memstats_heap_released_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes released to OS. Equals to /memory/classes/heap/released:bytes."
+     }
+    ],
+    "go_memstats_heap_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes obtained from system. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes + /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes."
+     }
+    ],
+    "go_memstats_last_gc_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of seconds since 1970 of last garbage collection."
+     }
+    ],
+    "go_memstats_mallocs_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of heap objects allocated, both live and gc-ed. Semantically a counter version for go_memstats_heap_objects gauge. Equals to /gc/heap/allocs:objects + /gc/heap/tiny/allocs:objects."
+     }
+    ],
+    "go_memstats_mcache_inuse_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes in use by mcache structures. Equals to /memory/classes/metadata/mcache/inuse:bytes."
+     }
+    ],
+    "go_memstats_mcache_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes used for mcache structures obtained from system. Equals to /memory/classes/metadata/mcache/inuse:bytes + /memory/classes/metadata/mcache/free:bytes."
+     }
+    ],
+    "go_memstats_mspan_inuse_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes in use by mspan structures. Equals to /memory/classes/metadata/mspan/inuse:bytes."
+     }
+    ],
+    "go_memstats_mspan_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes used for mspan structures obtained from system. Equals to /memory/classes/metadata/mspan/inuse:bytes + /memory/classes/metadata/mspan/free:bytes."
+     }
+    ],
+    "go_memstats_next_gc_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of heap bytes when next garbage collection will take place. Equals to /gc/heap/goal:bytes."
+     }
+    ],
+    "go_memstats_other_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes used for other system allocations. Equals to /memory/classes/other:bytes."
+     }
+    ],
+    "go_memstats_stack_inuse_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes obtained from system for stack allocator in non-CGO environments. Equals to /memory/classes/heap/stacks:bytes."
+     }
+    ],
+    "go_memstats_stack_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes obtained from system for stack allocator. Equals to /memory/classes/heap/stacks:bytes + /memory/classes/os-stacks:bytes."
+     }
+    ],
+    "go_memstats_sys_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of bytes obtained from system. Equals to /memory/classes/total:byte."
+     }
+    ],
+    "go_sched_gomaxprocs_threads": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current runtime.GOMAXPROCS setting, or the number of operating system threads that can execute user-level Go code simultaneously. Sourced from /sched/gomaxprocs:threads."
+     }
+    ],
+    "go_sched_goroutines_created_goroutines_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Count of goroutines created since program start. Sourced from /sched/goroutines-created:goroutines."
+     }
+    ],
+    "go_sched_goroutines_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Count of live goroutines. Sourced from /sched/goroutines:goroutines."
+     }
+    ],
+    "go_sched_goroutines_not_in_go_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Approximate count of goroutines running or blocked in a system call or cgo call. Not guaranteed to add up to /sched/goroutines:goroutines with other goroutine metrics. Sourced from /sched/goroutines/not-in-go:goroutines."
+     }
+    ],
+    "go_sched_goroutines_runnable_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Approximate count of goroutines ready to execute, but not executing. Not guaranteed to add up to /sched/goroutines:goroutines with other goroutine metrics. Sourced from /sched/goroutines/runnable:goroutines."
+     }
+    ],
+    "go_sched_goroutines_running_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Approximate count of goroutines executing. Always less than or equal to /sched/gomaxprocs:threads. Not guaranteed to add up to /sched/goroutines:goroutines with other goroutine metrics. Sourced from /sched/goroutines/running:goroutines."
+     }
+    ],
+    "go_sched_goroutines_waiting_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Approximate count of goroutines waiting on a resource (I/O or sync primitives). Not guaranteed to add up to /sched/goroutines:goroutines with other goroutine metrics. Sourced from /sched/goroutines/waiting:goroutines."
+     }
+    ],
+    "go_sched_latencies_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of the time goroutines have spent in the scheduler in a runnable state before actually running. Bucket counts increase monotonically. Sourced from /sched/latencies:seconds."
+     }
+    ],
+    "go_sched_pauses_stopping_gc_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of individual GC-related stop-the-world stopping latencies. This is the time it takes from deciding to stop the world until all Ps are stopped. This is a subset of the total GC-related stop-the-world time (/sched/pauses/total/gc:seconds). During this time, some threads may be executing. Bucket counts increase monotonically. Sourced from /sched/pauses/stopping/gc:seconds."
+     }
+    ],
+    "go_sched_pauses_stopping_other_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of individual non-GC-related stop-the-world stopping latencies. This is the time it takes from deciding to stop the world until all Ps are stopped. This is a subset of the total non-GC-related stop-the-world time (/sched/pauses/total/other:seconds). During this time, some threads may be executing. Bucket counts increase monotonically. Sourced from /sched/pauses/stopping/other:seconds."
+     }
+    ],
+    "go_sched_pauses_total_gc_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of individual GC-related stop-the-world pause latencies. This is the time from deciding to stop the world until the world is started again. Some of this time is spent getting all threads to stop (this is measured directly in /sched/pauses/stopping/gc:seconds), during which some threads may still be running. Bucket counts increase monotonically. Sourced from /sched/pauses/total/gc:seconds."
+     }
+    ],
+    "go_sched_pauses_total_other_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Distribution of individual non-GC-related stop-the-world pause latencies. This is the time from deciding to stop the world until the world is started again. Some of this time is spent getting all threads to stop (measured directly in /sched/pauses/stopping/other:seconds). Bucket counts increase monotonically. Sourced from /sched/pauses/total/other:seconds."
+     }
+    ],
+    "go_sched_threads_total_threads": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current count of live threads that are owned by the Go runtime. Sourced from /sched/threads/total:threads."
+     }
+    ],
+    "go_sync_mutex_wait_total_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Approximate cumulative time goroutines have spent blocked on a sync.Mutex, sync.RWMutex, or runtime-internal lock. This metric is useful for identifying global changes in lock contention. Collect a mutex or block profile using the runtime/pprof package for more detailed contention data. Sourced from /sync/mutex/wait/total:seconds."
+     }
+    ],
+    "go_threads": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of OS threads created."
+     }
+    ],
+    "net_conntrack_dialer_conn_attempted_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections attempted by the given dialer a given name."
+     }
+    ],
+    "net_conntrack_dialer_conn_closed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections closed which originated from the dialer of a given name."
+     }
+    ],
+    "net_conntrack_dialer_conn_established_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections successfully established by the given dialer a given name."
+     }
+    ],
+    "net_conntrack_dialer_conn_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections failed to dial by the dialer a given name."
+     }
+    ],
+    "net_conntrack_listener_conn_accepted_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections opened to the listener of a given name."
+     }
+    ],
+    "net_conntrack_listener_conn_closed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of connections closed that were made to the listener of a given name."
+     }
+    ],
+    "node_arp_entries": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "ARP entries by device"
+     }
+    ],
+    "node_boot_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Node boot time, in unixtime."
+     }
+    ],
+    "node_btrfs_allocation_ratio": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Data allocation ratio for a layout/data type"
+     }
+    ],
+    "node_btrfs_commit_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Sum of the duration of all commits, in seconds."
+     }
+    ],
+    "node_btrfs_commits_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of commits that have occurred."
+     }
+    ],
+    "node_btrfs_device_errors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Errors reported for the device"
+     }
+    ],
+    "node_btrfs_device_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of a device that is part of the filesystem."
+     }
+    ],
+    "node_btrfs_device_unused_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Unused bytes unused on a device that is part of the filesystem."
+     }
+    ],
+    "node_btrfs_global_rsv_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of global reserve."
+     }
+    ],
+    "node_btrfs_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem information"
+     }
+    ],
+    "node_btrfs_last_commit_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Duration of the most recent commit, in seconds."
+     }
+    ],
+    "node_btrfs_max_commit_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Duration of the slowest commit, in seconds."
+     }
+    ],
+    "node_btrfs_reserved_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Amount of space reserved for a data type"
+     }
+    ],
+    "node_btrfs_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Amount of space allocated for a layout/data type"
+     }
+    ],
+    "node_btrfs_used_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Amount of used space by a layout/data type"
+     }
+    ],
+    "node_context_switches_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of context switches."
+     }
+    ],
+    "node_cooling_device_cur_state": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current throttle state of the cooling device"
+     }
+    ],
+    "node_cooling_device_max_state": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum throttle state of the cooling device"
+     }
+    ],
+    "node_cpu_frequency_avg_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Average CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_frequency_max_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_frequency_min_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Minimum CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_guest_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Seconds the CPUs spent in guests (VMs) for each mode."
+     }
+    ],
+    "node_cpu_scaling_frequency_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current scaled CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_scaling_frequency_max_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum scaled CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_scaling_frequency_min_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Minimum scaled CPU thread frequency in hertz."
+     }
+    ],
+    "node_cpu_scaling_governor": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current enabled CPU frequency governor."
+     }
+    ],
+    "node_cpu_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Seconds the CPUs spent in each mode."
+     }
+    ],
+    "node_disk_device_mapper_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Info about disk device mapper."
+     }
+    ],
+    "node_disk_discard_time_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "This is the total number of seconds spent by all discards."
+     }
+    ],
+    "node_disk_discarded_sectors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of sectors discarded successfully."
+     }
+    ],
+    "node_disk_discards_completed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of discards completed successfully."
+     }
+    ],
+    "node_disk_discards_merged_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of discards merged."
+     }
+    ],
+    "node_disk_filesystem_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Info about disk filesystem."
+     }
+    ],
+    "node_disk_flush_requests_time_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "This is the total number of seconds spent by all flush requests."
+     }
+    ],
+    "node_disk_flush_requests_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of flush requests completed successfully"
+     }
+    ],
+    "node_disk_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Info of /sys/block/\u003cblock_device\u003e."
+     }
+    ],
+    "node_disk_io_now": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The number of I/Os currently in progress."
+     }
+    ],
+    "node_disk_io_time_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total seconds spent doing I/Os."
+     }
+    ],
+    "node_disk_io_time_weighted_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The weighted # of seconds spent doing I/Os."
+     }
+    ],
+    "node_disk_read_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of bytes read successfully."
+     }
+    ],
+    "node_disk_read_time_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of seconds spent by all reads."
+     }
+    ],
+    "node_disk_reads_completed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of reads completed successfully."
+     }
+    ],
+    "node_disk_reads_merged_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of reads merged."
+     }
+    ],
+    "node_disk_write_time_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "This is the total number of seconds spent by all writes."
+     }
+    ],
+    "node_disk_writes_completed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of writes completed successfully."
+     }
+    ],
+    "node_disk_writes_merged_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of writes merged."
+     }
+    ],
+    "node_disk_written_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of bytes written successfully."
+     }
+    ],
+    "node_dmi_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "A metric with a constant '1' value labeled by bios_date, bios_release, bios_vendor, bios_version, board_asset_tag, board_name, board_serial, board_vendor, board_version, chassis_asset_tag, chassis_serial, chassis_vendor, chassis_version, product_family, product_name, product_serial, product_sku, product_uuid, product_version, system_vendor if provided by DMI."
+     }
+    ],
+    "node_entropy_available_bits": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Bits of available entropy."
+     }
+    ],
+    "node_entropy_pool_size_bits": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Bits of entropy pool."
+     }
+    ],
+    "node_exporter_build_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "A metric with a constant '1' value labeled by version, revision, branch, goversion from which node_exporter was built, and the goos and goarch for the build."
+     }
+    ],
+    "node_filefd_allocated": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "File descriptor statistics: allocated."
+     }
+    ],
+    "node_filefd_maximum": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "File descriptor statistics: maximum."
+     }
+    ],
+    "node_filesystem_avail_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem space available to non-root users in bytes."
+     }
+    ],
+    "node_filesystem_device_error": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Whether an error occurred while getting statistics for the given device."
+     }
+    ],
+    "node_filesystem_files": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem total file nodes."
+     }
+    ],
+    "node_filesystem_files_free": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem total free file nodes."
+     }
+    ],
+    "node_filesystem_free_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem free space in bytes."
+     }
+    ],
+    "node_filesystem_mount_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem mount information."
+     }
+    ],
+    "node_filesystem_purgeable_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem space available including purgeable space (MacOS specific)."
+     }
+    ],
+    "node_filesystem_readonly": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem read-only status."
+     }
+    ],
+    "node_filesystem_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Filesystem size in bytes."
+     }
+    ],
+    "node_forks_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of forks."
+     }
+    ],
+    "node_hwmon_chip_names": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Annotation metric for human-readable chip names"
+     }
+    ],
+    "node_hwmon_curr_amps": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for current (input)"
+     }
+    ],
+    "node_hwmon_curr_max_amps": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for current (max)"
+     }
+    ],
+    "node_hwmon_fan_fault": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware sensor fault status (fan)"
+     }
+    ],
+    "node_hwmon_fan_rpm": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for fan revolutions per minute (input)"
+     }
+    ],
+    "node_hwmon_fan_target_rpm": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for fan revolutions per minute (target)"
+     }
+    ],
+    "node_hwmon_freq_freq_mhz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for GPU frequency in MHz"
+     }
+    ],
+    "node_hwmon_in_max_volts": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for voltage (max)"
+     }
+    ],
+    "node_hwmon_in_min_volts": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for voltage (min)"
+     }
+    ],
+    "node_hwmon_in_volts": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for voltage (input)"
+     }
+    ],
+    "node_hwmon_power_average_watt": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for power usage in watts (average)"
+     }
+    ],
+    "node_hwmon_power_watt": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for power usage in watts (input)"
+     }
+    ],
+    "node_hwmon_sensor_label": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Label for given chip and sensor"
+     }
+    ],
+    "node_hwmon_temp_alarm": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware sensor alarm status (temp)"
+     }
+    ],
+    "node_hwmon_temp_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (input)"
+     }
+    ],
+    "node_hwmon_temp_crit_alarm_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (crit_alarm)"
+     }
+    ],
+    "node_hwmon_temp_crit_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (crit)"
+     }
+    ],
+    "node_hwmon_temp_emergency_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (emergency)"
+     }
+    ],
+    "node_hwmon_temp_enable_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (enable)"
+     }
+    ],
+    "node_hwmon_temp_fault": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware sensor fault status (temp)"
+     }
+    ],
+    "node_hwmon_temp_lcrit_alarm_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (lcrit_alarm)"
+     }
+    ],
+    "node_hwmon_temp_lcrit_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (lcrit)"
+     }
+    ],
+    "node_hwmon_temp_max_alarm_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (max_alarm)"
+     }
+    ],
+    "node_hwmon_temp_max_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (max)"
+     }
+    ],
+    "node_hwmon_temp_min_alarm_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (min_alarm)"
+     }
+    ],
+    "node_hwmon_temp_min_celsius": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Hardware monitor for temperature (min)"
+     }
+    ],
+    "node_intr_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of interrupts serviced."
+     }
+    ],
+    "node_kernel_hung_tasks_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of tasks that have been detected as hung since the system booted."
+     }
+    ],
+    "node_load1": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "1m load average."
+     }
+    ],
+    "node_load15": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "15m load average."
+     }
+    ],
+    "node_load5": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "5m load average."
+     }
+    ],
+    "node_memory_Active_anon_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Active_anon_bytes."
+     }
+    ],
+    "node_memory_Active_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Active_bytes."
+     }
+    ],
+    "node_memory_Active_file_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Active_file_bytes."
+     }
+    ],
+    "node_memory_AnonHugePages_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field AnonHugePages_bytes."
+     }
+    ],
+    "node_memory_AnonPages_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field AnonPages_bytes."
+     }
+    ],
+    "node_memory_Bounce_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Bounce_bytes."
+     }
+    ],
+    "node_memory_Buffers_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Buffers_bytes."
+     }
+    ],
+    "node_memory_Cached_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Cached_bytes."
+     }
+    ],
+    "node_memory_CmaFree_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field CmaFree_bytes."
+     }
+    ],
+    "node_memory_CmaTotal_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field CmaTotal_bytes."
+     }
+    ],
+    "node_memory_CommitLimit_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field CommitLimit_bytes."
+     }
+    ],
+    "node_memory_Committed_AS_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Committed_AS_bytes."
+     }
+    ],
+    "node_memory_DirectMap1G_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field DirectMap1G_bytes."
+     }
+    ],
+    "node_memory_DirectMap2M_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field DirectMap2M_bytes."
+     }
+    ],
+    "node_memory_DirectMap4k_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field DirectMap4k_bytes."
+     }
+    ],
+    "node_memory_Dirty_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Dirty_bytes."
+     }
+    ],
+    "node_memory_HardwareCorrupted_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field HardwareCorrupted_bytes."
+     }
+    ],
+    "node_memory_HugePages_Free": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field HugePages_Free."
+     }
+    ],
+    "node_memory_HugePages_Rsvd": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field HugePages_Rsvd."
+     }
+    ],
+    "node_memory_HugePages_Surp": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field HugePages_Surp."
+     }
+    ],
+    "node_memory_HugePages_Total": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field HugePages_Total."
+     }
+    ],
+    "node_memory_Hugepagesize_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Hugepagesize_bytes."
+     }
+    ],
+    "node_memory_Inactive_anon_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Inactive_anon_bytes."
+     }
+    ],
+    "node_memory_Inactive_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Inactive_bytes."
+     }
+    ],
+    "node_memory_Inactive_file_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Inactive_file_bytes."
+     }
+    ],
+    "node_memory_KernelStack_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field KernelStack_bytes."
+     }
+    ],
+    "node_memory_Mapped_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Mapped_bytes."
+     }
+    ],
+    "node_memory_MemAvailable_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field MemAvailable_bytes."
+     }
+    ],
+    "node_memory_MemFree_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field MemFree_bytes."
+     }
+    ],
+    "node_memory_MemTotal_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field MemTotal_bytes."
+     }
+    ],
+    "node_memory_Mlocked_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Mlocked_bytes."
+     }
+    ],
+    "node_memory_NFS_Unstable_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field NFS_Unstable_bytes."
+     }
+    ],
+    "node_memory_PageTables_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field PageTables_bytes."
+     }
+    ],
+    "node_memory_Percpu_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Percpu_bytes."
+     }
+    ],
+    "node_memory_SReclaimable_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field SReclaimable_bytes."
+     }
+    ],
+    "node_memory_SUnreclaim_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field SUnreclaim_bytes."
+     }
+    ],
+    "node_memory_ShmemHugePages_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field ShmemHugePages_bytes."
+     }
+    ],
+    "node_memory_ShmemPmdMapped_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field ShmemPmdMapped_bytes."
+     }
+    ],
+    "node_memory_Shmem_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Shmem_bytes."
+     }
+    ],
+    "node_memory_Slab_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Slab_bytes."
+     }
+    ],
+    "node_memory_SwapCached_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field SwapCached_bytes."
+     }
+    ],
+    "node_memory_SwapFree_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field SwapFree_bytes."
+     }
+    ],
+    "node_memory_SwapTotal_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field SwapTotal_bytes."
+     }
+    ],
+    "node_memory_Unevictable_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Unevictable_bytes."
+     }
+    ],
+    "node_memory_VmallocChunk_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field VmallocChunk_bytes."
+     }
+    ],
+    "node_memory_VmallocTotal_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field VmallocTotal_bytes."
+     }
+    ],
+    "node_memory_VmallocUsed_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field VmallocUsed_bytes."
+     }
+    ],
+    "node_memory_WritebackTmp_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field WritebackTmp_bytes."
+     }
+    ],
+    "node_memory_Writeback_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Writeback_bytes."
+     }
+    ],
+    "node_memory_Zswap_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Zswap_bytes."
+     }
+    ],
+    "node_memory_Zswapped_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Memory information field Zswapped_bytes."
+     }
+    ],
+    "node_netstat_Icmp6_InErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Icmp6InErrors."
+     }
+    ],
+    "node_netstat_Icmp6_InMsgs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Icmp6InMsgs."
+     }
+    ],
+    "node_netstat_Icmp6_OutMsgs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Icmp6OutMsgs."
+     }
+    ],
+    "node_netstat_Icmp_InErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IcmpInErrors."
+     }
+    ],
+    "node_netstat_Icmp_InMsgs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IcmpInMsgs."
+     }
+    ],
+    "node_netstat_Icmp_OutMsgs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IcmpOutMsgs."
+     }
+    ],
+    "node_netstat_Ip6_InOctets": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Ip6InOctets."
+     }
+    ],
+    "node_netstat_Ip6_OutOctets": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Ip6OutOctets."
+     }
+    ],
+    "node_netstat_IpExt_InOctets": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IpExtInOctets."
+     }
+    ],
+    "node_netstat_IpExt_OutOctets": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IpExtOutOctets."
+     }
+    ],
+    "node_netstat_Ip_Forwarding": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic IpForwarding."
+     }
+    ],
+    "node_netstat_TcpExt_ListenDrops": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtListenDrops."
+     }
+    ],
+    "node_netstat_TcpExt_ListenOverflows": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtListenOverflows."
+     }
+    ],
+    "node_netstat_TcpExt_SyncookiesFailed": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtSyncookiesFailed."
+     }
+    ],
+    "node_netstat_TcpExt_SyncookiesRecv": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtSyncookiesRecv."
+     }
+    ],
+    "node_netstat_TcpExt_SyncookiesSent": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtSyncookiesSent."
+     }
+    ],
+    "node_netstat_TcpExt_TCPOFOQueue": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtTCPOFOQueue."
+     }
+    ],
+    "node_netstat_TcpExt_TCPRcvQDrop": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtTCPRcvQDrop."
+     }
+    ],
+    "node_netstat_TcpExt_TCPSynRetrans": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtTCPSynRetrans."
+     }
+    ],
+    "node_netstat_TcpExt_TCPTimeouts": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpExtTCPTimeouts."
+     }
+    ],
+    "node_netstat_Tcp_ActiveOpens": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpActiveOpens."
+     }
+    ],
+    "node_netstat_Tcp_CurrEstab": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpCurrEstab."
+     }
+    ],
+    "node_netstat_Tcp_InErrs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpInErrs."
+     }
+    ],
+    "node_netstat_Tcp_InSegs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpInSegs."
+     }
+    ],
+    "node_netstat_Tcp_OutRsts": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpOutRsts."
+     }
+    ],
+    "node_netstat_Tcp_OutSegs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpOutSegs."
+     }
+    ],
+    "node_netstat_Tcp_PassiveOpens": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpPassiveOpens."
+     }
+    ],
+    "node_netstat_Tcp_RetransSegs": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic TcpRetransSegs."
+     }
+    ],
+    "node_netstat_Udp6_InDatagrams": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6InDatagrams."
+     }
+    ],
+    "node_netstat_Udp6_InErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6InErrors."
+     }
+    ],
+    "node_netstat_Udp6_NoPorts": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6NoPorts."
+     }
+    ],
+    "node_netstat_Udp6_OutDatagrams": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6OutDatagrams."
+     }
+    ],
+    "node_netstat_Udp6_RcvbufErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6RcvbufErrors."
+     }
+    ],
+    "node_netstat_Udp6_SndbufErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic Udp6SndbufErrors."
+     }
+    ],
+    "node_netstat_Udp_InDatagrams": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpInDatagrams."
+     }
+    ],
+    "node_netstat_Udp_InErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpInErrors."
+     }
+    ],
+    "node_netstat_Udp_NoPorts": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpNoPorts."
+     }
+    ],
+    "node_netstat_Udp_OutDatagrams": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpOutDatagrams."
+     }
+    ],
+    "node_netstat_Udp_RcvbufErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpRcvbufErrors."
+     }
+    ],
+    "node_netstat_Udp_SndbufErrors": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "Statistic UdpSndbufErrors."
+     }
+    ],
+    "node_network_address_assign_type": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: address_assign_type"
+     }
+    ],
+    "node_network_carrier": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: carrier"
+     }
+    ],
+    "node_network_carrier_changes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device property: carrier_changes_total"
+     }
+    ],
+    "node_network_carrier_down_changes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device property: carrier_down_changes_total"
+     }
+    ],
+    "node_network_carrier_up_changes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device property: carrier_up_changes_total"
+     }
+    ],
+    "node_network_device_id": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: device_id"
+     }
+    ],
+    "node_network_dormant": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: dormant"
+     }
+    ],
+    "node_network_flags": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: flags"
+     }
+    ],
+    "node_network_iface_id": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: iface_id"
+     }
+    ],
+    "node_network_iface_link": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: iface_link"
+     }
+    ],
+    "node_network_iface_link_mode": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: iface_link_mode"
+     }
+    ],
+    "node_network_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Non-numeric data from /sys/class/net/\u003ciface\u003e, value is always 1."
+     }
+    ],
+    "node_network_mtu_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: mtu_bytes"
+     }
+    ],
+    "node_network_name_assign_type": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: name_assign_type"
+     }
+    ],
+    "node_network_net_dev_group": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: net_dev_group"
+     }
+    ],
+    "node_network_protocol_type": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: protocol_type"
+     }
+    ],
+    "node_network_receive_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_bytes."
+     }
+    ],
+    "node_network_receive_compressed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_compressed."
+     }
+    ],
+    "node_network_receive_drop_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_drop."
+     }
+    ],
+    "node_network_receive_errs_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_errs."
+     }
+    ],
+    "node_network_receive_fifo_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_fifo."
+     }
+    ],
+    "node_network_receive_frame_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_frame."
+     }
+    ],
+    "node_network_receive_multicast_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_multicast."
+     }
+    ],
+    "node_network_receive_nohandler_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_nohandler."
+     }
+    ],
+    "node_network_receive_packets_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic receive_packets."
+     }
+    ],
+    "node_network_transmit_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_bytes."
+     }
+    ],
+    "node_network_transmit_carrier_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_carrier."
+     }
+    ],
+    "node_network_transmit_colls_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_colls."
+     }
+    ],
+    "node_network_transmit_compressed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_compressed."
+     }
+    ],
+    "node_network_transmit_drop_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_drop."
+     }
+    ],
+    "node_network_transmit_errs_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_errs."
+     }
+    ],
+    "node_network_transmit_fifo_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_fifo."
+     }
+    ],
+    "node_network_transmit_packets_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Network device statistic transmit_packets."
+     }
+    ],
+    "node_network_transmit_queue_length": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Network device property: transmit_queue_length"
+     }
+    ],
+    "node_network_up": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Value is 1 if operstate is 'up', 0 otherwise."
+     }
+    ],
+    "node_nf_conntrack_entries": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of currently allocated flow entries for connection tracking."
+     }
+    ],
+    "node_nf_conntrack_entries_limit": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum size of connection tracking table."
+     }
+    ],
+    "node_nf_conntrack_stat_drop": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of packets dropped due to conntrack failure."
+     }
+    ],
+    "node_nf_conntrack_stat_early_drop": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of dropped conntrack entries to make room for new ones, if maximum table size was reached."
+     }
+    ],
+    "node_nf_conntrack_stat_found": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of searched entries which were successful."
+     }
+    ],
+    "node_nf_conntrack_stat_ignore": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of packets seen which are already connected to a conntrack entry."
+     }
+    ],
+    "node_nf_conntrack_stat_insert": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of entries inserted into the list."
+     }
+    ],
+    "node_nf_conntrack_stat_insert_failed": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of entries for which list insertion was attempted but failed."
+     }
+    ],
+    "node_nf_conntrack_stat_invalid": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of packets seen which can not be tracked."
+     }
+    ],
+    "node_nf_conntrack_stat_search_restart": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of conntrack table lookups which had to be restarted due to hashtable resizes."
+     }
+    ],
+    "node_nvme_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Non-numeric data from /sys/class/nvme/\u003cdevice\u003e, value is always 1."
+     }
+    ],
+    "node_nvme_namespace_capacity_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Capacity of the NVMe namespace in bytes. Computed as namespace_size * namespace_logical_block_size"
+     }
+    ],
+    "node_nvme_namespace_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Information about NVMe namespaces. Value is always 1"
+     }
+    ],
+    "node_nvme_namespace_logical_block_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Logical block size of the NVMe namespace in bytes. Usually 4Kb. Available in /sys/class/nvme/\u003cdevice\u003e/\u003cnamespace\u003e/queue/logical_block_size"
+     }
+    ],
+    "node_nvme_namespace_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of the NVMe namespace in bytes. Available in /sys/class/nvme/\u003cdevice\u003e/\u003cnamespace\u003e/size"
+     }
+    ],
+    "node_nvme_namespace_used_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Used space of the NVMe namespace in bytes. Available in /sys/class/nvme/\u003cdevice\u003e/\u003cnamespace\u003e/nuse"
+     }
+    ],
+    "node_os_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "A metric with a constant '1' value labeled by build_id, id, id_like, image_id, image_version, name, pretty_name, variant, variant_id, version, version_codename, version_id."
+     }
+    ],
+    "node_power_supply_capacity": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "capacity value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_charge_ampere": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "charge_ampere value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_charge_full": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "charge_full value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_charge_full_design": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "charge_full_design value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_current_ampere": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "current_ampere value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_current_max": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "current_max value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_cyclecount": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "cyclecount value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "info of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_online": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "online value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_present": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "present value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_voltage_max": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "voltage_max value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_voltage_min": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "voltage_min value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_voltage_min_design": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "voltage_min_design value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_power_supply_voltage_volt": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "voltage_volt value of /sys/class/power_supply/\u003cpower_supply\u003e."
+     }
+    ],
+    "node_pressure_cpu_waiting_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds that processes have waited for CPU time"
+     }
+    ],
+    "node_pressure_io_stalled_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds no process could make progress due to IO congestion"
+     }
+    ],
+    "node_pressure_io_waiting_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds that processes have waited due to IO congestion"
+     }
+    ],
+    "node_pressure_irq_stalled_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds no process could make progress due to IRQ congestion"
+     }
+    ],
+    "node_pressure_memory_stalled_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds no process could make progress due to memory congestion"
+     }
+    ],
+    "node_pressure_memory_waiting_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total time in seconds that processes have waited for memory"
+     }
+    ],
+    "node_procs_blocked": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of processes blocked waiting for I/O to complete."
+     }
+    ],
+    "node_procs_running": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of processes in runnable state."
+     }
+    ],
+    "node_schedstat_running_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of seconds CPU spent running a process."
+     }
+    ],
+    "node_schedstat_timeslices_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of timeslices executed by CPU."
+     }
+    ],
+    "node_schedstat_waiting_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of seconds spent by processing waiting for this CPU."
+     }
+    ],
+    "node_scrape_collector_duration_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "node_exporter: Duration of a collector scrape."
+     }
+    ],
+    "node_scrape_collector_success": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "node_exporter: Whether a collector succeeded."
+     }
+    ],
+    "node_selinux_enabled": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "SELinux is enabled, 1 is true, 0 is false"
+     }
+    ],
+    "node_sockstat_FRAG6_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of FRAG6 sockets in state inuse."
+     }
+    ],
+    "node_sockstat_FRAG6_memory": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of FRAG6 sockets in state memory."
+     }
+    ],
+    "node_sockstat_FRAG_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of FRAG sockets in state inuse."
+     }
+    ],
+    "node_sockstat_FRAG_memory": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of FRAG sockets in state memory."
+     }
+    ],
+    "node_sockstat_RAW6_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of RAW6 sockets in state inuse."
+     }
+    ],
+    "node_sockstat_RAW_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of RAW sockets in state inuse."
+     }
+    ],
+    "node_sockstat_TCP6_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP6 sockets in state inuse."
+     }
+    ],
+    "node_sockstat_TCP_alloc": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state alloc."
+     }
+    ],
+    "node_sockstat_TCP_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state inuse."
+     }
+    ],
+    "node_sockstat_TCP_mem": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state mem."
+     }
+    ],
+    "node_sockstat_TCP_mem_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state mem_bytes."
+     }
+    ],
+    "node_sockstat_TCP_orphan": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state orphan."
+     }
+    ],
+    "node_sockstat_TCP_tw": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of TCP sockets in state tw."
+     }
+    ],
+    "node_sockstat_UDP6_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of UDP6 sockets in state inuse."
+     }
+    ],
+    "node_sockstat_UDP_inuse": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of UDP sockets in state inuse."
+     }
+    ],
+    "node_sockstat_UDP_mem": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of UDP sockets in state mem."
+     }
+    ],
+    "node_sockstat_UDP_mem_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of UDP sockets in state mem_bytes."
+     }
+    ],
+    "node_sockstat_sockets_used": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of IPv4 sockets in use."
+     }
+    ],
+    "node_softnet_backlog_len": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Softnet backlog status"
+     }
+    ],
+    "node_softnet_cpu_collision_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of collision occur while obtaining device lock while transmitting"
+     }
+    ],
+    "node_softnet_dropped_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of dropped packets"
+     }
+    ],
+    "node_softnet_flow_limit_count_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of times flow limit has been reached"
+     }
+    ],
+    "node_softnet_processed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of processed packets"
+     }
+    ],
+    "node_softnet_received_rps_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of times cpu woken up received_rps"
+     }
+    ],
+    "node_softnet_times_squeezed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of times processing packets ran out of quota"
+     }
+    ],
+    "node_textfile_scrape_error": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "1 if there was an error opening or reading a file, 0 otherwise"
+     }
+    ],
+    "node_thermal_zone_temp": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Zone temperature in Celsius"
+     }
+    ],
+    "node_time_clocksource_available_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Available clocksources read from '/sys/devices/system/clocksource'."
+     }
+    ],
+    "node_time_clocksource_current_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current clocksource read from '/sys/devices/system/clocksource'."
+     }
+    ],
+    "node_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "System time in seconds since epoch (1970)."
+     }
+    ],
+    "node_time_zone_offset_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "System time zone offset in seconds."
+     }
+    ],
+    "node_timex_estimated_error_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Estimated error in seconds."
+     }
+    ],
+    "node_timex_frequency_adjustment_ratio": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Local clock frequency adjustment."
+     }
+    ],
+    "node_timex_loop_time_constant": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Phase-locked loop time constant."
+     }
+    ],
+    "node_timex_maxerror_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum error in seconds."
+     }
+    ],
+    "node_timex_offset_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Time offset in between local system and reference clock."
+     }
+    ],
+    "node_timex_pps_calibration_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Pulse per second count of calibration intervals."
+     }
+    ],
+    "node_timex_pps_error_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Pulse per second count of calibration errors."
+     }
+    ],
+    "node_timex_pps_frequency_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Pulse per second frequency."
+     }
+    ],
+    "node_timex_pps_jitter_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Pulse per second jitter."
+     }
+    ],
+    "node_timex_pps_jitter_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Pulse per second count of jitter limit exceeded events."
+     }
+    ],
+    "node_timex_pps_shift_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Pulse per second interval duration."
+     }
+    ],
+    "node_timex_pps_stability_exceeded_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Pulse per second count of stability limit exceeded events."
+     }
+    ],
+    "node_timex_pps_stability_hertz": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Pulse per second stability, average of recent frequency changes."
+     }
+    ],
+    "node_timex_status": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Value of the status array bits."
+     }
+    ],
+    "node_timex_sync_status": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Is clock synchronized to a reliable server (1 = yes, 0 = no)."
+     }
+    ],
+    "node_timex_tai_offset_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "International Atomic Time (TAI) offset."
+     }
+    ],
+    "node_timex_tick_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Seconds between clock ticks."
+     }
+    ],
+    "node_udp_queues": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of allocated memory in the kernel for UDP datagrams in bytes."
+     }
+    ],
+    "node_uname_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Labeled system information as provided by the uname system call."
+     }
+    ],
+    "node_vmstat_oom_kill": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field oom_kill."
+     }
+    ],
+    "node_vmstat_pgfault": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pgfault."
+     }
+    ],
+    "node_vmstat_pgmajfault": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pgmajfault."
+     }
+    ],
+    "node_vmstat_pgpgin": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pgpgin."
+     }
+    ],
+    "node_vmstat_pgpgout": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pgpgout."
+     }
+    ],
+    "node_vmstat_pswpin": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pswpin."
+     }
+    ],
+    "node_vmstat_pswpout": [
+     {
+      "type": "unknown",
+      "unit": "",
+      "help": "/proc/vmstat information field pswpout."
+     }
+    ],
+    "process_cpu_seconds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total user and system CPU time spent in seconds."
+     }
+    ],
+    "process_max_fds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum number of open file descriptors."
+     }
+    ],
+    "process_network_receive_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of bytes received by the process over the network."
+     }
+    ],
+    "process_network_transmit_bytes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of bytes sent by the process over the network."
+     }
+    ],
+    "process_open_fds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of open file descriptors."
+     }
+    ],
+    "process_resident_memory_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Resident memory size in bytes."
+     }
+    ],
+    "process_start_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Start time of the process since unix epoch in seconds."
+     }
+    ],
+    "process_virtual_memory_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Virtual memory size in bytes."
+     }
+    ],
+    "process_virtual_memory_max_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum amount of virtual memory available in bytes."
+     }
+    ],
+    "prometheus_api_notification_active_subscribers": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current number of active notification subscribers."
+     }
+    ],
+    "prometheus_api_notification_updates_dropped_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of notification updates dropped."
+     }
+    ],
+    "prometheus_api_notification_updates_sent_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of notification updates sent."
+     }
+    ],
+    "prometheus_build_info": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "A metric with a constant '1' value labeled by version, revision, branch, goversion from which prometheus was built, and the goos and goarch for the build."
+     }
+    ],
+    "prometheus_config_last_reload_success_timestamp_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Timestamp of the last successful configuration reload."
+     }
+    ],
+    "prometheus_config_last_reload_successful": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Whether the last configuration reload attempt was successful."
+     }
+    ],
+    "prometheus_engine_queries": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current number of queries being executed or waiting."
+     }
+    ],
+    "prometheus_engine_queries_concurrent_max": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The max number of concurrent queries."
+     }
+    ],
+    "prometheus_engine_query_duration_histogram_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "The duration of various parts of PromQL query execution."
+     }
+    ],
+    "prometheus_engine_query_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Query timings"
+     }
+    ],
+    "prometheus_engine_query_log_enabled": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "State of the query log."
+     }
+    ],
+    "prometheus_engine_query_log_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of query log failures."
+     }
+    ],
+    "prometheus_engine_query_samples_read_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of samples read by all queries (only new points per step for range-vector)."
+     }
+    ],
+    "prometheus_engine_query_samples_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of samples loaded by all queries (full window per step for range-vector)."
+     }
+    ],
+    "prometheus_http_request_duration_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Histogram of latencies for HTTP requests."
+     }
+    ],
+    "prometheus_http_requests_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Counter of HTTP requests."
+     }
+    ],
+    "prometheus_http_response_size_bytes": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Histogram of response size for HTTP requests."
+     }
+    ],
+    "prometheus_notifications_alertmanagers_discovered": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The number of alertmanagers discovered and active."
+     }
+    ],
+    "prometheus_notifications_queue_capacity": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The capacity of the alert notifications queue."
+     }
+    ],
+    "prometheus_ready": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Whether Prometheus startup was fully completed and the server is ready for normal operation."
+     }
+    ],
+    "prometheus_remote_read_handler_queries": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current number of remote read queries that are either in execution or queued on the handler."
+     }
+    ],
+    "prometheus_remote_storage_exemplars_in_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Exemplars in to remote storage, compare to exemplars out for queue managers. Deprecated, check prometheus_wal_watcher_records_read_total and prometheus_remote_storage_exemplars_dropped_total"
+     }
+    ],
+    "prometheus_remote_storage_highest_timestamp_in_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Highest timestamp that has come into the remote storage via the Appender interface, in seconds since epoch. Initialized to 0 when no data has been received yet. Deprecated, check prometheus_remote_storage_queue_highest_timestamp_seconds which is more accurate."
+     }
+    ],
+    "prometheus_remote_storage_histograms_in_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "HistogramSamples in to remote storage, compare to histograms out for queue managers. Deprecated, check prometheus_wal_watcher_records_read_total and prometheus_remote_storage_histograms_dropped_total"
+     }
+    ],
+    "prometheus_remote_storage_samples_in_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Samples in to remote storage, compare to samples out for queue managers. Deprecated, check prometheus_wal_watcher_records_read_total and prometheus_remote_storage_samples_dropped_total"
+     }
+    ],
+    "prometheus_remote_storage_string_interner_zero_reference_releases_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of times release has been called for strings that are not interned."
+     }
+    ],
+    "prometheus_rule_evaluation_duration_histogram_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "The duration for a rule to execute."
+     }
+    ],
+    "prometheus_rule_evaluation_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "The duration for a rule to execute."
+     }
+    ],
+    "prometheus_rule_group_duration_histogram_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "The duration of rule group evaluations."
+     }
+    ],
+    "prometheus_rule_group_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "The duration of rule group evaluations."
+     }
+    ],
+    "prometheus_sd_azure_cache_hit_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of cache hit during refresh."
+     }
+    ],
+    "prometheus_sd_azure_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of Azure service discovery refresh failures."
+     }
+    ],
+    "prometheus_sd_consul_rpc_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "The duration of a Consul RPC call in seconds."
+     }
+    ],
+    "prometheus_sd_consul_rpc_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of Consul RPC call failures."
+     }
+    ],
+    "prometheus_sd_discovered_targets": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current number of discovered targets."
+     }
+    ],
+    "prometheus_sd_dns_lookup_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of DNS-SD lookup failures."
+     }
+    ],
+    "prometheus_sd_dns_lookups_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of DNS-SD lookups."
+     }
+    ],
+    "prometheus_sd_failed_configs": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current number of service discovery configurations that failed to load."
+     }
+    ],
+    "prometheus_sd_file_read_errors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of File-SD read errors."
+     }
+    ],
+    "prometheus_sd_file_scan_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "The duration of the File-SD scan in seconds."
+     }
+    ],
+    "prometheus_sd_file_watcher_errors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of File-SD errors caused by filesystem watch failures."
+     }
+    ],
+    "prometheus_sd_http_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of HTTP service discovery refresh failures."
+     }
+    ],
+    "prometheus_sd_kubernetes_events_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of Kubernetes events handled."
+     }
+    ],
+    "prometheus_sd_kubernetes_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of failed WATCH/LIST requests."
+     }
+    ],
+    "prometheus_sd_kuma_fetch_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "The duration of a Kuma MADS fetch call."
+     }
+    ],
+    "prometheus_sd_kuma_fetch_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of Kuma MADS fetch call failures."
+     }
+    ],
+    "prometheus_sd_kuma_fetch_skipped_updates_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of Kuma MADS fetch calls that result in no updates to the targets."
+     }
+    ],
+    "prometheus_sd_last_update_timestamp_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Timestamp of the last update sent to the SD consumers."
+     }
+    ],
+    "prometheus_sd_linode_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of Linode service discovery refresh failures."
+     }
+    ],
+    "prometheus_sd_nomad_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of nomad service discovery refresh failures."
+     }
+    ],
+    "prometheus_sd_received_updates_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of update events received from the SD providers."
+     }
+    ],
+    "prometheus_sd_updates_delayed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of update events that couldn't be sent immediately."
+     }
+    ],
+    "prometheus_sd_updates_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of update events sent to the SD consumers."
+     }
+    ],
+    "prometheus_target_interval_length_histogram_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Actual intervals between scrapes."
+     }
+    ],
+    "prometheus_target_interval_length_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Actual intervals between scrapes."
+     }
+    ],
+    "prometheus_target_metadata_cache_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The number of bytes that are currently used for storing metric metadata in the cache"
+     }
+    ],
+    "prometheus_target_metadata_cache_entries": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Total number of metric metadata entries in the cache"
+     }
+    ],
+    "prometheus_target_scrape_duration_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Total duration of the scrape from start to commit completion in seconds."
+     }
+    ],
+    "prometheus_target_scrape_pool_exceeded_label_limits_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of times scrape pools hit the label limits, during sync or config reload."
+     }
+    ],
+    "prometheus_target_scrape_pool_exceeded_target_limit_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of times scrape pools hit the target limit, during sync or config reload."
+     }
+    ],
+    "prometheus_target_scrape_pool_reloads_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of failed scrape pool reloads."
+     }
+    ],
+    "prometheus_target_scrape_pool_reloads_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrape pool reloads."
+     }
+    ],
+    "prometheus_target_scrape_pool_symboltable_items": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current number of symbols in table for this scrape pool."
+     }
+    ],
+    "prometheus_target_scrape_pool_sync_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of syncs that were executed on a scrape pool."
+     }
+    ],
+    "prometheus_target_scrape_pool_target_limit": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum number of targets allowed in this scrape pool."
+     }
+    ],
+    "prometheus_target_scrape_pool_targets": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current number of targets in this scrape pool."
+     }
+    ],
+    "prometheus_target_scrape_pools_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrape pool creations that failed."
+     }
+    ],
+    "prometheus_target_scrape_pools_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrape pool creation attempts."
+     }
+    ],
+    "prometheus_target_scrapes_cache_flush_forced_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "How many times a scrape cache was flushed due to getting big while scrapes are failing."
+     }
+    ],
+    "prometheus_target_scrapes_exceeded_body_size_limit_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrapes that hit the body size limit"
+     }
+    ],
+    "prometheus_target_scrapes_exceeded_native_histogram_bucket_limit_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrapes that hit the native histogram bucket limit and were rejected."
+     }
+    ],
+    "prometheus_target_scrapes_exceeded_sample_limit_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrapes that hit the sample limit and were rejected."
+     }
+    ],
+    "prometheus_target_scrapes_exemplar_out_of_order_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of exemplar rejected due to not being out of the expected order."
+     }
+    ],
+    "prometheus_target_scrapes_sample_duplicate_timestamp_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of samples rejected due to duplicate timestamps but different values."
+     }
+    ],
+    "prometheus_target_scrapes_sample_out_of_bounds_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of samples rejected due to timestamp falling outside of the time bounds."
+     }
+    ],
+    "prometheus_target_scrapes_sample_out_of_order_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of samples rejected due to not being out of the expected order."
+     }
+    ],
+    "prometheus_target_sync_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of target sync failures."
+     }
+    ],
+    "prometheus_target_sync_length_histogram_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Actual interval to sync the scrape pool."
+     }
+    ],
+    "prometheus_target_sync_length_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Actual interval to sync the scrape pool."
+     }
+    ],
+    "prometheus_template_text_expansion_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of template text expansion failures."
+     }
+    ],
+    "prometheus_template_text_expansions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of template text expansions."
+     }
+    ],
+    "prometheus_treecache_watcher_goroutines": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The current number of watcher goroutines."
+     }
+    ],
+    "prometheus_treecache_zookeeper_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The total number of ZooKeeper failures."
+     }
+    ],
+    "prometheus_tsdb_blocks_loaded": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of currently loaded data blocks"
+     }
+    ],
+    "prometheus_tsdb_checkpoint_creations_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of checkpoint creations that failed."
+     }
+    ],
+    "prometheus_tsdb_checkpoint_creations_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of checkpoint creations attempted."
+     }
+    ],
+    "prometheus_tsdb_checkpoint_deletions_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of checkpoint deletions that failed."
+     }
+    ],
+    "prometheus_tsdb_checkpoint_deletions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of checkpoint deletions attempted."
+     }
+    ],
+    "prometheus_tsdb_clean_start": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "-1: lockfile is disabled. 0: a lockfile from a previous execution was replaced. 1: lockfile creation was clean"
+     }
+    ],
+    "prometheus_tsdb_compaction_chunk_range_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Final time range of chunks on their first compaction"
+     }
+    ],
+    "prometheus_tsdb_compaction_chunk_samples": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Final number of samples on their first compaction"
+     }
+    ],
+    "prometheus_tsdb_compaction_chunk_size_bytes": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Final size of chunks on their first compaction"
+     }
+    ],
+    "prometheus_tsdb_compaction_duration_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Duration of compaction runs"
+     }
+    ],
+    "prometheus_tsdb_compaction_populating_block": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Set to 1 when a block is currently being written to the disk."
+     }
+    ],
+    "prometheus_tsdb_compactions_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of compactions that failed for the partition."
+     }
+    ],
+    "prometheus_tsdb_compactions_skipped_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of skipped compactions due to disabled auto compaction."
+     }
+    ],
+    "prometheus_tsdb_compactions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of compactions that were executed for the partition."
+     }
+    ],
+    "prometheus_tsdb_compactions_triggered_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of triggered compactions for the partition."
+     }
+    ],
+    "prometheus_tsdb_data_replay_duration_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Time taken to replay the data on disk."
+     }
+    ],
+    "prometheus_tsdb_exemplar_exemplars_appended_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of appended exemplars."
+     }
+    ],
+    "prometheus_tsdb_exemplar_exemplars_in_storage": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of exemplars currently in circular storage."
+     }
+    ],
+    "prometheus_tsdb_exemplar_last_exemplars_timestamp_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The timestamp of the oldest exemplar stored in circular storage. Useful to check for what timerange the current exemplar buffer limit allows. This usually means the last timestampfor all exemplars for a typical setup. This is not true though if one of the series timestamp is in future compared to rest series."
+     }
+    ],
+    "prometheus_tsdb_exemplar_max_exemplars": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Total number of exemplars the exemplar storage can store, resizeable."
+     }
+    ],
+    "prometheus_tsdb_exemplar_out_of_order_exemplars_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of out of order exemplar ingestion failed attempts."
+     }
+    ],
+    "prometheus_tsdb_exemplar_series_with_exemplars_in_storage": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of series with exemplars currently in circular storage."
+     }
+    ],
+    "prometheus_tsdb_head_active_appenders": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of currently active appender transactions"
+     }
+    ],
+    "prometheus_tsdb_head_appenders_created_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of appender transactions created."
+     }
+    ],
+    "prometheus_tsdb_head_chunks": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Total number of chunks in the head block."
+     }
+    ],
+    "prometheus_tsdb_head_chunks_created_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of chunks created in the head"
+     }
+    ],
+    "prometheus_tsdb_head_chunks_removed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of chunks removed in the head"
+     }
+    ],
+    "prometheus_tsdb_head_chunks_storage_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of the chunks_head directory."
+     }
+    ],
+    "prometheus_tsdb_head_gc_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Runtime of garbage collection in the head block."
+     }
+    ],
+    "prometheus_tsdb_head_max_time": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum timestamp of the head block. The unit is decided by the library consumer."
+     }
+    ],
+    "prometheus_tsdb_head_max_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Maximum timestamp of the head block."
+     }
+    ],
+    "prometheus_tsdb_head_min_time": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Minimum time bound of the head block. The unit is decided by the library consumer."
+     }
+    ],
+    "prometheus_tsdb_head_min_time_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Minimum time bound of the head block."
+     }
+    ],
+    "prometheus_tsdb_head_native_histogram_buckets": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of positive and negative bucket entries in the most recent in-order native histogram sample of each series, including entries carried by staleness markers."
+     }
+    ],
+    "prometheus_tsdb_head_native_histogram_series": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Number of series whose most recent in-order sample is a native histogram."
+     }
+    ],
+    "prometheus_tsdb_head_out_of_order_samples_appended_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of appended out of order samples."
+     }
+    ],
+    "prometheus_tsdb_head_samples_appended_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of appended samples."
+     }
+    ],
+    "prometheus_tsdb_head_series": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Total number of series in the head block."
+     }
+    ],
+    "prometheus_tsdb_head_series_created_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of series created in the head"
+     }
+    ],
+    "prometheus_tsdb_head_series_not_found_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of requests for series that were not found."
+     }
+    ],
+    "prometheus_tsdb_head_series_pending_commit_underflow_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of attempts to release a pending-sample reservation when none was held."
+     }
+    ],
+    "prometheus_tsdb_head_series_removed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of series removed in the head"
+     }
+    ],
+    "prometheus_tsdb_head_stale_series": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Total number of stale series in the head block."
+     }
+    ],
+    "prometheus_tsdb_head_truncations_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of head truncations that failed."
+     }
+    ],
+    "prometheus_tsdb_head_truncations_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of head truncations attempted."
+     }
+    ],
+    "prometheus_tsdb_isolation_high_watermark": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The highest TSDB append ID that has been given out."
+     }
+    ],
+    "prometheus_tsdb_isolation_low_watermark": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The lowest TSDB append ID that is still referenced."
+     }
+    ],
+    "prometheus_tsdb_lowest_timestamp": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Lowest timestamp value stored in the database. The unit is decided by the library consumer."
+     }
+    ],
+    "prometheus_tsdb_lowest_timestamp_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Lowest timestamp value stored in the database."
+     }
+    ],
+    "prometheus_tsdb_mmap_chunk_corruptions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of memory-mapped chunk corruptions."
+     }
+    ],
+    "prometheus_tsdb_mmap_chunks_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of chunks that were memory-mapped."
+     }
+    ],
+    "prometheus_tsdb_out_of_bound_samples_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of out of bound samples ingestion failed attempts with out of order support disabled."
+     }
+    ],
+    "prometheus_tsdb_out_of_order_samples_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of out of order samples ingestion failed attempts due to out of order being disabled."
+     }
+    ],
+    "prometheus_tsdb_reloads_failures_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of times the database failed to reloadBlocks block data from disk."
+     }
+    ],
+    "prometheus_tsdb_reloads_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Number of times the database reloaded block data from disk."
+     }
+    ],
+    "prometheus_tsdb_retention_limit_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Max number of bytes to be retained in the tsdb blocks, configured 0 means disabled"
+     }
+    ],
+    "prometheus_tsdb_retention_limit_percentage": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Max percentage of total storage space to be retained in the tsdb blocks, configured 0 means disabled"
+     }
+    ],
+    "prometheus_tsdb_retention_limit_seconds": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "How long to retain samples in storage."
+     }
+    ],
+    "prometheus_tsdb_sample_ooo_delta": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Delta in seconds by which a sample is considered out of order (reported regardless of OOO time window and whether sample is accepted or not)."
+     }
+    ],
+    "prometheus_tsdb_selected_series_compaction_duration_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Duration of compactions triggered for an explicit caller-provided list of series references."
+     }
+    ],
+    "prometheus_tsdb_selected_series_compactions_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of compactions triggered for an explicit caller-provided list of series references that failed."
+     }
+    ],
+    "prometheus_tsdb_selected_series_compactions_triggered_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of compactions triggered for an explicit caller-provided list of series references."
+     }
+    ],
+    "prometheus_tsdb_size_retentions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of times that blocks were deleted because the maximum number of bytes was exceeded."
+     }
+    ],
+    "prometheus_tsdb_snapshot_replay_error_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number snapshot replays that failed."
+     }
+    ],
+    "prometheus_tsdb_stale_series_compaction_duration_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "Duration of stale series compaction runs."
+     }
+    ],
+    "prometheus_tsdb_stale_series_compactions_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of stale series compactions that failed."
+     }
+    ],
+    "prometheus_tsdb_stale_series_compactions_triggered_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of triggered stale series compactions."
+     }
+    ],
+    "prometheus_tsdb_storage_blocks_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "The number of bytes that are currently used for local storage by all blocks."
+     }
+    ],
+    "prometheus_tsdb_symbol_table_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of symbol table in memory for loaded blocks"
+     }
+    ],
+    "prometheus_tsdb_time_retentions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "The number of times that blocks were deleted because the maximum time limit was exceeded."
+     }
+    ],
+    "prometheus_tsdb_tombstone_cleanup_seconds": [
+     {
+      "type": "histogram",
+      "unit": "",
+      "help": "The time taken to recompact blocks to remove tombstones."
+     }
+    ],
+    "prometheus_tsdb_too_old_samples_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of out of order samples ingestion failed attempts with out of support enabled, but sample outside of time window."
+     }
+    ],
+    "prometheus_tsdb_vertical_compactions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of compactions done on overlapping blocks."
+     }
+    ],
+    "prometheus_tsdb_wal_completed_pages_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of completed pages."
+     }
+    ],
+    "prometheus_tsdb_wal_corruptions_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of WAL corruptions."
+     }
+    ],
+    "prometheus_tsdb_wal_fsync_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Duration of write log fsync."
+     }
+    ],
+    "prometheus_tsdb_wal_page_flushes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of page flushes."
+     }
+    ],
+    "prometheus_tsdb_wal_record_bytes_saved_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of bytes saved by the optional record compression. Use this metric to learn about the effectiveness compression."
+     }
+    ],
+    "prometheus_tsdb_wal_record_part_writes_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of record parts written before flushing."
+     }
+    ],
+    "prometheus_tsdb_wal_record_parts_bytes_written_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of record part bytes written before flushing, including CRC and compression headers."
+     }
+    ],
+    "prometheus_tsdb_wal_segment_current": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Write log segment index that TSDB is currently writing to."
+     }
+    ],
+    "prometheus_tsdb_wal_storage_size_bytes": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Size of the write log directory."
+     }
+    ],
+    "prometheus_tsdb_wal_truncate_duration_seconds": [
+     {
+      "type": "summary",
+      "unit": "",
+      "help": "Duration of WAL truncation."
+     }
+    ],
+    "prometheus_tsdb_wal_truncations_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of write log truncations that failed."
+     }
+    ],
+    "prometheus_tsdb_wal_truncations_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of write log truncations attempted."
+     }
+    ],
+    "prometheus_tsdb_wal_writes_failed_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of write log writes that failed."
+     }
+    ],
+    "prometheus_web_federation_errors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of errors that occurred while sending federation responses."
+     }
+    ],
+    "prometheus_web_federation_warnings_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of warnings that occurred while sending federation responses."
+     }
+    ],
+    "promhttp_metric_handler_errors_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of internal errors encountered by the promhttp metric handler."
+     }
+    ],
+    "promhttp_metric_handler_requests_in_flight": [
+     {
+      "type": "gauge",
+      "unit": "",
+      "help": "Current number of scrapes being served."
+     }
+    ],
+    "promhttp_metric_handler_requests_total": [
+     {
+      "type": "counter",
+      "unit": "",
+      "help": "Total number of scrapes by HTTP status code."
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "100 * (1 - avg by (job, instance) (rate(node_cpu_seconds_total{mode=\"idle\",job=\"hosts\",instance=\"localhost:19100\"}[20s])))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "3.3555555555560446"
+       ],
+       [
+        1790399518,
+        "3.3555555555560446"
+       ],
+       [
+        1790399520,
+        "3.119444444449382"
+       ],
+       [
+        1790399522,
+        "3.119444444449382"
+       ],
+       [
+        1790399524,
+        "3.119444444449382"
+       ],
+       [
+        1790399526,
+        "3.00555555554739"
+       ],
+       [
+        1790399528,
+        "3.00555555554739"
+       ],
+       [
+        1790399530,
+        "2.7944444444458205"
+       ],
+       [
+        1790399532,
+        "2.7944444444458205"
+       ],
+       [
+        1790399534,
+        "2.7944444444458205"
+       ],
+       [
+        1790399536,
+        "2.7972222222180987"
+       ],
+       [
+        1790399538,
+        "2.7972222222180987"
+       ],
+       [
+        1790399540,
+        "2.7750000000034802"
+       ],
+       [
+        1790399542,
+        "2.7750000000034802"
+       ],
+       [
+        1790399544,
+        "2.7750000000034802"
+       ],
+       [
+        1790399546,
+        "2.711111111109654"
+       ],
+       [
+        1790399548,
+        "2.711111111109654"
+       ],
+       [
+        1790399550,
+        "2.6444444444476023"
+       ],
+       [
+        1790399552,
+        "2.6444444444476023"
+       ],
+       [
+        1790399554,
+        "2.6444444444476023"
+       ],
+       [
+        1790399556,
+        "2.7472222222281184"
+       ],
+       [
+        1790399558,
+        "2.7472222222281184"
+       ],
+       [
+        1790399560,
+        "2.8111111111118414"
+       ],
+       [
+        1790399562,
+        "2.8111111111118414"
+       ],
+       [
+        1790399564,
+        "2.8111111111118414"
+       ],
+       [
+        1790399566,
+        "2.9194444444389456"
+       ],
+       [
+        1790399568,
+        "2.9194444444389456"
+       ],
+       [
+        1790399570,
+        "2.81944444443879"
+       ],
+       [
+        1790399572,
+        "2.81944444443879"
+       ],
+       [
+        1790399574,
+        "2.81944444443879"
+       ],
+       [
+        1790399576,
+        "2.81666666666448"
+       ],
+       [
+        1790399578,
+        "2.81666666666448"
+       ],
+       [
+        1790399580,
+        "2.747222222224077"
+       ],
+       [
+        1790399582,
+        "2.747222222224077"
+       ],
+       [
+        1790399584,
+        "2.747222222224077"
+       ],
+       [
+        1790399586,
+        "2.7722222222231196"
+       ],
+       [
+        1790399588,
+        "2.7722222222231196"
+       ],
+       [
+        1790399590,
+        "2.7361111111147474"
+       ],
+       [
+        1790399592,
+        "2.7361111111147474"
+       ],
+       [
+        1790399594,
+        "2.7361111111147474"
+       ],
+       [
+        1790399596,
+        "2.7166666666643247"
+       ],
+       [
+        1790399598,
+        "2.7166666666643247"
+       ],
+       [
+        1790399600,
+        "2.7027777777786754"
+       ],
+       [
+        1790399602,
+        "2.7027777777786754"
+       ],
+       [
+        1790399604,
+        "2.7027777777786754"
+       ],
+       [
+        1790399606,
+        "2.6666666666682826"
+       ],
+       [
+        1790399608,
+        "2.6666666666682826"
+       ],
+       [
+        1790399610,
+        "2.6083333333372094"
+       ],
+       [
+        1790399612,
+        "2.6083333333372094"
+       ],
+       [
+        1790399614,
+        "2.6083333333372094"
+       ],
+       [
+        1790399616,
+        "2.6111111111094987"
+       ],
+       [
+        1790399618,
+        "2.6111111111094987"
+       ],
+       [
+        1790399620,
+        "2.6666666666602"
+       ],
+       [
+        1790399622,
+        "2.6666666666602"
+       ],
+       [
+        1790399624,
+        "2.6666666666602"
+       ],
+       [
+        1790399626,
+        "2.913888888886307"
+       ],
+       [
+        1790399628,
+        "2.913888888886307"
+       ],
+       [
+        1790399630,
+        "3.222222222223836"
+       ],
+       [
+        1790399632,
+        "3.222222222223836"
+       ],
+       [
+        1790399634,
+        "3.222222222223836"
+       ],
+       [
+        1790399636,
+        "3.622222222226501"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "100 * sum by (job, instance) (rate(process_cpu_seconds_total{job=~\"api|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19998\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "0.26666666666666694"
+       ],
+       [
+        1790399518,
+        "0.26666666666666694"
+       ],
+       [
+        1790399520,
+        "0.26666666666666694"
+       ],
+       [
+        1790399522,
+        "0.26666666666666694"
+       ],
+       [
+        1790399524,
+        "0.26666666666666694"
+       ],
+       [
+        1790399526,
+        "0.3333333333333336"
+       ],
+       [
+        1790399528,
+        "0.3333333333333336"
+       ],
+       [
+        1790399530,
+        "0.26666666666666694"
+       ],
+       [
+        1790399532,
+        "0.26666666666666694"
+       ],
+       [
+        1790399534,
+        "0.26666666666666694"
+       ],
+       [
+        1790399536,
+        "0.26666666666666616"
+       ],
+       [
+        1790399538,
+        "0.26666666666666616"
+       ],
+       [
+        1790399540,
+        "0.19999999999999943"
+       ],
+       [
+        1790399542,
+        "0.19999999999999943"
+       ],
+       [
+        1790399544,
+        "0.19999999999999943"
+       ],
+       [
+        1790399546,
+        "0.19999999999999943"
+       ],
+       [
+        1790399548,
+        "0.19999999999999943"
+       ],
+       [
+        1790399550,
+        "0.20000000000000018"
+       ],
+       [
+        1790399552,
+        "0.20000000000000018"
+       ],
+       [
+        1790399554,
+        "0.20000000000000018"
+       ],
+       [
+        1790399556,
+        "0.20000000000000018"
+       ],
+       [
+        1790399558,
+        "0.20000000000000018"
+       ],
+       [
+        1790399560,
+        "0.20000000000000018"
+       ],
+       [
+        1790399562,
+        "0.20000000000000018"
+       ],
+       [
+        1790399564,
+        "0.20000000000000018"
+       ],
+       [
+        1790399566,
+        "0.3333333333333336"
+       ],
+       [
+        1790399568,
+        "0.3333333333333336"
+       ],
+       [
+        1790399570,
+        "0.3333333333333336"
+       ],
+       [
+        1790399572,
+        "0.3333333333333336"
+       ],
+       [
+        1790399574,
+        "0.3333333333333336"
+       ],
+       [
+        1790399576,
+        "0.3333333333333336"
+       ],
+       [
+        1790399578,
+        "0.3333333333333336"
+       ],
+       [
+        1790399580,
+        "0.20000000000000018"
+       ],
+       [
+        1790399582,
+        "0.20000000000000018"
+       ],
+       [
+        1790399584,
+        "0.20000000000000018"
+       ],
+       [
+        1790399586,
+        "0.20000000000000018"
+       ],
+       [
+        1790399588,
+        "0.20000000000000018"
+       ],
+       [
+        1790399590,
+        "0.20000000000000018"
+       ],
+       [
+        1790399592,
+        "0.20000000000000018"
+       ],
+       [
+        1790399594,
+        "0.20000000000000018"
+       ],
+       [
+        1790399596,
+        "0.20000000000000018"
+       ],
+       [
+        1790399598,
+        "0.20000000000000018"
+       ],
+       [
+        1790399600,
+        "0.20000000000000018"
+       ],
+       [
+        1790399602,
+        "0.20000000000000018"
+       ],
+       [
+        1790399604,
+        "0.20000000000000018"
+       ],
+       [
+        1790399606,
+        "0.20000000000000018"
+       ],
+       [
+        1790399608,
+        "0.20000000000000018"
+       ],
+       [
+        1790399610,
+        "0.20000000000000018"
+       ],
+       [
+        1790399612,
+        "0.20000000000000018"
+       ],
+       [
+        1790399614,
+        "0.20000000000000018"
+       ],
+       [
+        1790399616,
+        "0.13333333333333347"
+       ],
+       [
+        1790399618,
+        "0.13333333333333347"
+       ],
+       [
+        1790399620,
+        "0.1999999999999987"
+       ],
+       [
+        1790399622,
+        "0.1999999999999987"
+       ],
+       [
+        1790399624,
+        "0.1999999999999987"
+       ],
+       [
+        1790399626,
+        "0.2666666666666654"
+       ],
+       [
+        1790399628,
+        "0.2666666666666654"
+       ],
+       [
+        1790399630,
+        "0.33333333333333215"
+       ],
+       [
+        1790399632,
+        "0.33333333333333215"
+       ],
+       [
+        1790399634,
+        "0.33333333333333215"
+       ],
+       [
+        1790399636,
+        "0.26666666666666694"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "100 * (1 - sum by (job, instance) (node_memory_MemAvailable_bytes{job=\"hosts\",instance=\"localhost:19100\"}) / sum by (job, instance) (node_memory_MemTotal_bytes{job=\"hosts\",instance=\"localhost:19100\"}))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "12.595648669837578"
+       ],
+       [
+        1790399518,
+        "12.595648669837578"
+       ],
+       [
+        1790399520,
+        "12.589375526572155"
+       ],
+       [
+        1790399522,
+        "12.589375526572155"
+       ],
+       [
+        1790399524,
+        "12.589375526572155"
+       ],
+       [
+        1790399526,
+        "12.597111793631266"
+       ],
+       [
+        1790399528,
+        "12.597111793631266"
+       ],
+       [
+        1790399530,
+        "12.599970981378094"
+       ],
+       [
+        1790399532,
+        "12.599970981378094"
+       ],
+       [
+        1790399534,
+        "12.599970981378094"
+       ],
+       [
+        1790399536,
+        "12.598891927580247"
+       ],
+       [
+        1790399538,
+        "12.598891927580247"
+       ],
+       [
+        1790399540,
+        "12.607182962411134"
+       ],
+       [
+        1790399542,
+        "12.607182962411134"
+       ],
+       [
+        1790399544,
+        "12.607182962411134"
+       ],
+       [
+        1790399546,
+        "12.615138698039296"
+       ],
+       [
+        1790399548,
+        "12.615138698039296"
+       ],
+       [
+        1790399550,
+        "12.622960313986365"
+       ],
+       [
+        1790399552,
+        "12.622960313986365"
+       ],
+       [
+        1790399554,
+        "12.622960313986365"
+       ],
+       [
+        1790399556,
+        "12.566727589515747"
+       ],
+       [
+        1790399558,
+        "12.566727589515747"
+       ],
+       [
+        1790399560,
+        "12.572659337229307"
+       ],
+       [
+        1790399562,
+        "12.572659337229307"
+       ],
+       [
+        1790399564,
+        "12.572659337229307"
+       ],
+       [
+        1790399566,
+        "12.598513953933544"
+       ],
+       [
+        1790399568,
+        "12.598513953933544"
+       ],
+       [
+        1790399570,
+        "12.60662209829022"
+       ],
+       [
+        1790399572,
+        "12.60662209829022"
+       ],
+       [
+        1790399574,
+        "12.60662209829022"
+       ],
+       [
+        1790399576,
+        "12.6108346755462"
+       ],
+       [
+        1790399578,
+        "12.6108346755462"
+       ],
+       [
+        1790399580,
+        "12.609286202864556"
+       ],
+       [
+        1790399582,
+        "12.609286202864556"
+       ],
+       [
+        1790399584,
+        "12.609286202864556"
+       ],
+       [
+        1790399586,
+        "12.595752307772967"
+       ],
+       [
+        1790399588,
+        "12.595752307772967"
+       ],
+       [
+        1790399590,
+        "12.597093504583846"
+       ],
+       [
+        1790399592,
+        "12.597093504583846"
+       ],
+       [
+        1790399594,
+        "12.597093504583846"
+       ],
+       [
+        1790399596,
+        "12.588052618808698"
+       ],
+       [
+        1790399598,
+        "12.588052618808698"
+       ],
+       [
+        1790399600,
+        "12.622362871770608"
+       ],
+       [
+        1790399602,
+        "12.622362871770608"
+       ],
+       [
+        1790399604,
+        "12.622362871770608"
+       ],
+       [
+        1790399606,
+        "12.632488907692741"
+       ],
+       [
+        1790399608,
+        "12.632488907692741"
+       ],
+       [
+        1790399610,
+        "12.618449015622502"
+       ],
+       [
+        1790399612,
+        "12.618449015622502"
+       ],
+       [
+        1790399614,
+        "12.618449015622502"
+       ],
+       [
+        1790399616,
+        "12.625789019987488"
+       ],
+       [
+        1790399618,
+        "12.625789019987488"
+       ],
+       [
+        1790399620,
+        "12.634019091326964"
+       ],
+       [
+        1790399622,
+        "12.634019091326964"
+       ],
+       [
+        1790399624,
+        "12.634019091326964"
+       ],
+       [
+        1790399626,
+        "12.58918044339966"
+       ],
+       [
+        1790399628,
+        "12.58918044339966"
+       ],
+       [
+        1790399630,
+        "12.618723351333816"
+       ],
+       [
+        1790399632,
+        "12.618723351333816"
+       ],
+       [
+        1790399634,
+        "12.618723351333816"
+       ],
+       [
+        1790399636,
+        "12.660123658345967"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (process_resident_memory_bytes{job=~\"api|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19998\"})"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "119476224"
+       ],
+       [
+        1790399518,
+        "119476224"
+       ],
+       [
+        1790399520,
+        "119476224"
+       ],
+       [
+        1790399522,
+        "119476224"
+       ],
+       [
+        1790399524,
+        "119476224"
+       ],
+       [
+        1790399526,
+        "119476224"
+       ],
+       [
+        1790399528,
+        "119476224"
+       ],
+       [
+        1790399530,
+        "119476224"
+       ],
+       [
+        1790399532,
+        "119476224"
+       ],
+       [
+        1790399534,
+        "119476224"
+       ],
+       [
+        1790399536,
+        "119476224"
+       ],
+       [
+        1790399538,
+        "119476224"
+       ],
+       [
+        1790399540,
+        "119476224"
+       ],
+       [
+        1790399542,
+        "119476224"
+       ],
+       [
+        1790399544,
+        "119476224"
+       ],
+       [
+        1790399546,
+        "119476224"
+       ],
+       [
+        1790399548,
+        "119476224"
+       ],
+       [
+        1790399550,
+        "119476224"
+       ],
+       [
+        1790399552,
+        "119476224"
+       ],
+       [
+        1790399554,
+        "119476224"
+       ],
+       [
+        1790399556,
+        "119476224"
+       ],
+       [
+        1790399558,
+        "119476224"
+       ],
+       [
+        1790399560,
+        "119476224"
+       ],
+       [
+        1790399562,
+        "119476224"
+       ],
+       [
+        1790399564,
+        "119476224"
+       ],
+       [
+        1790399566,
+        "119476224"
+       ],
+       [
+        1790399568,
+        "119476224"
+       ],
+       [
+        1790399570,
+        "119476224"
+       ],
+       [
+        1790399572,
+        "119476224"
+       ],
+       [
+        1790399574,
+        "119476224"
+       ],
+       [
+        1790399576,
+        "119476224"
+       ],
+       [
+        1790399578,
+        "119476224"
+       ],
+       [
+        1790399580,
+        "119476224"
+       ],
+       [
+        1790399582,
+        "119476224"
+       ],
+       [
+        1790399584,
+        "119476224"
+       ],
+       [
+        1790399586,
+        "119476224"
+       ],
+       [
+        1790399588,
+        "119476224"
+       ],
+       [
+        1790399590,
+        "119476224"
+       ],
+       [
+        1790399592,
+        "119476224"
+       ],
+       [
+        1790399594,
+        "119476224"
+       ],
+       [
+        1790399596,
+        "119476224"
+       ],
+       [
+        1790399598,
+        "119476224"
+       ],
+       [
+        1790399600,
+        "119476224"
+       ],
+       [
+        1790399602,
+        "119476224"
+       ],
+       [
+        1790399604,
+        "119476224"
+       ],
+       [
+        1790399606,
+        "119476224"
+       ],
+       [
+        1790399608,
+        "119476224"
+       ],
+       [
+        1790399610,
+        "119476224"
+       ],
+       [
+        1790399612,
+        "119476224"
+       ],
+       [
+        1790399614,
+        "119476224"
+       ],
+       [
+        1790399616,
+        "119476224"
+       ],
+       [
+        1790399618,
+        "119476224"
+       ],
+       [
+        1790399620,
+        "119476224"
+       ],
+       [
+        1790399622,
+        "119476224"
+       ],
+       [
+        1790399624,
+        "119476224"
+       ],
+       [
+        1790399626,
+        "119476224"
+       ],
+       [
+        1790399628,
+        "119476224"
+       ],
+       [
+        1790399630,
+        "119476224"
+       ],
+       [
+        1790399632,
+        "119476224"
+       ],
+       [
+        1790399634,
+        "119476224"
+       ],
+       [
+        1790399636,
+        "119476224"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (rate(node_disk_read_bytes_total{job=\"hosts\",instance=\"localhost:19100\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "0"
+       ],
+       [
+        1790399518,
+        "0"
+       ],
+       [
+        1790399520,
+        "0"
+       ],
+       [
+        1790399522,
+        "0"
+       ],
+       [
+        1790399524,
+        "0"
+       ],
+       [
+        1790399526,
+        "0"
+       ],
+       [
+        1790399528,
+        "0"
+       ],
+       [
+        1790399530,
+        "0"
+       ],
+       [
+        1790399532,
+        "0"
+       ],
+       [
+        1790399534,
+        "0"
+       ],
+       [
+        1790399536,
+        "0"
+       ],
+       [
+        1790399538,
+        "0"
+       ],
+       [
+        1790399540,
+        "0"
+       ],
+       [
+        1790399542,
+        "0"
+       ],
+       [
+        1790399544,
+        "0"
+       ],
+       [
+        1790399546,
+        "0"
+       ],
+       [
+        1790399548,
+        "0"
+       ],
+       [
+        1790399550,
+        "0"
+       ],
+       [
+        1790399552,
+        "0"
+       ],
+       [
+        1790399554,
+        "0"
+       ],
+       [
+        1790399556,
+        "0"
+       ],
+       [
+        1790399558,
+        "0"
+       ],
+       [
+        1790399560,
+        "0"
+       ],
+       [
+        1790399562,
+        "0"
+       ],
+       [
+        1790399564,
+        "0"
+       ],
+       [
+        1790399566,
+        "0"
+       ],
+       [
+        1790399568,
+        "0"
+       ],
+       [
+        1790399570,
+        "0"
+       ],
+       [
+        1790399572,
+        "0"
+       ],
+       [
+        1790399574,
+        "0"
+       ],
+       [
+        1790399576,
+        "0"
+       ],
+       [
+        1790399578,
+        "0"
+       ],
+       [
+        1790399580,
+        "0"
+       ],
+       [
+        1790399582,
+        "0"
+       ],
+       [
+        1790399584,
+        "0"
+       ],
+       [
+        1790399586,
+        "0"
+       ],
+       [
+        1790399588,
+        "0"
+       ],
+       [
+        1790399590,
+        "0"
+       ],
+       [
+        1790399592,
+        "0"
+       ],
+       [
+        1790399594,
+        "0"
+       ],
+       [
+        1790399596,
+        "0"
+       ],
+       [
+        1790399598,
+        "0"
+       ],
+       [
+        1790399600,
+        "0"
+       ],
+       [
+        1790399602,
+        "0"
+       ],
+       [
+        1790399604,
+        "0"
+       ],
+       [
+        1790399606,
+        "0"
+       ],
+       [
+        1790399608,
+        "0"
+       ],
+       [
+        1790399610,
+        "0"
+       ],
+       [
+        1790399612,
+        "0"
+       ],
+       [
+        1790399614,
+        "0"
+       ],
+       [
+        1790399616,
+        "0"
+       ],
+       [
+        1790399618,
+        "0"
+       ],
+       [
+        1790399620,
+        "0"
+       ],
+       [
+        1790399622,
+        "0"
+       ],
+       [
+        1790399624,
+        "0"
+       ],
+       [
+        1790399626,
+        "0"
+       ],
+       [
+        1790399628,
+        "0"
+       ],
+       [
+        1790399630,
+        "0"
+       ],
+       [
+        1790399632,
+        "0"
+       ],
+       [
+        1790399634,
+        "0"
+       ],
+       [
+        1790399636,
+        "0"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (rate(node_disk_written_bytes_total{job=\"hosts\",instance=\"localhost:19100\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "885282.1333333333"
+       ],
+       [
+        1790399518,
+        "885282.1333333333"
+       ],
+       [
+        1790399520,
+        "664644.2666666666"
+       ],
+       [
+        1790399522,
+        "664644.2666666666"
+       ],
+       [
+        1790399524,
+        "664644.2666666666"
+       ],
+       [
+        1790399526,
+        "1182378.6666666667"
+       ],
+       [
+        1790399528,
+        "1182378.6666666667"
+       ],
+       [
+        1790399530,
+        "978124.7999999999"
+       ],
+       [
+        1790399532,
+        "978124.7999999999"
+       ],
+       [
+        1790399534,
+        "978124.7999999999"
+       ],
+       [
+        1790399536,
+        "885828.2666666666"
+       ],
+       [
+        1790399538,
+        "885828.2666666666"
+       ],
+       [
+        1790399540,
+        "1141964.8"
+       ],
+       [
+        1790399542,
+        "1141964.8"
+       ],
+       [
+        1790399544,
+        "1141964.8"
+       ],
+       [
+        1790399546,
+        "1255560.5333333332"
+       ],
+       [
+        1790399548,
+        "1255560.5333333332"
+       ],
+       [
+        1790399550,
+        "1255560.5333333332"
+       ],
+       [
+        1790399552,
+        "1255560.5333333332"
+       ],
+       [
+        1790399554,
+        "1255560.5333333332"
+       ],
+       [
+        1790399556,
+        "1005431.4666666667"
+       ],
+       [
+        1790399558,
+        "1005431.4666666667"
+       ],
+       [
+        1790399560,
+        "1002154.6666666666"
+       ],
+       [
+        1790399562,
+        "1002154.6666666666"
+       ],
+       [
+        1790399564,
+        "1002154.6666666666"
+       ],
+       [
+        1790399566,
+        "1002154.6666666666"
+       ],
+       [
+        1790399568,
+        "1002154.6666666666"
+       ],
+       [
+        1790399570,
+        "404684.8"
+       ],
+       [
+        1790399572,
+        "404684.8"
+       ],
+       [
+        1790399574,
+        "404684.8"
+       ],
+       [
+        1790399576,
+        "567978.6666666666"
+       ],
+       [
+        1790399578,
+        "567978.6666666666"
+       ],
+       [
+        1790399580,
+        "772232.5333333333"
+       ],
+       [
+        1790399582,
+        "772232.5333333333"
+       ],
+       [
+        1790399584,
+        "772232.5333333333"
+       ],
+       [
+        1790399586,
+        "742195.2"
+       ],
+       [
+        1790399588,
+        "742195.2"
+       ],
+       [
+        1790399590,
+        "468582.39999999997"
+       ],
+       [
+        1790399592,
+        "468582.39999999997"
+       ],
+       [
+        1790399594,
+        "468582.39999999997"
+       ],
+       [
+        1790399596,
+        "1039291.7333333333"
+       ],
+       [
+        1790399598,
+        "1039291.7333333333"
+       ],
+       [
+        1790399600,
+        "880913.0666666667"
+       ],
+       [
+        1790399602,
+        "880913.0666666667"
+       ],
+       [
+        1790399604,
+        "880913.0666666667"
+       ],
+       [
+        1790399606,
+        "880913.0666666667"
+       ],
+       [
+        1790399608,
+        "880913.0666666667"
+       ],
+       [
+        1790399610,
+        "518826.6666666667"
+       ],
+       [
+        1790399612,
+        "518826.6666666667"
+       ],
+       [
+        1790399614,
+        "518826.6666666667"
+       ],
+       [
+        1790399616,
+        "515003.73333333334"
+       ],
+       [
+        1790399618,
+        "515003.73333333334"
+       ],
+       [
+        1790399620,
+        "835584"
+       ],
+       [
+        1790399622,
+        "835584"
+       ],
+       [
+        1790399624,
+        "835584"
+       ],
+       [
+        1790399626,
+        "1241361.0666666667"
+       ],
+       [
+        1790399628,
+        "1241361.0666666667"
+       ],
+       [
+        1790399630,
+        "1483844.2666666666"
+       ],
+       [
+        1790399632,
+        "1483844.2666666666"
+       ],
+       [
+        1790399634,
+        "1483844.2666666666"
+       ],
+       [
+        1790399636,
+        "1410662.4"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (rate(node_network_receive_bytes_total{device!=\"lo\",job=\"hosts\",instance=\"localhost:19100\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "1838.6"
+       ],
+       [
+        1790399518,
+        "1838.6"
+       ],
+       [
+        1790399520,
+        "1697.0666666666666"
+       ],
+       [
+        1790399522,
+        "1697.0666666666666"
+       ],
+       [
+        1790399524,
+        "1697.0666666666666"
+       ],
+       [
+        1790399526,
+        "2249"
+       ],
+       [
+        1790399528,
+        "2249"
+       ],
+       [
+        1790399530,
+        "1337.7333333333333"
+       ],
+       [
+        1790399532,
+        "1337.7333333333333"
+       ],
+       [
+        1790399534,
+        "1337.7333333333333"
+       ],
+       [
+        1790399536,
+        "1163"
+       ],
+       [
+        1790399538,
+        "1163"
+       ],
+       [
+        1790399540,
+        "658.8"
+       ],
+       [
+        1790399542,
+        "658.8"
+       ],
+       [
+        1790399544,
+        "658.8"
+       ],
+       [
+        1790399546,
+        "917"
+       ],
+       [
+        1790399548,
+        "917"
+       ],
+       [
+        1790399550,
+        "913.2666666666667"
+       ],
+       [
+        1790399552,
+        "913.2666666666667"
+       ],
+       [
+        1790399554,
+        "913.2666666666667"
+       ],
+       [
+        1790399556,
+        "1148"
+       ],
+       [
+        1790399558,
+        "1148"
+       ],
+       [
+        1790399560,
+        "945.8"
+       ],
+       [
+        1790399562,
+        "945.8"
+       ],
+       [
+        1790399564,
+        "945.8"
+       ],
+       [
+        1790399566,
+        "1078.9333333333334"
+       ],
+       [
+        1790399568,
+        "1078.9333333333334"
+       ],
+       [
+        1790399570,
+        "1066.4666666666667"
+       ],
+       [
+        1790399572,
+        "1066.4666666666667"
+       ],
+       [
+        1790399574,
+        "1066.4666666666667"
+       ],
+       [
+        1790399576,
+        "1916.3333333333333"
+       ],
+       [
+        1790399578,
+        "1916.3333333333333"
+       ],
+       [
+        1790399580,
+        "2075.8"
+       ],
+       [
+        1790399582,
+        "2075.8"
+       ],
+       [
+        1790399584,
+        "2075.8"
+       ],
+       [
+        1790399586,
+        "1858.9333333333334"
+       ],
+       [
+        1790399588,
+        "1858.9333333333334"
+       ],
+       [
+        1790399590,
+        "965.4"
+       ],
+       [
+        1790399592,
+        "965.4"
+       ],
+       [
+        1790399594,
+        "965.4"
+       ],
+       [
+        1790399596,
+        "696.0666666666666"
+       ],
+       [
+        1790399598,
+        "696.0666666666666"
+       ],
+       [
+        1790399600,
+        "543.0666666666666"
+       ],
+       [
+        1790399602,
+        "543.0666666666666"
+       ],
+       [
+        1790399604,
+        "543.0666666666666"
+       ],
+       [
+        1790399606,
+        "725.9333333333333"
+       ],
+       [
+        1790399608,
+        "725.9333333333333"
+       ],
+       [
+        1790399610,
+        "3055.4"
+       ],
+       [
+        1790399612,
+        "3055.4"
+       ],
+       [
+        1790399614,
+        "3055.4"
+       ],
+       [
+        1790399616,
+        "3439.733333333333"
+       ],
+       [
+        1790399618,
+        "3439.733333333333"
+       ],
+       [
+        1790399620,
+        "3532.4666666666667"
+       ],
+       [
+        1790399622,
+        "3532.4666666666667"
+       ],
+       [
+        1790399624,
+        "3532.4666666666667"
+       ],
+       [
+        1790399626,
+        "1310.5333333333333"
+       ],
+       [
+        1790399628,
+        "1310.5333333333333"
+       ],
+       [
+        1790399630,
+        "2374.4"
+       ],
+       [
+        1790399632,
+        "2374.4"
+       ],
+       [
+        1790399634,
+        "2374.4"
+       ],
+       [
+        1790399636,
+        "4722.733333333334"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (rate(node_network_transmit_bytes_total{device!=\"lo\",job=\"hosts\",instance=\"localhost:19100\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "1898.2666666666667"
+       ],
+       [
+        1790399518,
+        "1898.2666666666667"
+       ],
+       [
+        1790399520,
+        "2257.6"
+       ],
+       [
+        1790399522,
+        "2257.6"
+       ],
+       [
+        1790399524,
+        "2257.6"
+       ],
+       [
+        1790399526,
+        "3263.6666666666665"
+       ],
+       [
+        1790399528,
+        "3263.6666666666665"
+       ],
+       [
+        1790399530,
+        "2603.3333333333335"
+       ],
+       [
+        1790399532,
+        "2603.3333333333335"
+       ],
+       [
+        1790399534,
+        "2603.3333333333335"
+       ],
+       [
+        1790399536,
+        "1560.4"
+       ],
+       [
+        1790399538,
+        "1560.4"
+       ],
+       [
+        1790399540,
+        "888.0666666666666"
+       ],
+       [
+        1790399542,
+        "888.0666666666666"
+       ],
+       [
+        1790399544,
+        "888.0666666666666"
+       ],
+       [
+        1790399546,
+        "1193.3333333333333"
+       ],
+       [
+        1790399548,
+        "1193.3333333333333"
+       ],
+       [
+        1790399550,
+        "1579"
+       ],
+       [
+        1790399552,
+        "1579"
+       ],
+       [
+        1790399554,
+        "1579"
+       ],
+       [
+        1790399556,
+        "1761"
+       ],
+       [
+        1790399558,
+        "1761"
+       ],
+       [
+        1790399560,
+        "1618.2"
+       ],
+       [
+        1790399562,
+        "1618.2"
+       ],
+       [
+        1790399564,
+        "1618.2"
+       ],
+       [
+        1790399566,
+        "1278.5333333333333"
+       ],
+       [
+        1790399568,
+        "1278.5333333333333"
+       ],
+       [
+        1790399570,
+        "1252.4666666666667"
+       ],
+       [
+        1790399572,
+        "1252.4666666666667"
+       ],
+       [
+        1790399574,
+        "1252.4666666666667"
+       ],
+       [
+        1790399576,
+        "1857.5333333333333"
+       ],
+       [
+        1790399578,
+        "1857.5333333333333"
+       ],
+       [
+        1790399580,
+        "3199.6666666666665"
+       ],
+       [
+        1790399582,
+        "3199.6666666666665"
+       ],
+       [
+        1790399584,
+        "3199.6666666666665"
+       ],
+       [
+        1790399586,
+        "3056.4"
+       ],
+       [
+        1790399588,
+        "3056.4"
+       ],
+       [
+        1790399590,
+        "2248.0666666666666"
+       ],
+       [
+        1790399592,
+        "2248.0666666666666"
+       ],
+       [
+        1790399594,
+        "2248.0666666666666"
+       ],
+       [
+        1790399596,
+        "826.6"
+       ],
+       [
+        1790399598,
+        "826.6"
+       ],
+       [
+        1790399600,
+        "608.0666666666666"
+       ],
+       [
+        1790399602,
+        "608.0666666666666"
+       ],
+       [
+        1790399604,
+        "608.0666666666666"
+       ],
+       [
+        1790399606,
+        "724.8666666666667"
+       ],
+       [
+        1790399608,
+        "724.8666666666667"
+       ],
+       [
+        1790399610,
+        "2712.2666666666664"
+       ],
+       [
+        1790399612,
+        "2712.2666666666664"
+       ],
+       [
+        1790399614,
+        "2712.2666666666664"
+       ],
+       [
+        1790399616,
+        "3109.5333333333333"
+       ],
+       [
+        1790399618,
+        "3109.5333333333333"
+       ],
+       [
+        1790399620,
+        "3890.733333333333"
+       ],
+       [
+        1790399622,
+        "3890.733333333333"
+       ],
+       [
+        1790399624,
+        "3890.733333333333"
+       ],
+       [
+        1790399626,
+        "2048.133333333333"
+       ],
+       [
+        1790399628,
+        "2048.133333333333"
+       ],
+       [
+        1790399630,
+        "21443.866666666665"
+       ],
+       [
+        1790399632,
+        "21443.866666666665"
+       ],
+       [
+        1790399634,
+        "21443.866666666665"
+       ],
+       [
+        1790399636,
+        "61168.26666666666"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "avg by (job, instance) (up{job=~\"api|hosts|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19100|localhost:19998\"})"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "127.0.0.1:19999",
+       "job": "api"
+      },
+      "values": [
+       [
+        1790399516,
+        "0"
+       ],
+       [
+        1790399518,
+        "0"
+       ],
+       [
+        1790399520,
+        "0"
+       ],
+       [
+        1790399522,
+        "0"
+       ],
+       [
+        1790399524,
+        "0"
+       ],
+       [
+        1790399526,
+        "0"
+       ],
+       [
+        1790399528,
+        "0"
+       ],
+       [
+        1790399530,
+        "0"
+       ],
+       [
+        1790399532,
+        "0"
+       ],
+       [
+        1790399534,
+        "0"
+       ],
+       [
+        1790399536,
+        "0"
+       ],
+       [
+        1790399538,
+        "0"
+       ],
+       [
+        1790399540,
+        "0"
+       ],
+       [
+        1790399542,
+        "0"
+       ],
+       [
+        1790399544,
+        "0"
+       ],
+       [
+        1790399546,
+        "0"
+       ],
+       [
+        1790399548,
+        "0"
+       ],
+       [
+        1790399550,
+        "0"
+       ],
+       [
+        1790399552,
+        "0"
+       ],
+       [
+        1790399554,
+        "0"
+       ],
+       [
+        1790399556,
+        "0"
+       ],
+       [
+        1790399558,
+        "0"
+       ],
+       [
+        1790399560,
+        "0"
+       ],
+       [
+        1790399562,
+        "0"
+       ],
+       [
+        1790399564,
+        "0"
+       ],
+       [
+        1790399566,
+        "0"
+       ],
+       [
+        1790399568,
+        "0"
+       ],
+       [
+        1790399570,
+        "0"
+       ],
+       [
+        1790399572,
+        "0"
+       ],
+       [
+        1790399574,
+        "0"
+       ],
+       [
+        1790399576,
+        "0"
+       ],
+       [
+        1790399578,
+        "0"
+       ],
+       [
+        1790399580,
+        "0"
+       ],
+       [
+        1790399582,
+        "0"
+       ],
+       [
+        1790399584,
+        "0"
+       ],
+       [
+        1790399586,
+        "0"
+       ],
+       [
+        1790399588,
+        "0"
+       ],
+       [
+        1790399590,
+        "0"
+       ],
+       [
+        1790399592,
+        "0"
+       ],
+       [
+        1790399594,
+        "0"
+       ],
+       [
+        1790399596,
+        "0"
+       ],
+       [
+        1790399598,
+        "0"
+       ],
+       [
+        1790399600,
+        "0"
+       ],
+       [
+        1790399602,
+        "0"
+       ],
+       [
+        1790399604,
+        "0"
+       ],
+       [
+        1790399606,
+        "0"
+       ],
+       [
+        1790399608,
+        "0"
+       ],
+       [
+        1790399610,
+        "0"
+       ],
+       [
+        1790399612,
+        "0"
+       ],
+       [
+        1790399614,
+        "0"
+       ],
+       [
+        1790399616,
+        "0"
+       ],
+       [
+        1790399618,
+        "0"
+       ],
+       [
+        1790399620,
+        "0"
+       ],
+       [
+        1790399622,
+        "0"
+       ],
+       [
+        1790399624,
+        "0"
+       ],
+       [
+        1790399626,
+        "0"
+       ],
+       [
+        1790399628,
+        "0"
+       ],
+       [
+        1790399630,
+        "0"
+       ],
+       [
+        1790399632,
+        "0"
+       ],
+       [
+        1790399634,
+        "0"
+       ],
+       [
+        1790399636,
+        "0"
+       ]
+      ]
+     },
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "1"
+       ],
+       [
+        1790399518,
+        "1"
+       ],
+       [
+        1790399520,
+        "1"
+       ],
+       [
+        1790399522,
+        "1"
+       ],
+       [
+        1790399524,
+        "1"
+       ],
+       [
+        1790399526,
+        "1"
+       ],
+       [
+        1790399528,
+        "1"
+       ],
+       [
+        1790399530,
+        "1"
+       ],
+       [
+        1790399532,
+        "1"
+       ],
+       [
+        1790399534,
+        "1"
+       ],
+       [
+        1790399536,
+        "1"
+       ],
+       [
+        1790399538,
+        "1"
+       ],
+       [
+        1790399540,
+        "1"
+       ],
+       [
+        1790399542,
+        "1"
+       ],
+       [
+        1790399544,
+        "1"
+       ],
+       [
+        1790399546,
+        "1"
+       ],
+       [
+        1790399548,
+        "1"
+       ],
+       [
+        1790399550,
+        "1"
+       ],
+       [
+        1790399552,
+        "1"
+       ],
+       [
+        1790399554,
+        "1"
+       ],
+       [
+        1790399556,
+        "1"
+       ],
+       [
+        1790399558,
+        "1"
+       ],
+       [
+        1790399560,
+        "1"
+       ],
+       [
+        1790399562,
+        "1"
+       ],
+       [
+        1790399564,
+        "1"
+       ],
+       [
+        1790399566,
+        "1"
+       ],
+       [
+        1790399568,
+        "1"
+       ],
+       [
+        1790399570,
+        "1"
+       ],
+       [
+        1790399572,
+        "1"
+       ],
+       [
+        1790399574,
+        "1"
+       ],
+       [
+        1790399576,
+        "1"
+       ],
+       [
+        1790399578,
+        "1"
+       ],
+       [
+        1790399580,
+        "1"
+       ],
+       [
+        1790399582,
+        "1"
+       ],
+       [
+        1790399584,
+        "1"
+       ],
+       [
+        1790399586,
+        "1"
+       ],
+       [
+        1790399588,
+        "1"
+       ],
+       [
+        1790399590,
+        "1"
+       ],
+       [
+        1790399592,
+        "1"
+       ],
+       [
+        1790399594,
+        "1"
+       ],
+       [
+        1790399596,
+        "1"
+       ],
+       [
+        1790399598,
+        "1"
+       ],
+       [
+        1790399600,
+        "1"
+       ],
+       [
+        1790399602,
+        "1"
+       ],
+       [
+        1790399604,
+        "1"
+       ],
+       [
+        1790399606,
+        "1"
+       ],
+       [
+        1790399608,
+        "1"
+       ],
+       [
+        1790399610,
+        "1"
+       ],
+       [
+        1790399612,
+        "1"
+       ],
+       [
+        1790399614,
+        "1"
+       ],
+       [
+        1790399616,
+        "1"
+       ],
+       [
+        1790399618,
+        "1"
+       ],
+       [
+        1790399620,
+        "1"
+       ],
+       [
+        1790399622,
+        "1"
+       ],
+       [
+        1790399624,
+        "1"
+       ],
+       [
+        1790399626,
+        "1"
+       ],
+       [
+        1790399628,
+        "1"
+       ],
+       [
+        1790399630,
+        "1"
+       ],
+       [
+        1790399632,
+        "1"
+       ],
+       [
+        1790399634,
+        "1"
+       ],
+       [
+        1790399636,
+        "1"
+       ]
+      ]
+     },
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "1"
+       ],
+       [
+        1790399518,
+        "1"
+       ],
+       [
+        1790399520,
+        "1"
+       ],
+       [
+        1790399522,
+        "1"
+       ],
+       [
+        1790399524,
+        "1"
+       ],
+       [
+        1790399526,
+        "1"
+       ],
+       [
+        1790399528,
+        "1"
+       ],
+       [
+        1790399530,
+        "1"
+       ],
+       [
+        1790399532,
+        "1"
+       ],
+       [
+        1790399534,
+        "1"
+       ],
+       [
+        1790399536,
+        "1"
+       ],
+       [
+        1790399538,
+        "1"
+       ],
+       [
+        1790399540,
+        "1"
+       ],
+       [
+        1790399542,
+        "1"
+       ],
+       [
+        1790399544,
+        "1"
+       ],
+       [
+        1790399546,
+        "1"
+       ],
+       [
+        1790399548,
+        "1"
+       ],
+       [
+        1790399550,
+        "1"
+       ],
+       [
+        1790399552,
+        "1"
+       ],
+       [
+        1790399554,
+        "1"
+       ],
+       [
+        1790399556,
+        "1"
+       ],
+       [
+        1790399558,
+        "1"
+       ],
+       [
+        1790399560,
+        "1"
+       ],
+       [
+        1790399562,
+        "1"
+       ],
+       [
+        1790399564,
+        "1"
+       ],
+       [
+        1790399566,
+        "1"
+       ],
+       [
+        1790399568,
+        "1"
+       ],
+       [
+        1790399570,
+        "1"
+       ],
+       [
+        1790399572,
+        "1"
+       ],
+       [
+        1790399574,
+        "1"
+       ],
+       [
+        1790399576,
+        "1"
+       ],
+       [
+        1790399578,
+        "1"
+       ],
+       [
+        1790399580,
+        "1"
+       ],
+       [
+        1790399582,
+        "1"
+       ],
+       [
+        1790399584,
+        "1"
+       ],
+       [
+        1790399586,
+        "1"
+       ],
+       [
+        1790399588,
+        "1"
+       ],
+       [
+        1790399590,
+        "1"
+       ],
+       [
+        1790399592,
+        "1"
+       ],
+       [
+        1790399594,
+        "1"
+       ],
+       [
+        1790399596,
+        "1"
+       ],
+       [
+        1790399598,
+        "1"
+       ],
+       [
+        1790399600,
+        "1"
+       ],
+       [
+        1790399602,
+        "1"
+       ],
+       [
+        1790399604,
+        "1"
+       ],
+       [
+        1790399606,
+        "1"
+       ],
+       [
+        1790399608,
+        "1"
+       ],
+       [
+        1790399610,
+        "1"
+       ],
+       [
+        1790399612,
+        "1"
+       ],
+       [
+        1790399614,
+        "1"
+       ],
+       [
+        1790399616,
+        "1"
+       ],
+       [
+        1790399618,
+        "1"
+       ],
+       [
+        1790399620,
+        "1"
+       ],
+       [
+        1790399622,
+        "1"
+       ],
+       [
+        1790399624,
+        "1"
+       ],
+       [
+        1790399626,
+        "1"
+       ],
+       [
+        1790399628,
+        "1"
+       ],
+       [
+        1790399630,
+        "1"
+       ],
+       [
+        1790399632,
+        "1"
+       ],
+       [
+        1790399634,
+        "1"
+       ],
+       [
+        1790399636,
+        "1"
+       ]
+      ]
+     },
+     {
+      "metric": {
+       "instance": "localhost:19998",
+       "job": "api"
+      },
+      "values": [
+       [
+        1790399516,
+        "0"
+       ],
+       [
+        1790399518,
+        "0"
+       ],
+       [
+        1790399520,
+        "0"
+       ],
+       [
+        1790399522,
+        "0"
+       ],
+       [
+        1790399524,
+        "0"
+       ],
+       [
+        1790399526,
+        "0"
+       ],
+       [
+        1790399528,
+        "0"
+       ],
+       [
+        1790399530,
+        "0"
+       ],
+       [
+        1790399532,
+        "0"
+       ],
+       [
+        1790399534,
+        "0"
+       ],
+       [
+        1790399536,
+        "0"
+       ],
+       [
+        1790399538,
+        "0"
+       ],
+       [
+        1790399540,
+        "0"
+       ],
+       [
+        1790399542,
+        "0"
+       ],
+       [
+        1790399544,
+        "0"
+       ],
+       [
+        1790399546,
+        "0"
+       ],
+       [
+        1790399548,
+        "0"
+       ],
+       [
+        1790399550,
+        "0"
+       ],
+       [
+        1790399552,
+        "0"
+       ],
+       [
+        1790399554,
+        "0"
+       ],
+       [
+        1790399556,
+        "0"
+       ],
+       [
+        1790399558,
+        "0"
+       ],
+       [
+        1790399560,
+        "0"
+       ],
+       [
+        1790399562,
+        "0"
+       ],
+       [
+        1790399564,
+        "0"
+       ],
+       [
+        1790399566,
+        "0"
+       ],
+       [
+        1790399568,
+        "0"
+       ],
+       [
+        1790399570,
+        "0"
+       ],
+       [
+        1790399572,
+        "0"
+       ],
+       [
+        1790399574,
+        "0"
+       ],
+       [
+        1790399576,
+        "0"
+       ],
+       [
+        1790399578,
+        "0"
+       ],
+       [
+        1790399580,
+        "0"
+       ],
+       [
+        1790399582,
+        "0"
+       ],
+       [
+        1790399584,
+        "0"
+       ],
+       [
+        1790399586,
+        "0"
+       ],
+       [
+        1790399588,
+        "0"
+       ],
+       [
+        1790399590,
+        "0"
+       ],
+       [
+        1790399592,
+        "0"
+       ],
+       [
+        1790399594,
+        "0"
+       ],
+       [
+        1790399596,
+        "0"
+       ],
+       [
+        1790399598,
+        "0"
+       ],
+       [
+        1790399600,
+        "0"
+       ],
+       [
+        1790399602,
+        "0"
+       ],
+       [
+        1790399604,
+        "0"
+       ],
+       [
+        1790399606,
+        "0"
+       ],
+       [
+        1790399608,
+        "0"
+       ],
+       [
+        1790399610,
+        "0"
+       ],
+       [
+        1790399612,
+        "0"
+       ],
+       [
+        1790399614,
+        "0"
+       ],
+       [
+        1790399616,
+        "0"
+       ],
+       [
+        1790399618,
+        "0"
+       ],
+       [
+        1790399620,
+        "0"
+       ],
+       [
+        1790399622,
+        "0"
+       ],
+       [
+        1790399624,
+        "0"
+       ],
+       [
+        1790399626,
+        "0"
+       ],
+       [
+        1790399628,
+        "0"
+       ],
+       [
+        1790399630,
+        "0"
+       ],
+       [
+        1790399632,
+        "0"
+       ],
+       [
+        1790399634,
+        "0"
+       ],
+       [
+        1790399636,
+        "0"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "avg by (job, instance) (process_resident_memory_bytes{job=~\"api|hosts|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19100|localhost:19998\"})"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "119476224"
+       ],
+       [
+        1790399518,
+        "119476224"
+       ],
+       [
+        1790399520,
+        "119476224"
+       ],
+       [
+        1790399522,
+        "119476224"
+       ],
+       [
+        1790399524,
+        "119476224"
+       ],
+       [
+        1790399526,
+        "119476224"
+       ],
+       [
+        1790399528,
+        "119476224"
+       ],
+       [
+        1790399530,
+        "119476224"
+       ],
+       [
+        1790399532,
+        "119476224"
+       ],
+       [
+        1790399534,
+        "119476224"
+       ],
+       [
+        1790399536,
+        "119476224"
+       ],
+       [
+        1790399538,
+        "119476224"
+       ],
+       [
+        1790399540,
+        "119476224"
+       ],
+       [
+        1790399542,
+        "119476224"
+       ],
+       [
+        1790399544,
+        "119476224"
+       ],
+       [
+        1790399546,
+        "119476224"
+       ],
+       [
+        1790399548,
+        "119476224"
+       ],
+       [
+        1790399550,
+        "119476224"
+       ],
+       [
+        1790399552,
+        "119476224"
+       ],
+       [
+        1790399554,
+        "119476224"
+       ],
+       [
+        1790399556,
+        "119476224"
+       ],
+       [
+        1790399558,
+        "119476224"
+       ],
+       [
+        1790399560,
+        "119476224"
+       ],
+       [
+        1790399562,
+        "119476224"
+       ],
+       [
+        1790399564,
+        "119476224"
+       ],
+       [
+        1790399566,
+        "119476224"
+       ],
+       [
+        1790399568,
+        "119476224"
+       ],
+       [
+        1790399570,
+        "119476224"
+       ],
+       [
+        1790399572,
+        "119476224"
+       ],
+       [
+        1790399574,
+        "119476224"
+       ],
+       [
+        1790399576,
+        "119476224"
+       ],
+       [
+        1790399578,
+        "119476224"
+       ],
+       [
+        1790399580,
+        "119476224"
+       ],
+       [
+        1790399582,
+        "119476224"
+       ],
+       [
+        1790399584,
+        "119476224"
+       ],
+       [
+        1790399586,
+        "119476224"
+       ],
+       [
+        1790399588,
+        "119476224"
+       ],
+       [
+        1790399590,
+        "119476224"
+       ],
+       [
+        1790399592,
+        "119476224"
+       ],
+       [
+        1790399594,
+        "119476224"
+       ],
+       [
+        1790399596,
+        "119476224"
+       ],
+       [
+        1790399598,
+        "119476224"
+       ],
+       [
+        1790399600,
+        "119476224"
+       ],
+       [
+        1790399602,
+        "119476224"
+       ],
+       [
+        1790399604,
+        "119476224"
+       ],
+       [
+        1790399606,
+        "119476224"
+       ],
+       [
+        1790399608,
+        "119476224"
+       ],
+       [
+        1790399610,
+        "119476224"
+       ],
+       [
+        1790399612,
+        "119476224"
+       ],
+       [
+        1790399614,
+        "119476224"
+       ],
+       [
+        1790399616,
+        "119476224"
+       ],
+       [
+        1790399618,
+        "119476224"
+       ],
+       [
+        1790399620,
+        "119476224"
+       ],
+       [
+        1790399622,
+        "119476224"
+       ],
+       [
+        1790399624,
+        "119476224"
+       ],
+       [
+        1790399626,
+        "119476224"
+       ],
+       [
+        1790399628,
+        "119476224"
+       ],
+       [
+        1790399630,
+        "119476224"
+       ],
+       [
+        1790399632,
+        "119476224"
+       ],
+       [
+        1790399634,
+        "119476224"
+       ],
+       [
+        1790399636,
+        "119476224"
+       ]
+      ]
+     },
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "28528640"
+       ],
+       [
+        1790399518,
+        "28528640"
+       ],
+       [
+        1790399520,
+        "28327936"
+       ],
+       [
+        1790399522,
+        "28327936"
+       ],
+       [
+        1790399524,
+        "28327936"
+       ],
+       [
+        1790399526,
+        "28483584"
+       ],
+       [
+        1790399528,
+        "28483584"
+       ],
+       [
+        1790399530,
+        "28594176"
+       ],
+       [
+        1790399532,
+        "28594176"
+       ],
+       [
+        1790399534,
+        "28594176"
+       ],
+       [
+        1790399536,
+        "28905472"
+       ],
+       [
+        1790399538,
+        "28905472"
+       ],
+       [
+        1790399540,
+        "28884992"
+       ],
+       [
+        1790399542,
+        "28884992"
+       ],
+       [
+        1790399544,
+        "28884992"
+       ],
+       [
+        1790399546,
+        "28884992"
+       ],
+       [
+        1790399548,
+        "28884992"
+       ],
+       [
+        1790399550,
+        "28463104"
+       ],
+       [
+        1790399552,
+        "28463104"
+       ],
+       [
+        1790399554,
+        "28463104"
+       ],
+       [
+        1790399556,
+        "28540928"
+       ],
+       [
+        1790399558,
+        "28540928"
+       ],
+       [
+        1790399560,
+        "28647424"
+       ],
+       [
+        1790399562,
+        "28647424"
+       ],
+       [
+        1790399564,
+        "28647424"
+       ],
+       [
+        1790399566,
+        "29040640"
+       ],
+       [
+        1790399568,
+        "29040640"
+       ],
+       [
+        1790399570,
+        "28647424"
+       ],
+       [
+        1790399572,
+        "28647424"
+       ],
+       [
+        1790399574,
+        "28647424"
+       ],
+       [
+        1790399576,
+        "28585984"
+       ],
+       [
+        1790399578,
+        "28585984"
+       ],
+       [
+        1790399580,
+        "28344320"
+       ],
+       [
+        1790399582,
+        "28344320"
+       ],
+       [
+        1790399584,
+        "28344320"
+       ],
+       [
+        1790399586,
+        "28684288"
+       ],
+       [
+        1790399588,
+        "28684288"
+       ],
+       [
+        1790399590,
+        "28467200"
+       ],
+       [
+        1790399592,
+        "28467200"
+       ],
+       [
+        1790399594,
+        "28467200"
+       ],
+       [
+        1790399596,
+        "28401664"
+       ],
+       [
+        1790399598,
+        "28401664"
+       ],
+       [
+        1790399600,
+        "29188096"
+       ],
+       [
+        1790399602,
+        "29188096"
+       ],
+       [
+        1790399604,
+        "29188096"
+       ],
+       [
+        1790399606,
+        "29904896"
+       ],
+       [
+        1790399608,
+        "29904896"
+       ],
+       [
+        1790399610,
+        "29704192"
+       ],
+       [
+        1790399612,
+        "29704192"
+       ],
+       [
+        1790399614,
+        "29704192"
+       ],
+       [
+        1790399616,
+        "29483008"
+       ],
+       [
+        1790399618,
+        "29483008"
+       ],
+       [
+        1790399620,
+        "29237248"
+       ],
+       [
+        1790399622,
+        "29237248"
+       ],
+       [
+        1790399624,
+        "29237248"
+       ],
+       [
+        1790399626,
+        "28397568"
+       ],
+       [
+        1790399628,
+        "28397568"
+       ],
+       [
+        1790399630,
+        "28356608"
+       ],
+       [
+        1790399632,
+        "28356608"
+       ],
+       [
+        1790399634,
+        "28356608"
+       ],
+       [
+        1790399636,
+        "28721152"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "sum by (job, instance) (rate(prometheus_http_requests_total{job=~\"api|hosts|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19100|localhost:19998\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "0.2"
+       ],
+       [
+        1790399518,
+        "0.2"
+       ],
+       [
+        1790399520,
+        "0.2"
+       ],
+       [
+        1790399522,
+        "0.2"
+       ],
+       [
+        1790399524,
+        "0.2"
+       ],
+       [
+        1790399526,
+        "0.2"
+       ],
+       [
+        1790399528,
+        "0.2"
+       ],
+       [
+        1790399530,
+        "0.2"
+       ],
+       [
+        1790399532,
+        "0.2"
+       ],
+       [
+        1790399534,
+        "0.2"
+       ],
+       [
+        1790399536,
+        "0.2"
+       ],
+       [
+        1790399538,
+        "0.2"
+       ],
+       [
+        1790399540,
+        "0.2"
+       ],
+       [
+        1790399542,
+        "0.2"
+       ],
+       [
+        1790399544,
+        "0.2"
+       ],
+       [
+        1790399546,
+        "0.2"
+       ],
+       [
+        1790399548,
+        "0.2"
+       ],
+       [
+        1790399550,
+        "0.2"
+       ],
+       [
+        1790399552,
+        "0.2"
+       ],
+       [
+        1790399554,
+        "0.2"
+       ],
+       [
+        1790399556,
+        "0.2"
+       ],
+       [
+        1790399558,
+        "0.2"
+       ],
+       [
+        1790399560,
+        "0.2"
+       ],
+       [
+        1790399562,
+        "0.2"
+       ],
+       [
+        1790399564,
+        "0.2"
+       ],
+       [
+        1790399566,
+        "0.2"
+       ],
+       [
+        1790399568,
+        "0.2"
+       ],
+       [
+        1790399570,
+        "0.2"
+       ],
+       [
+        1790399572,
+        "0.2"
+       ],
+       [
+        1790399574,
+        "0.2"
+       ],
+       [
+        1790399576,
+        "0.2"
+       ],
+       [
+        1790399578,
+        "0.2"
+       ],
+       [
+        1790399580,
+        "0.2"
+       ],
+       [
+        1790399582,
+        "0.2"
+       ],
+       [
+        1790399584,
+        "0.2"
+       ],
+       [
+        1790399586,
+        "0.2"
+       ],
+       [
+        1790399588,
+        "0.2"
+       ],
+       [
+        1790399590,
+        "0.2"
+       ],
+       [
+        1790399592,
+        "0.2"
+       ],
+       [
+        1790399594,
+        "0.2"
+       ],
+       [
+        1790399596,
+        "0.2"
+       ],
+       [
+        1790399598,
+        "0.2"
+       ],
+       [
+        1790399600,
+        "0.2"
+       ],
+       [
+        1790399602,
+        "0.2"
+       ],
+       [
+        1790399604,
+        "0.2"
+       ],
+       [
+        1790399606,
+        "0.2"
+       ],
+       [
+        1790399608,
+        "0.2"
+       ],
+       [
+        1790399610,
+        "0.2"
+       ],
+       [
+        1790399612,
+        "0.2"
+       ],
+       [
+        1790399614,
+        "0.2"
+       ],
+       [
+        1790399616,
+        "0.2"
+       ],
+       [
+        1790399618,
+        "0.2"
+       ],
+       [
+        1790399620,
+        "0.2"
+       ],
+       [
+        1790399622,
+        "0.2"
+       ],
+       [
+        1790399624,
+        "0.2"
+       ],
+       [
+        1790399626,
+        "0.2"
+       ],
+       [
+        1790399628,
+        "0.2"
+       ],
+       [
+        1790399630,
+        "0.2"
+       ],
+       [
+        1790399632,
+        "0.2"
+       ],
+       [
+        1790399634,
+        "0.2"
+       ],
+       [
+        1790399636,
+        "0.2"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "max by (job, instance) (go_goroutines{job=~\"api|hosts|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19100|localhost:19998\"})"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "41"
+       ],
+       [
+        1790399518,
+        "41"
+       ],
+       [
+        1790399520,
+        "39"
+       ],
+       [
+        1790399522,
+        "39"
+       ],
+       [
+        1790399524,
+        "39"
+       ],
+       [
+        1790399526,
+        "39"
+       ],
+       [
+        1790399528,
+        "39"
+       ],
+       [
+        1790399530,
+        "39"
+       ],
+       [
+        1790399532,
+        "39"
+       ],
+       [
+        1790399534,
+        "39"
+       ],
+       [
+        1790399536,
+        "39"
+       ],
+       [
+        1790399538,
+        "39"
+       ],
+       [
+        1790399540,
+        "39"
+       ],
+       [
+        1790399542,
+        "39"
+       ],
+       [
+        1790399544,
+        "39"
+       ],
+       [
+        1790399546,
+        "40"
+       ],
+       [
+        1790399548,
+        "40"
+       ],
+       [
+        1790399550,
+        "39"
+       ],
+       [
+        1790399552,
+        "39"
+       ],
+       [
+        1790399554,
+        "39"
+       ],
+       [
+        1790399556,
+        "39"
+       ],
+       [
+        1790399558,
+        "39"
+       ],
+       [
+        1790399560,
+        "40"
+       ],
+       [
+        1790399562,
+        "40"
+       ],
+       [
+        1790399564,
+        "40"
+       ],
+       [
+        1790399566,
+        "39"
+       ],
+       [
+        1790399568,
+        "39"
+       ],
+       [
+        1790399570,
+        "39"
+       ],
+       [
+        1790399572,
+        "39"
+       ],
+       [
+        1790399574,
+        "39"
+       ],
+       [
+        1790399576,
+        "39"
+       ],
+       [
+        1790399578,
+        "39"
+       ],
+       [
+        1790399580,
+        "39"
+       ],
+       [
+        1790399582,
+        "39"
+       ],
+       [
+        1790399584,
+        "39"
+       ],
+       [
+        1790399586,
+        "39"
+       ],
+       [
+        1790399588,
+        "39"
+       ],
+       [
+        1790399590,
+        "40"
+       ],
+       [
+        1790399592,
+        "40"
+       ],
+       [
+        1790399594,
+        "40"
+       ],
+       [
+        1790399596,
+        "39"
+       ],
+       [
+        1790399598,
+        "39"
+       ],
+       [
+        1790399600,
+        "39"
+       ],
+       [
+        1790399602,
+        "39"
+       ],
+       [
+        1790399604,
+        "39"
+       ],
+       [
+        1790399606,
+        "39"
+       ],
+       [
+        1790399608,
+        "39"
+       ],
+       [
+        1790399610,
+        "39"
+       ],
+       [
+        1790399612,
+        "39"
+       ],
+       [
+        1790399614,
+        "39"
+       ],
+       [
+        1790399616,
+        "39"
+       ],
+       [
+        1790399618,
+        "39"
+       ],
+       [
+        1790399620,
+        "40"
+       ],
+       [
+        1790399622,
+        "40"
+       ],
+       [
+        1790399624,
+        "40"
+       ],
+       [
+        1790399626,
+        "39"
+       ],
+       [
+        1790399628,
+        "39"
+       ],
+       [
+        1790399630,
+        "39"
+       ],
+       [
+        1790399632,
+        "39"
+       ],
+       [
+        1790399634,
+        "39"
+       ],
+       [
+        1790399636,
+        "39"
+       ]
+      ]
+     },
+     {
+      "metric": {
+       "instance": "localhost:19100",
+       "job": "hosts"
+      },
+      "values": [
+       [
+        1790399516,
+        "7"
+       ],
+       [
+        1790399518,
+        "7"
+       ],
+       [
+        1790399520,
+        "7"
+       ],
+       [
+        1790399522,
+        "7"
+       ],
+       [
+        1790399524,
+        "7"
+       ],
+       [
+        1790399526,
+        "7"
+       ],
+       [
+        1790399528,
+        "7"
+       ],
+       [
+        1790399530,
+        "7"
+       ],
+       [
+        1790399532,
+        "7"
+       ],
+       [
+        1790399534,
+        "7"
+       ],
+       [
+        1790399536,
+        "7"
+       ],
+       [
+        1790399538,
+        "7"
+       ],
+       [
+        1790399540,
+        "7"
+       ],
+       [
+        1790399542,
+        "7"
+       ],
+       [
+        1790399544,
+        "7"
+       ],
+       [
+        1790399546,
+        "7"
+       ],
+       [
+        1790399548,
+        "7"
+       ],
+       [
+        1790399550,
+        "7"
+       ],
+       [
+        1790399552,
+        "7"
+       ],
+       [
+        1790399554,
+        "7"
+       ],
+       [
+        1790399556,
+        "7"
+       ],
+       [
+        1790399558,
+        "7"
+       ],
+       [
+        1790399560,
+        "7"
+       ],
+       [
+        1790399562,
+        "7"
+       ],
+       [
+        1790399564,
+        "7"
+       ],
+       [
+        1790399566,
+        "7"
+       ],
+       [
+        1790399568,
+        "7"
+       ],
+       [
+        1790399570,
+        "7"
+       ],
+       [
+        1790399572,
+        "7"
+       ],
+       [
+        1790399574,
+        "7"
+       ],
+       [
+        1790399576,
+        "7"
+       ],
+       [
+        1790399578,
+        "7"
+       ],
+       [
+        1790399580,
+        "7"
+       ],
+       [
+        1790399582,
+        "7"
+       ],
+       [
+        1790399584,
+        "7"
+       ],
+       [
+        1790399586,
+        "7"
+       ],
+       [
+        1790399588,
+        "7"
+       ],
+       [
+        1790399590,
+        "7"
+       ],
+       [
+        1790399592,
+        "7"
+       ],
+       [
+        1790399594,
+        "7"
+       ],
+       [
+        1790399596,
+        "7"
+       ],
+       [
+        1790399598,
+        "7"
+       ],
+       [
+        1790399600,
+        "7"
+       ],
+       [
+        1790399602,
+        "7"
+       ],
+       [
+        1790399604,
+        "7"
+       ],
+       [
+        1790399606,
+        "7"
+       ],
+       [
+        1790399608,
+        "7"
+       ],
+       [
+        1790399610,
+        "7"
+       ],
+       [
+        1790399612,
+        "7"
+       ],
+       [
+        1790399614,
+        "7"
+       ],
+       [
+        1790399616,
+        "7"
+       ],
+       [
+        1790399618,
+        "7"
+       ],
+       [
+        1790399620,
+        "7"
+       ],
+       [
+        1790399622,
+        "7"
+       ],
+       [
+        1790399624,
+        "7"
+       ],
+       [
+        1790399626,
+        "7"
+       ],
+       [
+        1790399628,
+        "7"
+       ],
+       [
+        1790399630,
+        "7"
+       ],
+       [
+        1790399632,
+        "7"
+       ],
+       [
+        1790399634,
+        "7"
+       ],
+       [
+        1790399636,
+        "7"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ },
+ {
+  "method": "POST",
+  "path": "/api/v1/query_range",
+  "form": {
+   "end": [
+    "1790399636.000"
+   ],
+   "query": [
+    "quantile by (job, instance) (0.95, rate(prometheus_http_requests_total{job=~\"api|hosts|prometheus\",instance=~\"127\\\\.0\\\\.0\\\\.1:19999|localhost:19090|localhost:19100|localhost:19998\"}[20s]))"
+   ],
+   "start": [
+    "1790399516.000"
+   ],
+   "step": [
+    "2"
+   ]
+  },
+  "status": 200,
+  "body": {
+   "status": "success",
+   "data": {
+    "resultType": "matrix",
+    "result": [
+     {
+      "metric": {
+       "instance": "localhost:19090",
+       "job": "prometheus"
+      },
+      "values": [
+       [
+        1790399516,
+        "0"
+       ],
+       [
+        1790399518,
+        "0"
+       ],
+       [
+        1790399520,
+        "0"
+       ],
+       [
+        1790399522,
+        "0"
+       ],
+       [
+        1790399524,
+        "0"
+       ],
+       [
+        1790399526,
+        "0"
+       ],
+       [
+        1790399528,
+        "0"
+       ],
+       [
+        1790399530,
+        "0"
+       ],
+       [
+        1790399532,
+        "0"
+       ],
+       [
+        1790399534,
+        "0"
+       ],
+       [
+        1790399536,
+        "0"
+       ],
+       [
+        1790399538,
+        "0"
+       ],
+       [
+        1790399540,
+        "0"
+       ],
+       [
+        1790399542,
+        "0"
+       ],
+       [
+        1790399544,
+        "0"
+       ],
+       [
+        1790399546,
+        "0"
+       ],
+       [
+        1790399548,
+        "0"
+       ],
+       [
+        1790399550,
+        "0"
+       ],
+       [
+        1790399552,
+        "0"
+       ],
+       [
+        1790399554,
+        "0"
+       ],
+       [
+        1790399556,
+        "0"
+       ],
+       [
+        1790399558,
+        "0"
+       ],
+       [
+        1790399560,
+        "0"
+       ],
+       [
+        1790399562,
+        "0"
+       ],
+       [
+        1790399564,
+        "0"
+       ],
+       [
+        1790399566,
+        "0"
+       ],
+       [
+        1790399568,
+        "0"
+       ],
+       [
+        1790399570,
+        "0"
+       ],
+       [
+        1790399572,
+        "0"
+       ],
+       [
+        1790399574,
+        "0"
+       ],
+       [
+        1790399576,
+        "0"
+       ],
+       [
+        1790399578,
+        "0"
+       ],
+       [
+        1790399580,
+        "0"
+       ],
+       [
+        1790399582,
+        "0"
+       ],
+       [
+        1790399584,
+        "0"
+       ],
+       [
+        1790399586,
+        "0"
+       ],
+       [
+        1790399588,
+        "0"
+       ],
+       [
+        1790399590,
+        "0"
+       ],
+       [
+        1790399592,
+        "0"
+       ],
+       [
+        1790399594,
+        "0"
+       ],
+       [
+        1790399596,
+        "0"
+       ],
+       [
+        1790399598,
+        "0"
+       ],
+       [
+        1790399600,
+        "0"
+       ],
+       [
+        1790399602,
+        "0"
+       ],
+       [
+        1790399604,
+        "0"
+       ],
+       [
+        1790399606,
+        "0"
+       ],
+       [
+        1790399608,
+        "0"
+       ],
+       [
+        1790399610,
+        "0"
+       ],
+       [
+        1790399612,
+        "0"
+       ],
+       [
+        1790399614,
+        "0"
+       ],
+       [
+        1790399616,
+        "0"
+       ],
+       [
+        1790399618,
+        "0"
+       ],
+       [
+        1790399620,
+        "0"
+       ],
+       [
+        1790399622,
+        "0"
+       ],
+       [
+        1790399624,
+        "0"
+       ],
+       [
+        1790399626,
+        "0"
+       ],
+       [
+        1790399628,
+        "0"
+       ],
+       [
+        1790399630,
+        "0"
+       ],
+       [
+        1790399632,
+        "0"
+       ],
+       [
+        1790399634,
+        "0"
+       ],
+       [
+        1790399636,
+        "0"
+       ]
+      ]
+     }
+    ]
+   }
+  }
+ }
+]
