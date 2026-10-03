@@ -8,7 +8,8 @@ import (
 	"strconv"
 	"testing"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // oldPoints is the decoder samples replaced, kept as the reference for its results.

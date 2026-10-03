@@ -7,7 +7,8 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // UseWorld gives the module the world, to match flow ends against what other modules found.

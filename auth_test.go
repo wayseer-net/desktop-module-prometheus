@@ -10,7 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
-	"wayseer/pkg/sdk/sdktest"
+
+	"wayseer.dev/sdk/sdktest"
 )
 
 const token = "s3cret-t0ken"

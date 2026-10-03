@@ -13,7 +13,8 @@ import (
 	"sync"
 	"testing"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // fakeAM is an Alertmanager that serves alerts and silences, and records the changes it is sent.

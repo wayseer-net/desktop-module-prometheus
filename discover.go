@@ -8,7 +8,8 @@ import (
 	"slices"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // Kinds and relations the module adds to the core vocabulary.

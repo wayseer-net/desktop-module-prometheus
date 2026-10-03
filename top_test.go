@@ -8,7 +8,8 @@ import (
 	"strings"
 	"sync"
 	"testing"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // topServer answers the topk instant query with its one target, and range queries with a

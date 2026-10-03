@@ -2,7 +2,8 @@ package prometheus
 
 import (
 	"testing"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 func scrapeOf(job, instance, health, lastError string) target {

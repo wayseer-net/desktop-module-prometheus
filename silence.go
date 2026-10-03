@@ -9,7 +9,8 @@ import (
 	"slices"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // silenceComment marks the silences Wayseer makes, with the instance's name as createdBy.

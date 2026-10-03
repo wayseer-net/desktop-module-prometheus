@@ -8,7 +8,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // amAlert is one alert from Alertmanager's /api/v2/alerts, which lists only unresolved ones.

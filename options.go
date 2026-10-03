@@ -8,7 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 type options struct {

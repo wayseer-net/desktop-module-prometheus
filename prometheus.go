@@ -15,7 +15,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // Kind is the module kind in config.

@@ -13,7 +13,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // inFlight passes requests to next, counting range queries, the targets each names, and the

@@ -5,7 +5,8 @@ import (
 	"testing"
 	"time"
 	"wayseer/modules/prometheus/promtest"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // trackerAllocs is TrackerUnchanged10k's allocation ceiling in scripts/budgets.txt.

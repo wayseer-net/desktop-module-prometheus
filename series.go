@@ -8,7 +8,8 @@ import (
 	"maps"
 	"slices"
 	"strings"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // seriesCount is how many series, as a metric was last read, named no entity or several.

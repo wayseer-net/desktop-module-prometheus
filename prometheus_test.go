@@ -11,8 +11,9 @@ import (
 	"testing"
 	"time"
 	"wayseer/modules/prometheus/promtest"
-	"wayseer/pkg/sdk"
-	"wayseer/pkg/sdk/sdktest"
+
+	"wayseer.dev/sdk"
+	"wayseer.dev/sdk/sdktest"
 
 	"go.yaml.in/yaml/v3"
 )

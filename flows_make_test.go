@@ -9,7 +9,8 @@ import (
 	"strings"
 	"testing"
 	"wayseer/modules/prometheus/promtest"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 const graphQuery = "sum by (client, server) (rate(traces_service_graph_request_total[1m]))"

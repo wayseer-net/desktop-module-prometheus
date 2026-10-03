@@ -3,7 +3,8 @@ package prometheus
 import (
 	"errors"
 	"fmt"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // errLeftOut is a flow end that would make an entity past the bound.

@@ -9,7 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // maxPoints is Prometheus's limit on points per series in one range query.

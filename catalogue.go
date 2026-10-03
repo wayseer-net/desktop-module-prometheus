@@ -4,7 +4,8 @@ import (
 	"maps"
 	"slices"
 	"strings"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // metaEntry is one family's metadata from /api/v1/metadata.

@@ -7,7 +7,8 @@ import (
 	"slices"
 	"testing"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 // What the app asks of a module: at most seriesBatch entities a query (cmd/wayseer/series.go),

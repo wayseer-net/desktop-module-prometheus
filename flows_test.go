@@ -8,7 +8,8 @@ import (
 	"strings"
 	"testing"
 	"wayseer/modules/prometheus/promtest"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 const (

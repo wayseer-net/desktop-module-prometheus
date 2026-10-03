@@ -13,7 +13,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
-	"wayseer/pkg/sdk"
+
+	"wayseer.dev/sdk"
 )
 
 const (
