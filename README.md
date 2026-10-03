@@ -31,9 +31,6 @@ To change it alongside the SDK or the app, use a Go workspace: `go.work` here wi
 `use . ../../sdk`, or the app's `make workspace`, which writes one for the whole of Wayseer
 Desktop. `go.work` is ignored by git.
 
-Until `wayseer.dev` serves the SDK's page and its repository is public, fetching it needs
-`GOPRIVATE=github.com/wayseer-net/*` and git access to GitHub over HTTPS.
-
 ## Licence
 
 MIT; see `LICENSE`.

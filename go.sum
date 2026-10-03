@@ -2,9 +2,9 @@ github.com/ebitengine/purego v0.11.0 h1:jhp/D+Nyv7UUW8HAcmcjt2N2rYrYi9m3SL21k0Ua
 github.com/ebitengine/purego v0.11.0/go.mod h1:DCHPP08djqhNSoTfImcnHYQRZmd0qhakvrozqaEYhGQ=
 github.com/godbus/dbus/v5 v5.2.2 h1:TUR3TgtSVDmjiXOgAAyaZbYmIeP3DPkld3jgKGV8mXQ=
 github.com/godbus/dbus/v5 v5.2.2/go.mod h1:3AAv2+hPq5rdnr5txxxRwiGjPXamgoIHgz9FPBfOp3c=
-github.com/wayseer-net/desktop-sdk v0.1.0 h1:YRH6Sh23Wv1Rah2CGAjn81kUIu3LAdLkJHiD29PEniQ=
-github.com/wayseer-net/desktop-sdk v0.1.0/go.mod h1:lLteZh2PPH2c/COCYGAc6lSOT6/bWdLik//cwWU1i9o=
 go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
 go.yaml.in/yaml/v3 v3.0.5/go.mod h1:HVTZu1O7/Vkt2N+BFy8Zza+lnLsABggaTM2ZpNIGuKg=
 golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
 golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
+wayseer.dev/sdk v0.1.0 h1:Oevf4JT3t+EhumszSjQ2PRkPGyS6WsN5KwA+xo2fxu4=
+wayseer.dev/sdk v0.1.0/go.mod h1:lLteZh2PPH2c/COCYGAc6lSOT6/bWdLik//cwWU1i9o=

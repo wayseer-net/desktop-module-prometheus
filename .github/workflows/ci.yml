@@ -15,10 +15,6 @@ jobs:
       matrix:
         os: [ubuntu-24.04, macos-15, windows-2025]
     runs-on: ${{ matrix.os }}
-    env:
-      # The SDK is fetched from its private repository until wayseer.dev serves it; the owner
-      # chooses the credential when CI is turned on.
-      GOPRIVATE: github.com/wayseer-net/*
     defaults:
       run:
         shell: bash
