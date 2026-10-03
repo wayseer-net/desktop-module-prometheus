@@ -11,7 +11,7 @@ import (
 	"wayseer.dev/sdk"
 )
 
-// What the app asks of a module: at most seriesBatch entities a query (cmd/wayseer/series.go),
+// What the app asks of a module: at most seriesBatch entities a query (the app's series batch),
 // or, of one that ranks, Grid's top (grid.MaxTiles).
 const appBatch, appTop = 100, 500
 

@@ -1,0 +1,32 @@
+# Runs scripts/check.sh on Linux, macOS and Windows.
+# Runs by hand only (workflow_dispatch) until the owner turns CI on.
+name: ci
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    runs-on: ${{ matrix.os }}
+    env:
+      # The SDK is fetched from its private repository until wayseer.dev serves it; the owner
+      # chooses the credential when CI is turned on.
+      GOPRIVATE: github.com/wayseer-net/*
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the key scan reads every commit
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - run: scripts/check.sh

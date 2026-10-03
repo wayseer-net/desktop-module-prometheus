@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 	"time"
-	"wayseer/modules/prometheus/promtest"
 
+	"wayseer.dev/modules/prometheus/promtest"
 	"wayseer.dev/sdk"
 )
 

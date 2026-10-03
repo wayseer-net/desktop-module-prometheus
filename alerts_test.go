@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
-	"wayseer/modules/prometheus/promtest"
 
+	"wayseer.dev/modules/prometheus/promtest"
 	"wayseer.dev/sdk"
 )
 
@@ -34,7 +34,7 @@ func (w *withAlerts) RoundTrip(r *http.Request) (*http.Response, error) {
 
 var errConnRefused = errors.New("connection refused")
 
-// set makes the Alertmanager answer as recorded in testdata/prometheus/alerts-<stage>.json;
+// set makes the Alertmanager answer as recorded in testdata/alerts-<stage>.json;
 // "" makes it refuse.
 func (w *withAlerts) set(t *testing.T, stage string) {
 	t.Helper()

@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 	"testing"
-	"wayseer/modules/prometheus/promtest"
 
+	"wayseer.dev/modules/prometheus/promtest"
 	"wayseer.dev/sdk"
 )
 

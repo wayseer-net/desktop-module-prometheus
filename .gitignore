@@ -1,0 +1,12 @@
+# Go
+*.test
+*.out
+coverage.*
+go.work
+go.work.sum
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~

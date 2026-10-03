@@ -4,12 +4,12 @@ import (
 	"context"
 	"testing"
 	"time"
-	"wayseer/modules/prometheus/promtest"
 
+	"wayseer.dev/modules/prometheus/promtest"
 	"wayseer.dev/sdk"
 )
 
-// trackerAllocs is TrackerUnchanged10k's allocation ceiling in scripts/budgets.txt.
+// trackerAllocs is the SDK's TrackerUnchanged10k allocation ceiling in the app's budgets.
 const trackerAllocs = 10
 
 // bigGraph refreshes a module reading a 500-service graph of 2000 calls, held at one time, then
