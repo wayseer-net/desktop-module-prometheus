@@ -6,5 +6,5 @@ go.yaml.in/yaml/v3 v3.0.5 h1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=
 go.yaml.in/yaml/v3 v3.0.5/go.mod h1:HVTZu1O7/Vkt2N+BFy8Zza+lnLsABggaTM2ZpNIGuKg=
 golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
 golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=
-wayseer.dev/sdk v0.1.0 h1:Oevf4JT3t+EhumszSjQ2PRkPGyS6WsN5KwA+xo2fxu4=
-wayseer.dev/sdk v0.1.0/go.mod h1:lLteZh2PPH2c/COCYGAc6lSOT6/bWdLik//cwWU1i9o=
+wayseer.dev/sdk v0.1.7 h1:T7/J3eAXb6nkOHBWeFbyRY/DhnmmxL8Y3LaWW2XZDws=
+wayseer.dev/sdk v0.1.7/go.mod h1:lLteZh2PPH2c/COCYGAc6lSOT6/bWdLik//cwWU1i9o=

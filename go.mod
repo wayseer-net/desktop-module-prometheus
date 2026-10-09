@@ -4,7 +4,7 @@ go 1.27
 
 require (
 	go.yaml.in/yaml/v3 v3.0.5
-	wayseer.dev/sdk v0.1.0
+	wayseer.dev/sdk v0.1.7
 )
 
 require (
