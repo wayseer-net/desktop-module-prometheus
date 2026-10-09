@@ -148,8 +148,18 @@ func rateUnit(name string) sdk.Unit {
 		return sdk.UnitBitsPS
 	case strings.HasSuffix(name, "_seconds_total"):
 		return sdk.UnitRatio // seconds per second
+	case strings.HasSuffix(name, "_joules_total"):
+		return sdk.UnitWatts // joules per second
 	}
 	return sdk.UnitPerSec
+}
+
+// physicalUnits are the units of physical quantities by Prometheus's names for them, the
+// node exporter's hwmon spellings among them.
+var physicalUnits = map[string]sdk.Unit{
+	"celsius": sdk.UnitCelsius, "hertz": sdk.UnitHertz, "volts": sdk.UnitVolts, "amps": sdk.UnitAmperes,
+	"amperes": sdk.UnitAmperes, "watt": sdk.UnitWatts, "watts": sdk.UnitWatts, "pascals": sdk.UnitPascals,
+	"lux": sdk.UnitLux,
 }
 
 // gaugeUnit is a gauge's unit, from its metadata or its name's suffix.
@@ -170,5 +180,5 @@ func gaugeUnit(name, unit string) sdk.Unit {
 	case "bits":
 		return sdk.UnitBits
 	}
-	return sdk.UnitNone
+	return physicalUnits[suffix]
 }

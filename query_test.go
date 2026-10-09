@@ -94,7 +94,7 @@ func TestCatalogueComesFromMetadata(t *testing.T) {
 	want := map[string]sdk.Unit{
 		"cpu.utilisation": sdk.UnitPercent, "node_cpu_seconds_total": sdk.UnitRatio,
 		"node_network_receive_bytes_total": sdk.UnitBytesPS, "process_resident_memory_bytes": sdk.UnitBytes,
-		"temperature": sdk.UnitNone, "net.receive": sdk.UnitBytesPS, "up": sdk.UnitNone, "scrape_duration_seconds": sdk.UnitSeconds,
+		"temperature": sdk.UnitCelsius, "net.receive": sdk.UnitBytesPS, "up": sdk.UnitNone, "scrape_duration_seconds": sdk.UnitSeconds,
 	}
 	for name, unit := range want {
 		if u, ok := got[name]; !ok || u != unit {
